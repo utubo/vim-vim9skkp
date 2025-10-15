@@ -19,10 +19,10 @@ export var sticky_shift = false
 # 表示制御 {{{
 export def Popup()
   if !U.IsPopupExists(winid)
-    winid = popup_create('', {
-      zindex: g:vim9skkp.zindex, highlight: 'Vim9skkp'
-    })
+    winid = popup_create('', { zindex: g:vim9skkp.zindex })
   endif
+  win_execute(winid, 'syntax match Vim9skkp /./')
+  win_execute(winid, 'syntax match Vim9skkpCursor /.$/')
   chartype = C.Type.Hira
   midasi = g:vim9skkp.keep_midasi_mode
   SetText('')
@@ -42,8 +42,13 @@ enddef
 
 export def SetText(_text: string)
   text = _text
-  # NOTE: textが空の場合はポップアップ下の文字を透かしておく
-  popup_settext(winid, text ?? U.GetCharAtCursor())
+  if !text
+    # textが空の場合はカーソル位置の文字を空かしておく
+    popup_settext(winid, U.GetCharAtCursor() ?? ' ')
+  else
+    # textの末尾にカーソルを表示
+    popup_settext(winid, text .. ' ')
+  endif
   doautocmd vim9skkp User vim9skkp-m-settext
 enddef
 # }}}

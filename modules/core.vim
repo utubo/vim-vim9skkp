@@ -58,7 +58,7 @@ enddef
 # NOTE: CursorMovedIやCursorMovedCで実行すると<C-r>=foo<CR>などのマッピングでチラつく
 def FollowCursor()
   if M.active
-    const c = U.GetCurPos()
+    const c = g:vim9skkp.getcurpos(U.GetCurPos())
     M.FollowCursor(c)
     S.FollowCursor(c, M.text)
   endif

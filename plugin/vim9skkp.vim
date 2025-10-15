@@ -35,7 +35,7 @@ var default = {
     prev: ["\<S-Tab>", 'x'],
     top: '.',
     commit: "\<CR>",
-    cancel: ["\<C-g>", "\<Esc>"],
+    cancel: "\<C-g>",
     delete: "\<C-d>",
     sticky_shift: [],
   },
@@ -89,7 +89,9 @@ Map('tnoremap', g:vim9skkp.keymap.terminal, '<Plug>(vim9skkp-terminal)')
 
 # 色 {{{
 def ColorScheme()
-  hi default link Vim9skkp CursorIM
+  # hi default link Vim9skkp gui=underline cterm=underline
+  hi Vim9skkp gui=underline cterm=underline
+  hi default link Vim9skkpCursor CursorIM
   hi default link Vim9skkpBlur PMenuExtra
 enddef
 
