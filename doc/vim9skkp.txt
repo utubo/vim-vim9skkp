@@ -1,0 +1,317 @@
+*vim9skkpp.txt*	SKK日本語入力をVim9 scriptとポップアップウインドウで実装した 実験的なプラグイン
+
+Author  : utubo
+License : MIT license  {{{
+    Permission is hereby granted, free of charge, to any person obtaining
+    a copy of this software and associated documentation files (the
+    "Software"), to deal in the Software without restriction, including
+    without limitation the rights to use, copy, modify, merge, publish,
+    distribute, sublicense, and/or sell copies of the Software, and to
+    permit persons to whom the Software is furnished to do so, subject to
+    the following conditions:
+    The above copyright notice and this permission notice shall be included
+    in all copies or substantial portions of the Software.
+
+    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+    OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+    MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+    IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+    CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+    TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+    SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+}}}
+
+==============================================================================
+CONTENTS					*vim9skkp-contents*
+
+INTRODUCTION			|vim9skkp-introduction|
+USAGE				|vim9skkp-usage|
+INTERFACE			|vim9skkp-interface|
+  VARIABLES			  |vim9skkp-variables|
+  COMMANDS			  |vim9skkp-commands|
+  FUNCTIONS			  |vim9skkp-functions|
+  EVENTS			  |vim9skkp-events|
+  HIGHLIGHTS			  |vim9skkp-highlights|
+TODO				|vim9skkp-todo|
+KNOWN ISSUES			|vim9skkp-knwonissues|
+
+
+==============================================================================
+INTRODUCTION					*vim9skkp-introduction*
+
+*vim9skkp* は、SKK日本語入力をVim9 scriptとポップアップウインドウで実装した
+実験的なプラグインです
+
+ポップアップウインドウを使うことで以下を実現しています
+・確定するまでバッファが汚れない
+・起動時のキーマッピングの上書きを最低限に(特にメリットは無いですが…)
+
+Latest version:
+https://github.com/utubo/vim-vim9skkp.vim
+
+
+==============================================================================
+USAGE						*vim9skkp-usage*
+
+デフォルトでは挿入モードで`<C-j>`で起動します
+基本的にはよくあるSKKの入力形式と同様です
+(まだ実装されていないものが多々ありますが…)
+
+ひらがなモードまたはカタカナモードで以下の変換が用意されています
+	`z<Space>` 全角スペース
+	`z.` …
+	`z/` ・
+	`z[` 「
+	`z]` 」
+	`zh` ←
+	`zj` ↓
+	`zk` ↑
+	`zl` →
+
+
+==============================================================================
+INTERFACE					*vim9skkp-interface*
+
+------------------------------------------------------------------------------
+VARIABLES					*vim9skkp-variables*
+
+g:vim9skkp_status					*g:vim9skkp_mode*
+	現在のvim9skkpの状態をあらわすdictionaryです
+	statuslineなどにお使いください
+	以下の様にユーザーイベントを利用するとリアルタイムで更新できます
+>
+	autocmd User Vim9skkStatusChanged redraws!
+<
+	active
+		vim9skkpが起動している場合true、
+		それ以外の場合false
+	mode
+		入力モード
+		g:vim9skkp.mode_labelに対応する文字列
+	midasi
+		見出しモードならtrue、それ以外ならfalse
+	sticky_shift
+		スティッキーシフトによってシフトが有効ならtrue、
+		それ以外ならfalse
+
+g:vim9skkp					*g:vim9skkp*
+	各種設定のためのdictionaryです
+
+	TODO: vim-vim9skk(p無し)からコピーして編集したので嘘が残ってるかも
+
+	jisyo
+		辞書ファイルのパスの配列
+		`ファイル名:文字コード`の形式
+		ワイルドカードはvim9skkpの初回起動時に展開します
+	jisyo_user
+		ユーザー辞書ファイルのパス
+	jisyo_recent
+		「最後に実行した変換」辞書ファイルのパス
+		「最後に実行した変換」辞書はvimを閉じるときに保存されます
+	recent
+		「最後に実行した変換」辞書の最大件数
+	marker_okuri
+		送り仮名のマーカーです
+		デフォルト: `*`
+	mode_label
+		現在の入力モードを表す文字です
+	popup_maxheight
+		変換候補の最大表示行数です
+		0で非表示
+	search_limit
+		候補探索の試行上限です
+	keymap
+		キーマップです
+		文字列または文字列の配列で指定します
+		空配列を指定すると割り当て無しにできます
+		toggle
+			vim9skkpのオンオフをトグルします
+			全角英数モードやabbrevモードの場合は、ひらがなモードへ切り替えます
+		enable
+			vim9skkpを有効にします
+		disable
+			vim9skkpを無効にします
+		terminal
+			terminalに入力するための入力プロンプトを表示します
+		kana
+			カナモードをトグルします
+		hankaku
+			半角カナモードをトグルします
+		alphabet
+			全角英数モードをトグルします
+		abbr
+			abbrevモードをトグルします
+		hira
+			ひらがなモードへ切り替えます
+		midasi
+			見出しモードへ切り替えます
+		midasi_toggle
+			見出しモードをトグルします
+		select
+			選択モードへ切り替えます
+			既に選択モードの場合は、次の候補を選択します
+			見出しモードでない場合は無効です
+		next
+			次の候補を選択します
+		prev
+			前の候補を選択します
+		select_top
+			先頭の候補で確定します
+		complete
+			変換を確定します
+		top
+			一番上の変換候補で確定します
+		delete
+			選択中の候補をユーザー辞書と変換履歴から
+			削除します
+		cancel
+			以下の通りです
+			選択モード中: 変換をキャンセルし見出しモードに移行
+			見出しモード中: 見出しモードのまま入力を削除
+			入力無し: vim9skkpをクローズ
+		sticky_shift: [],
+			所謂スティッキーシフトです
+
+	roman_table
+		ローマ字入力の追加・上書き設定です
+		例: `{ kn: 'かん' }`
+	getcurpos
+		画面上のカーソル位置を返却するfuncrefです
+		ポップアップなどの表示位置を微調整したい場合は
+		以下の関数を用意しカーソル位置を返却してください
+		引数posはvim9skkpが算出したカーソル位置です
+>
+		foo(pos: any): any
+<
+	keep_midasi_mode
+		vim9skkpが有効になったとき、変換が確定したときに
+		即座に見出しモードに移行します
+
+	auto_commit_regex:
+		見出しモードで入力値がこの正規表現にマッチしたとき
+		即座に確定します
+
+	auto_suggest_regex:
+		見出しモードで入力値がこの正規表現にマッチしたとき
+		変換を開始します
+
+	hide_cursor
+		trueの場合、vim9skkp起動中にカーソルを非表示します
+
+	NOTE:
+		カスタマイズする際は、デフォルトから変更したい項目だけを
+		セットすればよいです
+>
+	g:vim9skkp = {
+	  keymap: {
+	    sticky_shift: ';',
+	  }
+	}
+<
+	デフォルトは以下です
+>
+	{
+	  jisyo: ['~/SKK-JISYO.L:EUC-JP', '~/SKK-JISYO.*.utf8:UTF8'],
+	  jisyo_user: '~/VIM9SKKP-JISYO.user',
+	  jisyo_recent: '~/VIM9SKKP-JISYO.recent',
+	  recent: 1000,
+	  marker_okuri: '*',
+	  mode_label: {
+	    off: '_A',
+	    hira: 'あ',
+	    kata: 'ア',
+	    hankaku: 'ｶﾅ',
+	    alphabet: 'Ａ',
+	    abbr: 'ab',
+	    midasi: '▽',
+	  },
+	  zindex: 50,
+	  popup_maxheight: 20,
+	  search_limit: 100,
+	  keymap: {
+	    enable: [],
+	    disable: [],
+	    toggle: "\<C-j>",
+	    terminal: "\<C-j>",
+	    hira: [],
+	    kata: 'q',
+	    hankaku: "\<C-q>",
+	    alphabet: 'L',
+	    abbr: '/',
+	    midasi: 'Q',
+	    select: [' '],
+	    next: "\<Tab>",
+	    prev: ["\<S-Tab>", 'x'],
+	    top: '.',
+	    commit: "\<CR>",
+	    cancel: ["\<C-g>", "\<Esc>"],
+	    delete: "\<C-d>",
+	    sticky_shift: [],
+	  },
+	  roman_table: {},
+	  keep_midasi_mode: false,
+	  auto_commit_regex: '[ をヲ、。「」]',
+	  auto_suggest_regex: '*[っッ]\?[^a-zA-Zっッ]$',
+	  getcurpos: vim9skkp#NoChangeCurPos,
+	  hide_cursor: true,
+	}
+<
+
+------------------------------------------------------------------------------
+COMMANDS					*vim9skkp-commands*
+
+:Vim9skkTerminalInput				*:Vim9skkTerminalInput*
+	terminalに入力するための入力プロンプトを表示します
+
+:Vim9skkReloadJisyo				*:Vim9skkReloadJisyo*
+	辞書を再読み込みします
+
+:Vim9skkRegisterToUserJisyo			*:Vim9skkRegisterToUserJisyo*
+	ユーザー辞書に登録します
+
+
+------------------------------------------------------------------------------
+FUNCTIONS					*vim9skkp-functions*
+
+vim9skkp#Enable()				*vim9skkpEnable*
+	vim9skkpを有効にします
+
+vim9skkp#Disable()				*vim9skkpDisable*
+	vim9skkpを無効にします
+
+vim9skkp#Toggle()				*vim9skkpToggle*
+	有効・無効を切り替えます
+
+vim9skkp#ReadJisyo({パス})			*vim9skkpReadJisyo*
+	パスで指定した辞書を読み込み、
+	{ line: list<string>, enc: string }
+	をreturnします
+
+------------------------------------------------------------------------------
+EVENTS						*vim9skkp-events*
+
+Vim9skkpStatusChanged				*Vim9skkpModeChanged*
+	`g:vim9skkp_status`が変更されたときに発火します
+
+
+------------------------------------------------------------------------------
+HIGHLIGHTS					*vim9skkp-highlights*
+
+Vim9skkp	入力値の色
+Vim9skkpBlur	非アクティブ時(変換候補がなくユーザー辞書登録となったとき)の入力値の色
+
+==============================================================================
+TODO						*vim9skkp-todo*
+
+- [ ] もっと設定できるようにする
+- [ ] テストを作る
+
+
+==============================================================================
+KNOWN ISSUES					*vim9skkp-knwonissues*
+
+tabpanelが左に表示されているとコマンドラインで表示がずれます
+プラグインでは対応できないのでtabpanelを右に表示するなどしてください
+
+==============================================================================
+vim:tw=78:ts=8:ft=help:norl:noet:fen:
