@@ -127,7 +127,6 @@ def SetupAutocmd()
     # subwinが発行するイベント
     au User vim9skkp-s-select M.SetText(S.selected)
     au User vim9skkp-s-commit {
-      const c = S.cands[S.index]
       J.AddRecent(S.src, S.cands[S.index])
       J.AddHistory(S.selected)
       M.Commit()
