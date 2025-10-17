@@ -22,7 +22,7 @@ export def Popup()
     winid = popup_create('', { zindex: g:vim9skkp.zindex })
   endif
   win_execute(winid, 'syntax match Vim9skkp /./')
-  win_execute(winid, 'syntax match Vim9skkpCursor /.$/')
+  win_execute(winid, 'syntax match Vim9skkpCursorAct /.$/')
   chartype = C.Type.Hira
   midasi = g:vim9skkp.keep_midasi_mode
   SetText('')

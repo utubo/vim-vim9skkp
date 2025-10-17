@@ -13,7 +13,7 @@ import './userjisyo.vim' as UJ
 
 var initialized = false
 var timerForCheckPopupExists = 0
-var t_ve_bak = ''
+var bak = { t_ve: '', curhl: null }
 
 # 初期化 {{{
 def Init()
@@ -46,10 +46,7 @@ export def Popup()
     { repeat: -1 }
   )
   FollowCursor()
-  if g:vim9skkp.hide_cursor && !t_ve_bak
-    t_ve_bak = &t_ve
-    set t_ve=
-  endif
+  HideCursor()
   redraw
   doautocmd User Vim9skkpStatusChanged
 enddef
@@ -180,12 +177,39 @@ export def Close()
   M.Close()
   S.Reset()
   S.Close()
-  if g:vim9skkp.hide_cursor && !!t_ve_bak
-    &t_ve = t_ve_bak
-    t_ve_bak = ''
-  endif
+  RestoreCursor()
   doautocmd User Vim9skkpStatusChanged
   redraw
+enddef
+
+def HideCursor()
+  if !g:vim9skkp.hide_cursor
+    hi! link Vim9skkpCursorAct Vim9skkpCursor
+    return
+  endif
+  if !bak.t_ve
+    bak.t_ve = &t_ve
+    set t_ve=
+  endif
+  if !bak.curhl
+    bak.curhl = hlget('Cursor')
+    [hlget('Vim9skkpCursor', true)[0]
+        ->copy()
+        ->extend({ name: 'Vim9skkpCursorAct' })
+    ]->hlset()
+    hi! Cursor None
+  endif
+enddef
+
+def RestoreCursor()
+  if !!bak.t_ve
+    &t_ve = bak.t_ve
+    bak.t_ve = ''
+  endif
+  if !!bak.curhl
+    hlset(bak.curhl)
+    bak.curhl = null
+  endif
 enddef
 
 export def Toggle()
