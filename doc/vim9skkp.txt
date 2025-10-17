@@ -259,13 +259,13 @@ g:vim9skkp					*g:vim9skkp*
 ------------------------------------------------------------------------------
 COMMANDS					*vim9skkp-commands*
 
-:Vim9skkTerminalInput				*:Vim9skkTerminalInput*
+:Vim9skkpTerminalInput				*:Vim9skkpTerminalInput*
 	terminalに入力するための入力プロンプトを表示します
 
-:Vim9skkReloadJisyo				*:Vim9skkReloadJisyo*
+:Vim9skkpReloadJisyo				*:Vim9skkpReloadJisyo*
 	辞書を再読み込みします
 
-:Vim9skkRegisterToUserJisyo			*:Vim9skkRegisterToUserJisyo*
+:Vim9skkpRegisterToUserJisyo [{読み}]		*:Vim9skkpRegisterToUserJisyo*
 	ユーザー辞書に登録します
 
 
