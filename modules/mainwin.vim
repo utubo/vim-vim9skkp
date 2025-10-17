@@ -250,8 +250,9 @@ def ChangeCharType(key: string): bool
         Commit()
         return true
       else
-        ToggleCharType(t)
-        SetMidasiMode(false)
+        noautocmd SetMidasiMode(false)
+        noautocmd ToggleCharType(t)
+        doautocmd User Vim9skkpStatusChanged
       endif
       break
     endif
@@ -265,6 +266,7 @@ export def ToggleCharType(ct: C.Type)
   else
     chartype = ct
   endif
+  doautocmd User Vim9skkpStatusChanged
 enddef
 
 export def Commit()
