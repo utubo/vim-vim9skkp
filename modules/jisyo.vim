@@ -226,7 +226,7 @@ enddef
 
 # 変換履歴と入力履歴 {{{
 export def AddRecent(_before: string, after: string)
-  var before = after =~ ';変換履歴'
+  var before = after =~ ';変換履歴 .\+'
     ? after->substitute('.*;変換履歴 ', '', '')
     : _before
   if !before || !after
