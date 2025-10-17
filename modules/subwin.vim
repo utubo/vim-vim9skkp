@@ -133,7 +133,12 @@ export def Filter(key: string, _: bool): bool
     Show()
   elseif g:vim9skkp.keymap.delete->Contains(key)
     cands = J.DeleteCand(cands, cands[index])
-    Select(index)
+    if !cands
+      Reset()
+      Show()
+    else
+      Select(index)
+    endif
   else
     return false
   endif

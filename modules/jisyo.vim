@@ -290,7 +290,7 @@ export def GetHistory(text: string = ''): list<string>
 enddef
 
 export def GetRecentAndHistory(text: string): list<string>
-  return (GetHistory(text) + GetRecent(text, '入力履歴'))->Uniq()
+  return (GetHistory(text) + GetRecent(text, '変換履歴'))->Uniq()
 enddef
 # }}}
 
