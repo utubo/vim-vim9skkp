@@ -58,11 +58,13 @@ enddef
 # 入力制御の大枠
 export def Filter(key: string, mapping: bool): bool
   if FilterImpl(key, mapping)
+    SetStickyShift(false)
     return true
   endif
   if mapping
     # 処理対象外なら入力中のものは確定してしまう
     Commit()
+    SetStickyShift(false)
   endif
   return false
 enddef
@@ -72,8 +74,6 @@ def FilterImpl(_key: string, mapping: bool): bool
   var key = _key
   if sticky_shift
     key = key->toupper()
-    sticky_shift = false
-    doautocmd User Vim9skkpStatusChanged
   endif
   if U.IsBackSpace(key)
     return BackSpace(mapping)
@@ -115,6 +115,13 @@ def FilterImpl(_key: string, mapping: bool): bool
   return ret
 enddef
 
+def SetStickyShift(b: bool)
+  if sticky_shift !=# b
+    sticky_shift = b
+    doautocmd User Vim9skkpStatusChanged
+  endif
+enddef
+
 def IgnoreKeys(key: string): bool
   return Contains([
     # カーソル移動されると面倒なので
@@ -139,8 +146,7 @@ def CommonFunctions(key: string): bool
   elseif Select(key)
     return true
   elseif g:vim9skkp.keymap.sticky_shift->Contains(key)
-    sticky_shift = true
-    doautocmd User Vim9skkpStatusChanged
+    SetStickyShift(true)
     return true
   else
     return false
