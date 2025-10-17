@@ -13,7 +13,7 @@ import './userjisyo.vim' as UJ
 
 var initialized = false
 var timerForCheckPopupExists = 0
-var bak = { t_ve: '', curhl: null }
+var bak = { t_ve: '', gcr: '' }
 
 # 初期化 {{{
 def Init()
@@ -191,13 +191,9 @@ def HideCursor()
     bak.t_ve = &t_ve
     set t_ve=
   endif
-  if !bak.curhl
-    bak.curhl = hlget('Cursor')
-    [hlget('Vim9skkpCursor', true)[0]
-        ->copy()
-        ->extend({ name: 'Vim9skkpCursorAct' })
-    ]->hlset()
-    hi! Cursor None
+  if !bak.gcr
+    bak.gcr = &guicursor
+    set gcr=n-v-c:ve
   endif
 enddef
 
@@ -206,9 +202,9 @@ def RestoreCursor()
     &t_ve = bak.t_ve
     bak.t_ve = ''
   endif
-  if !!bak.curhl
-    hlset(bak.curhl)
-    bak.curhl = null
+  if !!bak.gcr
+    &guicursor = bak.gcr
+    bak.gcr = ''
   endif
 enddef
 
