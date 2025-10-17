@@ -198,7 +198,7 @@ def HideCursor()
   endif
   if !bak.gcr
     bak.gcr = &guicursor
-    set guicursor=n-v-c:ve
+    set guicursor=i-c:CursorTransparent
   endif
 enddef
 
