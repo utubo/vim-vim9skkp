@@ -226,13 +226,13 @@ enddef
 
 # 変換履歴と入力履歴 {{{
 export def AddRecent(_before: string, after: string)
-  if after =~ ';入力履歴$'
+  if !after || after =~ ';入力履歴$'
     return
   endif
   var before = after =~ ';変換履歴 .\+'
     ? after->substitute('.*;変換履歴 ', '', '')
     : _before
-  if !before || !after
+  if !before
     return
   endif
   # 新規に追加する行
