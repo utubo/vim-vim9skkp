@@ -193,7 +193,7 @@ def HideCursor()
   endif
   if !bak.gcr
     bak.gcr = &guicursor
-    set gcr=n-v-c:ve
+    set guicursor=n-v-c:ve
   endif
 enddef
 
