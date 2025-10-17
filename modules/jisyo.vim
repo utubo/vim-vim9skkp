@@ -195,7 +195,7 @@ export def DeleteCand(cands: list<string>, cand: string): list<string>
   endif
   recent.lines = ReadRecent()->DeleteCandFromJisyo(c)
   SetSaveRecent()
-  if exists(jisyo, g:vim9skkp.jisyo_user)
+  if jisyo->has_key(g:vim9skkp.jisyo_user)
     jisyo[g:vim9skkp.jisyo_user].lines =
       ReadJisyo(g:vim9skkp.jisyo_user)->DeleteCandFromJisyo(c)
     WriteJisyo(jisyo[g:vim9skkp.jisyo_user].lines, g:vim9skkp.jisyo_user)
