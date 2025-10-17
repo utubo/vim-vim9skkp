@@ -209,8 +209,10 @@ def DeleteCandFromJisyo(j: any, cand: string): list<string>
   for line in j.lines
     if line->stridx(w) !=# -1 || line->stridx(w2) !=# -1
       var [k, v] = line->IconvFrom(j.enc)->Split(' ')
-      v = v->split('/')->ExcludeCand(cand)->join('/')
-      newlines += [$'{k} /{v}/'->IconvTo(j.enc)]
+      const excluded  = v->split('/')->ExcludeCand(cand)
+      if !!excluded
+        newlines += [$'{k} /{excluded}/'->IconvTo(j.enc)]
+      endif
     else
       newlines += [line]
     endif
