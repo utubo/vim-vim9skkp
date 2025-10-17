@@ -41,17 +41,16 @@ def Filter(_: number, key: string): bool
     return true
   elseif M.Filter(key, m)
     return true
-  endif
-
-  # 一旦mapping: trueにしてマッピング済みの入力をFilterで受けなおす
-  if !m
+  elseif m
+    return false
+  else
+    # 一旦mapping: trueにしてマッピング済みの入力をFilterで受けなおす
     popup_setoptions(M.winid, { mapping: true })
     mapping = true
     feedkeys(key, 'i')
-    return true
   endif
 
-  return false
+  return true
 enddef
 
 def CtrlR(key: string): bool
