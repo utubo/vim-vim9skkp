@@ -100,6 +100,7 @@ export def GetAllCands(text: string): list<any>
     ->matchstr('^.')
   const yomi = $'{gokan_key}{C.okuri_table->get(okuri_key, '')}' # `ほげf`
   cands += GetCandsFromJisyo(g:vim9skkp.jisyo_recent, yomi)
+    ->filter((k, v): bool => k < g:vim9skkp.recent_per_yomi)
     ->map((k, v): string => $'{v};変換履歴')
   cands += GetCandsFromJisyo(g:vim9skkp.jisyo_user, yomi)
     ->map((k, v): string => $'{v};ユーザー辞書')
@@ -224,7 +225,10 @@ enddef
 # }}}
 
 # 変換履歴と入力履歴 {{{
-export def AddRecent(before: string, after: string)
+export def AddRecent(_before: string, after: string)
+  var before = after =~ ';変換履歴'
+    ? after->substitute('.*;変換履歴 ', '', '')
+    : _before
   if !before || !after
     return
   endif
@@ -249,7 +253,7 @@ export def AddRecent(before: string, after: string)
   SetSaveRecent()
 enddef
 
-def GetRecent(text: string, detail: string = '変換履歴'): list<string>
+def GetRecent(text: string): list<string>
   if !text
     return []
   endif
@@ -258,15 +262,13 @@ def GetRecent(text: string, detail: string = '変換履歴'): list<string>
   var cands = []
   for l in j.lines
     if l->StartsWith(head)
-      cands += l
-        ->IconvFrom(j.enc)
-        ->Split(' ')[1]
+      const kv = l->IconvFrom(j.enc)->Split(' ')
+      cands += kv[1]
         ->split('/')
+        ->map((k, v): string => $'{v};変換履歴 {kv[0]}')
     endif
   endfor
   return cands
-    ->Uniq()
-    ->map((k, v): string => $'{v};{detail}')
 enddef
 
 export def AddHistory(next_word: string)
@@ -294,7 +296,7 @@ export def GetHistory(text: string = ''): list<string>
 enddef
 
 export def GetRecentAndHistory(text: string): list<string>
-  return (GetHistory(text) + GetRecent(text, '変換履歴'))->Uniq()
+  return (GetHistory(text) + GetRecent(text))->Uniq()
 enddef
 # }}}
 

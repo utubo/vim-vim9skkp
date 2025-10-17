@@ -110,6 +110,8 @@ g:vim9skkp					*g:vim9skkp*
 		「最後に実行した変換」辞書はvimを閉じるときに保存されます
 	recent
 		「最後に実行した変換」辞書の最大件数
+	recent_per_yomi
+		「最後に実行した変換」辞書の一つの読みに対する最大候補数
 	marker_okuri
 		送り仮名のマーカーです
 		デフォルト: `*`
@@ -214,6 +216,7 @@ g:vim9skkp					*g:vim9skkp*
 	  jisyo_user: '~/VIM9SKKP-JISYO.user',
 	  jisyo_recent: '~/VIM9SKKP-JISYO.recent',
 	  recent: 1000,
+	  recent_per_yomi: 1,
 	  marker_okuri: '*',
 	  mode_label: {
 	    off: '_A',

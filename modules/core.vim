@@ -128,9 +128,7 @@ def SetupAutocmd()
     au User vim9skkp-s-select M.SetText(S.selected)
     au User vim9skkp-s-commit {
       const c = S.cands[S.index]
-      if c !~ ';変換履歴' # TODO:変換履歴の更新をしたい
-        J.AddRecent(S.src, S.cands[S.index])
-      endif
+      J.AddRecent(S.src, S.cands[S.index])
       J.AddHistory(S.selected)
       M.Commit()
     }

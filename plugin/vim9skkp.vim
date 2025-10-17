@@ -6,6 +6,7 @@ var default = {
   jisyo_user: '~/VIM9SKKP-JISYO.user',
   jisyo_recent: '~/VIM9SKKP-JISYO.recent',
   recent: 1000,
+  recent_per_yomi: 1,
   marker_okuri: '*',
   mode_label: {
     off: '_A',
