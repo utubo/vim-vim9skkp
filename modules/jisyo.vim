@@ -158,19 +158,20 @@ def WriteJisyo(lines: list<string>, path: string, flags: string = '')
   endif
 enddef
 
-export def AddUserWord(key: string, value: string)
-  const newline = $'{key} /{value}/'
+export def AddUserWord(key: string, value: string): bool
   var j = ReadJisyo(g:vim9skkp.jisyo_user)
-  j.lines += [newline->IconvTo(j.enc)]
+  const newline = $'{key} /{value}/'->IconvTo(j.enc)
   if index(j.lines, newline) !=# -1
-    return
+    return false
   endif
+  j.lines += [newline]
   WriteJisyo(j.lines, g:vim9skkp.jisyo_user, 'a')
   # 候補探索用の辞書にはソート済のものをセットする
   jisyo[g:vim9skkp.jisyo_user] = {
     lines: j.lines->copy()->sort(),
     enc: j.enc,
   }
+  return true
 enddef
 
 def ReadRecent(): dict<any>

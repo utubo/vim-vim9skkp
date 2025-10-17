@@ -40,8 +40,8 @@ export def Register(_yomi: string, is_instant: bool): string
     if !value
       echo 'キャンセルしました'
     else
-      J.AddUserWord(_yomi, value)
-      echo '登録しました'
+      const r = J.AddUserWord(_yomi, value)
+      echo r ? '登録しました' : '登録済みです'
     endif
     if is_instant
       EndOfInstant(value)
