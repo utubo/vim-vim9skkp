@@ -89,14 +89,14 @@ def SetupAutocmd()
     au ModeChanged *:[nt] Close()
 
     # mainwinが発行するイベント
-    au vim9skkp User vim9skkp-m-toggle Toggle()
-    au vim9skkp User vim9skkp-m-settext OnSetText()
-    au vim9skkp User vim9skkp-m-before-add-char {
+    au User vim9skkp-m-toggle Toggle()
+    au User vim9skkp-m-settext OnSetText()
+    au User vim9skkp-m-before-add-char {
       if S.index !=# -1
         M.Commit()
       endif
     }
-    au vim9skkp User vim9skkp-m-start {
+    au User vim9skkp-m-start {
       if S.index ==# -1
         M.PreStart()
         S.ShowCands(M.text)
@@ -105,7 +105,7 @@ def SetupAutocmd()
         endif
       endif
     }
-    au vim9skkp User vim9skkp-m-commit {
+    au User vim9skkp-m-commit {
       if M.active
         S.Reset()
         S.cands = J.GetHistory()
@@ -116,7 +116,7 @@ def SetupAutocmd()
         endif
       endif
     }
-    au vim9skkp User vim9skkp-m-cancel {
+    au User vim9skkp-m-cancel {
       if !M.text
         Close()
       else
@@ -125,15 +125,20 @@ def SetupAutocmd()
     }
 
     # subwinが発行するイベント
-    au vim9skkp User vim9skkp-s-select M.SetText(S.selected)
-    au vim9skkp User vim9skkp-s-commit {
-      J.AddRecent(S.yomi, S.cands[S.index])
+    au User vim9skkp-s-select M.SetText(S.selected)
+    au User vim9skkp-s-commit {
+      J.AddRecent(S.src, S.cands[S.index])
       J.AddHistory(S.selected)
       M.Commit()
     }
+    au User vim9skkp-s-cancel {
+      M.SetText(S.src)
+      S.Reset()
+      S.Show()
+    }
 
     # global
-    au vim9skkp User Vim9skkpStatusChanged {
+    au User Vim9skkpStatusChanged {
       g:vim9skkp_status.active = M.active
       if M.active
         g:vim9skkp_status.midasi = M.midasi && M.chartype !=# C.Type.Abbr
@@ -146,7 +151,7 @@ def SetupAutocmd()
         g:vim9skkp_status.sticky_shift = false
       endif
     }
-    au vim9skkp User vim9skkp-abort {
+    au User vim9skkp-abort {
       try
         Close()
       catch
@@ -161,10 +166,10 @@ def OnSetText()
     return
   endif
   if S.index ==# -1 && M.midasi
-    S.cands = J.GetRecentAndHistory(M.text)
-    S.UnSelect()
+    S.ShowRecentAndHistory(M.text)
+  else
+    S.Show()
   endif
-  S.Show()
   FollowCursor()
   redraw
 enddef

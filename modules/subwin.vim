@@ -10,6 +10,7 @@ const Contains = U.Contains
 export var winid = 0
 export var winpos: dict<any> = { col: 0, line: 0 }
 export var cands: list<string>  = []
+export var src = ''
 export var yomi = ''
 export var okuri = ''
 export var index = -1
@@ -69,6 +70,7 @@ enddef
 export def ShowCands(text: string = '')
   Create()
   if !!text
+    src = text
     [cands, yomi, okuri] = J.GetAllCands(text)
   endif
   if !cands
@@ -87,6 +89,13 @@ export def ShowCands(text: string = '')
     popup_setoptions(winid, { cursorline: true })
     Select(1)
   endif
+enddef
+
+export def ShowRecentAndHistory(text: string)
+  src = text
+  cands = J.GetRecentAndHistory(text)
+  UnSelect()
+  Show()
 enddef
 
 def Select(i: number)
@@ -128,14 +137,11 @@ export def Filter(key: string, _: bool): bool
   elseif g:vim9skkp.keymap.commit->Contains(key)
     doautocmd User vim9skkp-s-commit
   elseif g:vim9skkp.keymap.cancel->Contains(key)
-    Select(0)
-    Reset()
-    Show()
+    doautocmd User vim9skkp-s-cancel
   elseif g:vim9skkp.keymap.delete->Contains(key)
     cands = J.DeleteCand(cands, cands[index])
     if !cands
-      Reset()
-      Show()
+      doautocmd User vim9skkp-s-cancel
     else
       Select(index)
     endif
