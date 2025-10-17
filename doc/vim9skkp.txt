@@ -75,7 +75,7 @@ INTERFACE					*vim9skkp-interface*
 ------------------------------------------------------------------------------
 VARIABLES					*vim9skkp-variables*
 
-g:vim9skkp_status					*g:vim9skkp_mode*
+g:vim9skkp_status					*g:vim9skkp_status*
 	現在のvim9skkpの状態をあらわすdictionaryです
 	statuslineなどにお使いください
 	以下の様にユーザーイベントを利用するとリアルタイムで更新できます
@@ -171,7 +171,6 @@ g:vim9skkp					*g:vim9skkp*
 			入力無し: vim9skkpをクローズ
 		sticky_shift: [],
 			所謂スティッキーシフトです
-
 	roman_table
 		ローマ字入力の追加・上書き設定です
 		例: `{ kn: 'かん' }`
@@ -202,11 +201,11 @@ g:vim9skkp					*g:vim9skkp*
 		カスタマイズする際は、デフォルトから変更したい項目だけを
 		セットすればよいです
 >
-	g:vim9skkp = {
-	  keymap: {
-	    sticky_shift: ';',
-	  }
-	}
+		g:vim9skkp = {
+		  keymap: {
+		    sticky_shift: ';',
+		  }
+		}
 <
 	デフォルトは以下です
 >
@@ -312,7 +311,7 @@ KNOWN ISSUES					*vim9skkp-knwonissues*
 
 - tabpanelが左に表示されているとコマンドラインで表示がずれます
   プラグインでは対応できないのでtabpanelを右に表示するなどしてください
-- ハイライトが微妙
+- ハイライトが微妙(とういうか無いに等しい)
 - その他バグ
   - ユーザー辞書登録後に挿入位置がずれる
   - 変換した候補が先頭にこないことがある
