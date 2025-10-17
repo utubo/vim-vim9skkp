@@ -59,10 +59,10 @@ enddef
 export def Filter(key: string, mapping: bool): bool
   if FilterImpl(key, mapping)
     return true
-  elseif mapping
+  endif
+  if mapping
     # 処理対象外なら入力中のものは確定してしまう
     Commit()
-    au SafeStateAgain * ++once doautocmd User vim9skkp-m-settext
   endif
   return false
 enddef
