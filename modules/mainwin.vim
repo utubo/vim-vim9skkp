@@ -77,11 +77,11 @@ def FilterImpl(_key: string, mapping: bool): bool
   endif
   if U.IsBackSpace(key)
     return BackSpace(mapping)
-  elseif CommonFunctions(key)
+  elseif InputAlphabet(key)
     return true
   elseif IgnoreKeys(key)
     return true
-  elseif InputAlphabet(key)
+  elseif CommonFunctions(key)
     return true
   elseif ChangeCharType(key)
     doautocmd User Vim9skkpStatusChanged
