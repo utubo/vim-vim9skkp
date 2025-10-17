@@ -55,24 +55,17 @@ enddef
 
 # キー入力制御 {{{
 
-# 入力制御の大枠 {{{
-export def NoMappedFilter(key: string): bool
-  return FilterImpl(key, false)
-  # 処理対象外はマッピングを適用してMappedFilterへ処理を渡す
-enddef
-
-export def MappedFilter(key: string): bool
-  # NOTE: FilterImplのelseif mappingの中だけやるのもアリだが
-  # 一応丸っとNoMappedFilterと同じことをしておく
-  if FilterImpl(key, true)
+# 入力制御の大枠
+export def Filter(key: string, mapping: bool): bool
+  if FilterImpl(key, mapping)
     return true
+  elseif mapping
+    # 処理対象外なら入力中のものは確定してしまう
+    Commit()
+    au SafeStateAgain * ++once doautocmd User vim9skkp-m-settext
   endif
-  # 処理対象外なら入力中のものは確定してしまう
-  Commit()
-  au SafeStateAgain * ++once doautocmd User vim9skkp-m-settext
   return false
 enddef
-# }}}
 
 # 入力制御のメイン
 def FilterImpl(_key: string, mapping: bool): bool

@@ -27,11 +27,31 @@ def Filter(_: number, key: string): bool
     return false
   elseif CtrlR(key)
     return false
-  elseif mapping
-    return MappedFilter(key)
-  else
-    return NoMappedFilter(key)
   endif
+
+  # マッピング済みの入力を受け取ったらポップアップのmappingを元に戻しておく
+  const m = mapping
+  if m
+    popup_setoptions(M.winid, { mapping: false })
+    mapping = false
+  endif
+
+  # キー処理メイン
+  if S.Filter(key, m)
+    return true
+  elseif M.Filter(key, m)
+    return true
+  endif
+
+  # 一旦mapping: trueにしてマッピング済みの入力をFilterで受けなおす
+  if !m
+    popup_setoptions(M.winid, { mapping: true })
+    mapping = true
+    feedkeys(key, 'i')
+    return true
+  endif
+
+  return false
 enddef
 
 def CtrlR(key: string): bool
@@ -40,35 +60,6 @@ def CtrlR(key: string): bool
     timer_start(10, (_) => {
       ctrlr = false
     })
-    return true
-  else
-    return false
-  endif
-enddef
-
-# TODO: 最初のころはM.NoMappedFilterとM.MappedFilterで中身が結構違ったけど
-# 今はほぼ同じなのでこの2つのメソッドは分けなくてもいいかな…？
-
-def NoMappedFilter(key: string): bool
-  if S.NoMappedFilter(key)
-    return true
-  elseif M.NoMappedFilter(key)
-    return true
-  else
-    # 一旦mapping: trueにしてマッピング済みの入力を受け入れる
-    popup_setoptions(M.winid, { mapping: true })
-    mapping = true
-    feedkeys(key, 'i')
-    return true
-  endif
-enddef
-
-def MappedFilter(key: string): bool
-  popup_setoptions(M.winid, { mapping: false })
-  mapping = false
-  if S.MappedFilter(key)
-    return true
-  elseif M.MappedFilter(key)
     return true
   else
     return false

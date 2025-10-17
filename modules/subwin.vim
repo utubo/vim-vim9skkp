@@ -110,7 +110,7 @@ export def Reset()
   UnSelect()
 enddef
 
-export def NoMappedFilter(key: string): bool
+export def Filter(key: string, _: bool): bool
   if cands->empty()
     return false
   elseif U.IsBackSpace(key)
@@ -138,9 +138,5 @@ export def NoMappedFilter(key: string): bool
     return false
   endif
   return true
-enddef
-
-export def MappedFilter(key: string): bool
-  return NoMappedFilter(key)
 enddef
 
