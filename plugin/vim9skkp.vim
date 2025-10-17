@@ -60,9 +60,9 @@ g:vim9skkp_status = {
 # }}}
 
 # コマンド {{{
-command! Vim9skkTerminalInput vim9skkp#TerminalInput()
-command! Vim9skkRefreshJisyo vim9skkp#RefreshJisyo()
-command! -nargs=? Vim9skkRegisterToUserJisyo vim9skkp#RegisterToUserJisyo(<q-args>)
+command! Vim9skkpTerminalInput vim9skkp#TerminalInput()
+command! Vim9skkpRefreshJisyo vim9skkp#RefreshJisyo()
+command! -nargs=? Vim9skkpRegisterToUserJisyo vim9skkp#RegisterToUserJisyo(<q-args>)
 # }}}
 
 # キーマッピング {{{
