@@ -127,7 +127,10 @@ def SetupAutocmd()
     # subwinが発行するイベント
     au User vim9skkp-s-select M.SetText(S.selected)
     au User vim9skkp-s-commit {
-      J.AddRecent(S.src, S.cands[S.index])
+      const c = S.cands[S.index]
+      if c !~ ';変換履歴' # TODO:変換履歴の更新をしたい
+        J.AddRecent(S.src, S.cands[S.index])
+      endif
       J.AddHistory(S.selected)
       M.Commit()
     }
