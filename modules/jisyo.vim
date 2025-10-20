@@ -108,7 +108,9 @@ export def GetAllCands(text: string): list<any>
     cands += GetCandsFromJisyo(j, yomi)
   endfor
   cands = cands->Uniq()
-  if len(cands) ==# 0 && gokan =~# '[ゔーぱぴぷぺぽ]'
+  # NOTE: 参考
+  # https://www.bunka.go.jp/kokugo_nihongo/sisaku/joho/joho/kijun/naikaku/gairai
+  if gokan =~# '[ゔーぱぴぷぺぽ]\|[いうくぐしじつとふ][ぁぃぇぉ]\|[てで][ぃぅ]\|ふゅ'
     cands += [U.Tr(gokan, C.hira_chars, C.kata_chars) .. ';外来語']
   endif
   cands += [$'{gokan};無変換']
