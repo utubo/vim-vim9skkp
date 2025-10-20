@@ -83,7 +83,7 @@ export def ShowCands(text: string = '')
   var lines = []
   for k in cands
     const l = k->substitute(';', "\t", '')
-    const s = get(shortcut, i, '')
+    const s = get(shortcut, i, '')->keytrans()
     if !s
       lines += [l]
     else
