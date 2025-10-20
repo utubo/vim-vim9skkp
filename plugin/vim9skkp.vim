@@ -17,7 +17,7 @@ var default = {
     abbr: 'ab',
     midasi: '▽',
   },
-  zindex: 50,
+  zindex: 200,
   popup_maxheight: 20,
   search_limit: 100,
   keymap: {
