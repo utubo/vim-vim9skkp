@@ -71,7 +71,7 @@ enddef
 
 def CheckPopupExists(_: number)
   if !M.active
-  # NOP
+    doautocmd User vim9skkp-abort
   elseif !U.IsPopupExists(M.winid)
     doautocmd User vim9skkp-abort
   elseif !U.IsPopupExists(S.winid)
