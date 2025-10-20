@@ -90,7 +90,7 @@ export def GetAllCands(text: string): list<any>
   # `▽ほげ*ふが`を語幹と送り仮名に分割する
   const [gokan, okuri] = text
     ->Split(g:vim9skkp.marker_okuri)
-  var cands = [$'{gokan};無変換'] # 候補一つ目は無変換
+  var cands = []
   # 候補を検索する
   const gokan_key = gokan
     ->Tr(C.kata_chars, C.hira_chars)
@@ -108,9 +108,10 @@ export def GetAllCands(text: string): list<any>
     cands += GetCandsFromJisyo(j, yomi)
   endfor
   cands = cands->Uniq()
-  if len(cands) ==# 1 && gokan =~# '[ゔーぱぴぷぺぽ]'
-    cands += [U.Tr(gokan, C.hira_chars, C.kata_chars)]
+  if len(cands) ==# 0 && gokan =~# '[ゔーぱぴぷぺぽ]'
+    cands += [U.Tr(gokan, C.hira_chars, C.kata_chars) .. ';外来語']
   endif
+  cands += [$'{gokan};無変換']
   return [cands, yomi, okuri]
 enddef
 # }}}

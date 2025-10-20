@@ -15,6 +15,7 @@ export var yomi = ''
 export var okuri = ''
 export var index = -1
 export var selected = ''
+export var shortcut = []
 
 def Create()
   if U.IsPopupExists(winid)
@@ -24,7 +25,8 @@ def Create()
     hidden: true,
     tabpage: -1,
     maxheight: g:vim9skkp.popup_maxheight,
-    zindex: g:vim9skkp.zindex + 2,
+    zindex: g:vim9skkp.zindex,
+    wrap: false,
   })
 enddef
 
@@ -76,18 +78,27 @@ export def ShowCands(text: string = '')
   if !cands
     return
   endif
+  shortcut = U.ToList(g:vim9skkp.keymap.shortcut)
+  var i = 0
   var lines = []
   for k in cands
     const l = k->substitute(';', "\t", '')
-    lines += [l]
+    const s = get(shortcut, i, '')
+    if !s
+      lines += [l]
+    else
+      lines += [$'{s}:{l}']
+    endif
+    i += 1
   endfor
   popup_settext(winid, lines)
   win_execute(winid, 'setlocal tabstop=12')
   win_execute(winid, 'syntax match PMenuExtra /\t.*/')
+  win_execute(winid, 'syntax match PMenuKind /^.*:/')
   popup_show(winid)
   if !!text
     popup_setoptions(winid, { cursorline: true })
-    Select(1)
+    Select(0)
   endif
 enddef
 
@@ -119,6 +130,16 @@ export def Reset()
   UnSelect()
 enddef
 
+def ShortCut(key: string): bool
+  const i = shortcut->index(key)
+  if cands->len() - 1 < i
+    return false
+  endif
+  Select(i)
+  doautocmd User vim9skkp-s-commit
+  return true
+enddef
+
 export def Filter(key: string, _: bool): bool
   if cands->empty()
     return false
@@ -131,9 +152,8 @@ export def Filter(key: string, _: bool): bool
     Select(index + 1)
   elseif g:vim9skkp.keymap.prev->Contains(key)
     Select(index - 1)
-  elseif g:vim9skkp.keymap.top->Contains(key)
-    Select(!cands[0]->matchstr(';無変換$') ? 0 : 1)
-    doautocmd User vim9skkp-s-commit
+  elseif shortcut->Contains(key)
+    return ShortCut(key)
   elseif g:vim9skkp.keymap.commit->Contains(key)
     doautocmd User vim9skkp-s-commit
   elseif g:vim9skkp.keymap.cancel->Contains(key)

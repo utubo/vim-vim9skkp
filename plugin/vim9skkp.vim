@@ -34,7 +34,7 @@ var default = {
     select: [' '],
     next: "\<Tab>",
     prev: ["\<S-Tab>", 'x'],
-    top: '.',
+    shortcut: '.123456789'->split('\zs'),
     commit: "\<CR>",
     cancel: "\<C-g>",
     delete: "\<C-d>",

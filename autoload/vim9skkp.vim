@@ -4,6 +4,7 @@ import '../modules/const.vim' as C
 import '../modules/core.vim' as Core
 import '../modules/jisyo.vim' as J
 import '../modules/userjisyo.vim' as UJ
+import '../modules/subwin.vim' as S
 
 export def Enable()
   Core.Popup()
@@ -15,6 +16,10 @@ enddef
 
 export def Toggle()
   Core.Toggle()
+enddef
+
+export def RefreshCands()
+  S.Show()
 enddef
 
 export def NoChangeCurPos(popup_pos: any): any

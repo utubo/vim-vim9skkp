@@ -43,6 +43,15 @@ export def GetCharAtCursor(): string
   endif
 enddef
 
+# 引数が文字列の場合は文字列のリストにして返す
+export def ToList(s: any): list<string>
+  if type(s) ==# v:t_string
+    return [s]
+  else
+    return s
+  endif
+enddef
+
 # 文字列のリストが指定の文字列を含むか返す
 # keysがリストでない場合は[keys]として扱う
 export def Contains(keys: any, key: string): bool

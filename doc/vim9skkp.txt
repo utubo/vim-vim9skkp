@@ -157,12 +157,10 @@ g:vim9skkp					*g:vim9skkp*
 			次の候補を選択します
 		prev
 			前の候補を選択します
-		select_top
-			先頭の候補で確定します
+		shortcut
+			候補撰択のショートカットキーです
 		commit
 			変換を確定します
-		top
-			一番上の変換候補で確定します
 		delete
 			選択中の候補をユーザー辞書と変換履歴から
 			削除します
@@ -244,7 +242,7 @@ g:vim9skkp					*g:vim9skkp*
 	    select: [' '],
 	    next: "\<Tab>",
 	    prev: ["\<S-Tab>", 'x'],
-	    top: '.',
+	    shortcut: '.123456789'->split('\zs'),
 	    commit: "\<CR>",
 	    cancel: "\<C-g>",
 	    delete: "\<C-d>",
@@ -288,6 +286,9 @@ vim9skkp#ReadJisyo({パス})			*vim9skkpReadJisyo*
 	パスで指定した辞書を読み込み、
 	{ line: list<string>, enc: string }
 	をreturnします
+
+vim9skkp#RefreshCands()				*vim9skkpRefreshCands*
+	候補を再描画します
 
 ------------------------------------------------------------------------------
 EVENTS						*vim9skkp-events*
