@@ -128,8 +128,7 @@ enddef
 
 def SetSaveRecent()
   augroup vim9skkp-recent
-    au!
-    au VimLeavePre * SaveRecent()
+    au! VimLeavePre * SaveRecent()
   augroup END
 enddef
 

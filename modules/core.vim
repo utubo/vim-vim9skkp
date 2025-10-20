@@ -50,9 +50,8 @@ export def Popup()
   redraw
   doautocmd User Vim9skkpStatusChanged
   augroup vim9skkp-cursormoved
-    au!
     # NOTE: <C-r>=foo<CR>などでチラつくのでタイマーを挟む
-    au CursorMovedI,CursorMovedC * timer_start(0, FollowCursor)
+    au! CursorMovedI,CursorMovedC * timer_start(0, FollowCursor)
   augroup END
 enddef
 
@@ -183,9 +182,7 @@ enddef
 
 # SKKオンオフ {{{
 export def Close()
-  augroup vim9skkp-cursormoved
-    au!
-  augroup END
+  au! vim9skkp-cursormoved
   StopCheckPopupExists()
   M.SetText('')
   M.Close()
