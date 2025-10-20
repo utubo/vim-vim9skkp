@@ -49,11 +49,15 @@ export def Popup()
   HideCursor()
   redraw
   doautocmd User Vim9skkpStatusChanged
+  augroup vim9skkp-cursormoved
+    au!
+    # NOTE: <C-r>=foo<CR>などでチラつくのでタイマーを挟む
+    au CursorMovedI,CursorMovedC * timer_start(0, FollowCursor)
+  augroup END
 enddef
 
 # ポップアップウィンドウをカーソル付近に追従させる
-# NOTE: CursorMovedIやCursorMovedCで実行すると<C-r>=foo<CR>などのマッピングでチラつく
-def FollowCursor()
+def FollowCursor(_: number = 0)
   if M.active
     const c = g:vim9skkp.getcurpos(U.GetCurPos())
     M.FollowCursor(c)
@@ -77,9 +81,9 @@ def CheckPopupExists(_: number)
   elseif !U.IsPopupExists(S.winid)
     doautocmd User vim9skkp-abort
   elseif mode() ==# 'n'
+    # noautocmd normal! "\<Esc>"
+    # とかされると有効のままノーマルモードになってしまうので…
     doautocmd User vim9skkp-abort
-  else
-    FollowCursor()
   endif
 enddef
 # }}}
@@ -179,6 +183,9 @@ enddef
 
 # SKKオンオフ {{{
 export def Close()
+  augroup vim9skkp-cursormoved
+    au!
+  augroup END
   StopCheckPopupExists()
   M.SetText('')
   M.Close()
