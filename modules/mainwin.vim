@@ -148,6 +148,9 @@ def CommonFunctions(key: string): bool
   elseif g:vim9skkp.keymap.sticky_shift->Contains(key)
     SetStickyShift(true)
     return true
+  elseif g:vim9skkp.keymap.userjisyo->Contains(key)
+    doautocmd User vim9skkp-userjisyo
+    return true
   else
     return false
   endif

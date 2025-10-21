@@ -164,6 +164,9 @@ g:vim9skkp					*g:vim9skkp*
 		delete
 			選択中の候補をユーザー辞書と変換履歴から
 			削除します
+		userjisyo
+			変換候補が見つからなかった場合と同様に
+			ユーザー辞書登録のプロンプトを起動します
 		cancel
 			以下の通りです
 			選択モード中: 変換をキャンセルし見出しモードに移行
@@ -246,6 +249,7 @@ g:vim9skkp					*g:vim9skkp*
 	    commit: "\<CR>",
 	    cancel: "\<C-g>",
 	    delete: "\<C-d>",
+	    userjisyo: "\<C-u>",
 	    sticky_shift: [],
 	  },
 	  roman_table: {},

@@ -141,7 +141,6 @@ def SetupAutocmd()
       S.Reset()
       S.Show()
     }
-
     # global
     au User Vim9skkpStatusChanged {
       g:vim9skkp_status.active = M.active
@@ -154,6 +153,15 @@ def SetupAutocmd()
         g:vim9skkp_status.midasi = false
         g:vim9skkp_status.mode = g:vim9skkp.mode_label.off
         g:vim9skkp_status.sticky_shift = false
+      endif
+    }
+    au User vim9skkp-userjisyo {
+      const yomi = S.yomi ?? M.text
+      if !yomi
+        feedkeys("\<Cmd>Vim9skkpRegisterToUserJisyo\<CR>")
+      else
+        M.SetText(yomi)
+        UJ.RegisterWithInstant(yomi)
       endif
     }
     au User vim9skkp-abort {

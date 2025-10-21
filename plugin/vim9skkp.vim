@@ -38,6 +38,7 @@ var default = {
     commit: "\<CR>",
     cancel: "\<C-g>",
     delete: "\<C-d>",
+    userjisyo: "\<C-u>",
     sticky_shift: [],
   },
   roman_table: {},

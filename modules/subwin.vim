@@ -165,6 +165,8 @@ export def Filter(key: string, _: bool): bool
     else
       Select(index)
     endif
+  elseif g:vim9skkp.keymap.userjisyo->Contains(key)
+    doautocmd User vim9skkp-userjisyo
   else
     return false
   endif
