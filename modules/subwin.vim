@@ -126,6 +126,7 @@ enddef
 
 export def Reset()
   cands = []
+  yomi = ''
   okuri = ''
   UnSelect()
 enddef
