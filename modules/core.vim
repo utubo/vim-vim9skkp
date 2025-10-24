@@ -105,11 +105,6 @@ def SetupAutocmd()
     # mainwinが発行するイベント
     au User vim9skkp-m-toggle Toggle()
     au User vim9skkp-m-settext OnSetText()
-    au User vim9skkp-m-before-add-char {
-      if S.index !=# -1
-        M.Commit()
-      endif
-    }
     au User vim9skkp-m-start {
       if S.index ==# -1
         M.PreStart()
@@ -156,6 +151,7 @@ def SetupAutocmd()
       S.Show()
       g:vim9skkp_status.is_cand_selected = false
     }
+
     # global
     au User Vim9skkpStatusChanged {
       g:vim9skkp_status.active = M.active

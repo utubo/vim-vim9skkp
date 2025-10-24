@@ -94,7 +94,6 @@ def FilterImpl(_key: string, mapping: bool): bool
   if key !~ '\p'
     return false
   endif
-  doautocmd User vim9skkp-m-before-add-char
   Midasi(key)
   var ret = true
   if Roman(key)
