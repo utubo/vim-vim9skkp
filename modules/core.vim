@@ -35,7 +35,7 @@ def Init()
     C.okuri_table[v->strcharpart(0, 1)] = k[0]
   endfor
   SetupAutocmd()
-  g:vim9skkp.jiso = J.ExpandPaths(g:vim9skkp.jisyo)
+  g:vim9skkp.jisyo = J.ExpandPaths(g:vim9skkp.jisyo)
   initialized = true
 enddef
 # }}}
