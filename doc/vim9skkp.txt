@@ -1,4 +1,4 @@
-*vim9skkpp.txt*	SKK日本語入力をVim9 scriptとポップアップウインドウで実装した 実験的なプラグイン
+*vim9skkpp.txt*	SKK日本語入力をVim9 scriptとpopupwinで実装した実験的plugin
 
 Author  : utubo
 License : MIT license  {{{
@@ -323,7 +323,8 @@ Vim9skkpStatusChanged				*Vim9skkpModeChanged*
 HIGHLIGHTS					*vim9skkp-highlights*
 
 Vim9skkp	入力値の色
-Vim9skkpBlur	非アクティブ時(変換候補がなくユーザー辞書登録となったとき)の入力値の色
+Vim9skkpBlur	非アクティブ時(変換候補が無く、ユーザー辞書登録が起動したとき)
+		の入力値の色
 
 ==============================================================================
 TODO						*vim9skkp-todo*
