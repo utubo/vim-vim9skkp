@@ -1,4 +1,4 @@
-vim9scrip
+vim9script
 
 # 各ポップアップウィンドウの統括
 # 要はmainwin.vimとsubwin.vimの橋渡し
