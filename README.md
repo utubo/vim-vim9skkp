@@ -14,6 +14,22 @@ vim9skkp は、SKK日本語入力をVim9 scriptとポップアップウインド
 
 [doc/vim9skkp.txt](doc/vim9skkp.txt)
 
+## インストール
+
+辞書をダウンロードする
+```bash
+cd ~
+wget http://openlab.jp/skk/dic/SKK-JISYO.L.gz
+gunzip -f SKK-JISYO.L.gz
+```
+
+お好きな方法でvimにvim9skkpを読み込ませる  
+(以下はpack以下に置いて読み込ませる例)
+```bash
+cd ~/.vim/pack/foo/start
+git clone https://github.com/utubo/vim-vim9skkp.git
+```
+
 ## おすすめ設定
 
 個人的には以下の設定をしてます

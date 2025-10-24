@@ -25,6 +25,7 @@ License : MIT license  {{{
 CONTENTS					*vim9skkp-contents*
 
 INTRODUCTION			|vim9skkp-introduction|
+INSTALLATION			|vim9skkp-instllation|
 USAGE				|vim9skkp-usage|
 INTERFACE			|vim9skkp-interface|
   VARIABLES			  |vim9skkp-variables|
@@ -49,6 +50,23 @@ INTRODUCTION					*vim9skkp-introduction*
 Latest version:
 https://github.com/utubo/vim-vim9skkp.vim
 
+
+==============================================================================
+INSTALLATION					*vim9skkp-instllation*
+
+辞書をダウンロードする
+>
+	cd ~
+	wget http://openlab.jp/skk/dic/SKK-JISYO.L.gz
+	gunzip -f SKK-JISYO.L.gz
+<
+
+お好きな方法でvimにvim9skkpを読み込ませる
+(以下はpack以下に置いて読み込ませる例)
+>
+	cd ~/.vim/pack/foo/start
+	git clone https://github.com/utubo/vim-vim9skkp.git
+<
 
 ==============================================================================
 USAGE						*vim9skkp-usage*
