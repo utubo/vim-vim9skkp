@@ -119,6 +119,17 @@ enddef
 # }}}
 
 # 辞書操作 {{{
+export def ExpandPaths(paths: list<string>): list<string>
+  var expanded = []
+  for j in paths
+    const [path, enc] = ToFullPathAndEncode(j)
+    for p in path->split('\n')
+      expanded += [$'{p}:{enc}']
+    endfor
+  endfor
+  return expanded
+enddef
+
 def SaveRecent()
   var lines = ReadRecent().lines
   if !!lines
