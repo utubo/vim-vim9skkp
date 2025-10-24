@@ -1,4 +1,4 @@
-vim9script
+vim9scrip
 
 # 各ポップアップウィンドウの統括
 # 要はmainwin.vimとsubwin.vimの橋渡し
@@ -14,6 +14,14 @@ import './userjisyo.vim' as UJ
 var initialized = false
 var timerForCheckPopupExists = 0
 var bak = { t_ve: '', gcr: '' }
+
+def Silent(F: func)
+  try
+    F()
+  catch
+    g:vim9skkp_exception = v:exception
+  endtry
+enddef
 
 # 初期化 {{{
 def Init()
@@ -50,9 +58,13 @@ export def Popup()
   redraw
   doautocmd User Vim9skkpStatusChanged
   augroup vim9skkp-cursormoved
-    # NOTE: <C-r>=foo<CR>などでチラつくのでタイマーを挟む
-    au! CursorMovedI,CursorMovedC * timer_start(0, FollowCursor)
+    au! CursorMovedI,CursorMovedC * OnCursorMoved->Silent()
   augroup END
+enddef
+
+def OnCursorMoved()
+  # NOTE: <C-r>=foo<CR>などでチラつくのでタイマーを挟む
+  timer_start(0, FollowCursor)
 enddef
 
 # ポップアップウィンドウをカーソル付近に追従させる
@@ -73,6 +85,10 @@ def StopCheckPopupExists()
 enddef
 
 def CheckPopupExists(_: number)
+  CheckPopupExistsImpl->Silent()
+enddef
+
+def CheckPopupExistsImpl()
   if !M.active
     doautocmd User vim9skkp-abort
   elseif !U.IsPopupExists(M.winid)
@@ -91,7 +107,7 @@ enddef
 def SetupAutocmd()
   augroup vim9skkp
     au!
-    au ModeChanged *:[nt] Close()
+    au ModeChanged *:[nt] Close->Silent()
 
     # mainwinが発行するイベント
     au User vim9skkp-m-toggle Toggle()
@@ -164,13 +180,7 @@ def SetupAutocmd()
         UJ.RegisterWithInstant(yomi)
       endif
     }
-    au User vim9skkp-abort {
-      try
-        Close()
-      catch
-        g:vim9skkp_exception = v:exception
-      endtry
-    }
+    au User vim9skkp-abort Close->Silent()
   augroup END
 enddef
 
