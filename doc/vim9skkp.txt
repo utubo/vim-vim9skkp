@@ -120,8 +120,6 @@ g:vim9skkp_status				*g:vim9skkp_status*
 g:vim9skkp					*g:vim9skkp*
 	各種設定のためのdictionaryです
 
-	TODO: vim-vim9skk(p無し)からコピーして編集したので嘘が残ってるかも
-
 	jisyo
 		辞書ファイルのパスの配列
 		`ファイル名:文字コード`の形式
@@ -200,6 +198,17 @@ g:vim9skkp					*g:vim9skkp*
 	roman_table
 		ローマ字入力の追加・上書き設定です
 		例: `{ kn: 'かん' }`
+	keep_midasi_mode
+		vim9skkpが有効になったとき、変換が確定したときに
+		即座に見出しモードに移行します
+	auto_commit_regex:
+		見出しモードで入力値がこの正規表現にマッチしたとき
+		即座に確定します
+	auto_suggest_regex:
+		見出しモードで入力値がこの正規表現にマッチしたとき
+		変換を開始します
+	hide_cursor
+		trueの場合、vim9skkp起動中にカーソルを非表示にします
 	getcurpos
 		画面上のカーソル位置を返却するfuncrefです
 		ポップアップなどの表示位置を微調整したい場合は
@@ -208,21 +217,6 @@ g:vim9skkp					*g:vim9skkp*
 >
 		foo(pos: any): any
 <
-	keep_midasi_mode
-		vim9skkpが有効になったとき、変換が確定したときに
-		即座に見出しモードに移行します
-
-	auto_commit_regex:
-		見出しモードで入力値がこの正規表現にマッチしたとき
-		即座に確定します
-
-	auto_suggest_regex:
-		見出しモードで入力値がこの正規表現にマッチしたとき
-		変換を開始します
-
-	hide_cursor
-		trueの場合、vim9skkp起動中にカーソルを非表示にします
-
 	NOTE:
 		カスタマイズする際は、デフォルトから変更したい項目だけを
 		セットすればよいです
