@@ -223,14 +223,10 @@ def HideCursor()
     hi! link Vim9skkpCursorAct Vim9skkpCursor
     return
   endif
-  if !bak.t_ve
-    bak.t_ve = &t_ve
-    set t_ve=
-  endif
-  if !bak.gcr
-    bak.gcr = &guicursor
-    set guicursor=i-c:CursorTransparent
-  endif
+  bak.t_ve = bak.t_ve ?? &t_ve
+  bak.gcr = bak.gcr ?? &guicursor
+  set t_ve=
+  set guicursor=i-c:CursorTransparent
 enddef
 
 def RestoreCursor()
