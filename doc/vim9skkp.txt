@@ -33,8 +33,6 @@ INTERFACE			|vim9skkp-interface|
   FUNCTIONS			  |vim9skkp-functions|
   EVENTS			  |vim9skkp-events|
   HIGHLIGHTS			  |vim9skkp-highlights|
-TODO				|vim9skkp-todo|
-KNOWN ISSUES			|vim9skkp-knwonissues|
 
 
 ==============================================================================
@@ -331,24 +329,6 @@ Vim9skkpCand		変換候補
 Vim9skkpCandExtra	変換候補の補足
 Vim9skkpCandShortCut	変換候補のショートカットキー
 
-==============================================================================
-TODO						*vim9skkp-todo*
-
-- [ ] もっと設定できるようにする
-- [ ] テストを作る
-
-
-==============================================================================
-KNOWN ISSUES					*vim9skkp-knwonissues*
-
-- tabpanelが左に表示されているとコマンドラインで表示がずれます
-  プラグインでは対応できないのでtabpanelを右に表示するなどしてください
-- ハイライトが微妙(とういうか無いに等しい)
-- その他バグ
-  - ユーザー辞書登録後に挿入位置がずれる
-  - Abbr中にユーザー辞書登録が起動するとひらがなモードに戻ってしまう
-  - 変換した候補が先頭にこないことがある
-  - 予測入力で送り仮名が正しく処理されていない
 
 ==============================================================================
 vim:tw=78:ts=8:ft=help:norl:noet:fen:
