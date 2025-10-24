@@ -219,7 +219,7 @@ g:vim9skkp					*g:vim9skkp*
 		変換を開始します
 
 	hide_cursor
-		trueの場合、vim9skkp起動中にカーソルを非表示します
+		trueの場合、vim9skkp起動中にカーソルを非表示にします
 
 	NOTE:
 		カスタマイズする際は、デフォルトから変更したい項目だけを
