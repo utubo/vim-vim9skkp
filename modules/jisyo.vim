@@ -140,7 +140,7 @@ def ToFullPathAndEncode(path: string): list<string>
     p = path
     if path =~ '\.utf8$'
       e = 'UTF8'
-    elseif path =~ 'SKK-JISYO\.[SLM]\+$'
+    elseif path =~ '[\\/]SKK-JISYO\.[SLM]\+$'
       e = 'EUC-JP'
     endif
   else
