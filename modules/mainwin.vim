@@ -160,11 +160,10 @@ enddef
 def BackSpace(mapping: bool): bool
   if mapping || !text
     return false
-  else
-    text
-      ->substitute('.$', '', '')
-      ->SetText()
   endif
+  text
+    ->substitute('.$', '', '')
+    ->SetText()
   return true
 enddef
 

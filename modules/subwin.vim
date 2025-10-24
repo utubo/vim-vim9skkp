@@ -66,6 +66,7 @@ def ShowMode()
   else
     popup_settext(winid, g:vim9skkp_status.mode)
   endif
+  popup_setoptions(winid, { highlight: 'Vim9skkpMode' })
   popup_show(winid)
 enddef
 
@@ -92,9 +93,10 @@ export def ShowCands(text: string = '')
     i += 1
   endfor
   popup_settext(winid, lines)
+  popup_setoptions(winid, { highlight: 'Vim9skkpCand' })
   win_execute(winid, 'setlocal tabstop=12')
-  win_execute(winid, 'syntax match PMenuExtra /\t.*/')
-  win_execute(winid, 'syntax match PMenuKind /^.*:/')
+  win_execute(winid, 'syntax match Vim9skkpCandExtra /\t\zs.*/')
+  win_execute(winid, 'syntax match Vim9skkpCandShortCut /^.*:/')
   popup_show(winid)
   if !!text
     popup_setoptions(winid, { cursorline: true })

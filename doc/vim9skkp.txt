@@ -327,9 +327,15 @@ Vim9skkpStatusChanged				*Vim9skkpModeChanged*
 ------------------------------------------------------------------------------
 HIGHLIGHTS					*vim9skkp-highlights*
 
-Vim9skkp	入力値の色
-Vim9skkpBlur	非アクティブ時(変換候補が無く、ユーザー辞書登録が起動したとき)
-		の入力値の色
+Vim9skkp		入力文字列
+Vim9skkpBlur		非アクティブ時
+			(変換候補が無く、ユーザー辞書登録が起動したとき)
+
+Vim9skkpMode		モード表示の色
+
+Vim9skkpCand		変換候補
+Vim9skkpCandExtra	変換候補の補足
+Vim9skkpCandShortCut	変換候補のショートカットキー
 
 ==============================================================================
 TODO						*vim9skkp-todo*
