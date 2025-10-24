@@ -72,3 +72,12 @@ export def IsPopupExists(id: number): bool
   return !!id && !popup_getpos(id)->empty()
 enddef
 
+# 例外が起きてもg:変数にいれて操作不能にならないようにする
+export def Silent(F: func)
+  try
+    F()
+  catch
+    g:vim9skkp_exception = v:exception
+  endtry
+enddef
+

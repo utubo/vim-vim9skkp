@@ -15,14 +15,6 @@ var initialized = false
 var timerForCheckPopupExists = 0
 var bak = { t_ve: '', gcr: '' }
 
-def Silent(F: func)
-  try
-    F()
-  catch
-    g:vim9skkp_exception = v:exception
-  endtry
-enddef
-
 # 初期化 {{{
 def Init()
   if initialized
@@ -59,7 +51,7 @@ export def Popup()
   redraw
   doautocmd User Vim9skkpStatusChanged
   augroup vim9skkp-cursormoved
-    au! CursorMovedI,CursorMovedC * OnCursorMoved->Silent()
+    au! CursorMovedI,CursorMovedC * U.Silent(OnCursorMoved)
   augroup END
 enddef
 
@@ -86,7 +78,7 @@ def StopCheckPopupExists()
 enddef
 
 def CheckPopupExists(_: number)
-  CheckPopupExistsImpl->Silent()
+  U.Silent(CheckPopupExistsImpl)
 enddef
 
 def CheckPopupExistsImpl()
@@ -108,7 +100,7 @@ enddef
 def SetupAutocmd()
   augroup vim9skkp
     au!
-    au ModeChanged *:[nt] Close->Silent()
+    au ModeChanged *:[nt] U.Silent(Close)
 
     # mainwinが発行するイベント
     au User vim9skkp-m-toggle Toggle()
@@ -187,7 +179,7 @@ def SetupAutocmd()
         UJ.RegisterWithInstant(yomi)
       endif
     }
-    au User vim9skkp-abort Close->Silent()
+    au User vim9skkp-abort U.Silent(Close)
   augroup END
 enddef
 
