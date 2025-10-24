@@ -80,7 +80,8 @@ def FilterImpl(_key: string, mapping: bool): bool
   elseif InputAlphabet(key)
     return true
   elseif IgnoreKeys(key)
-    return true
+    # NOTE: 無視したいキーもマッピング後は有効なキーになっている可能性がある
+    return mapping
   elseif CommonFunctions(key)
     return true
   elseif ChangeCharType(key)
