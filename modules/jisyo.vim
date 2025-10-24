@@ -134,7 +134,20 @@ enddef
 
 def ToFullPathAndEncode(path: string): list<string>
   const m = path->matchlist('\(.\+\):\([a-zA-Z0-9-]*\)$')
-  return !m ? [expand(path), ''] : [expand(m[1]), m[2]]
+  var p = ''
+  var e = ''
+  if !m
+    p = path
+    if path =~ '\.utf8$'
+      e = 'UTF8'
+    elseif path =~ 'SKK-JISYO\.[SLM]\+$'
+      e = 'EUC-JP'
+    endif
+  else
+    p = m[1]
+    e = m[2]
+  endif
+  return [expand(p), e]
 enddef
 
 export def ReadJisyo(path: string): dict<any>
