@@ -58,6 +58,7 @@ g:vim9skkp_status = {
   mode: g:vim9skkp.mode_label.off,
   midasi: g:vim9skkp.keep_midasi_mode,
   sticky_shift: false,
+  is_cand_selected: false,
 }
 # }}}
 

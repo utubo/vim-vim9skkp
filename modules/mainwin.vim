@@ -13,7 +13,7 @@ export var winid = 0
 export var active = false
 export var text = ''
 export var chartype = C.Type.Hira
-export var midasi = false # NOTE: 処理簡略化のためabbrのときもtrue
+export var midasi = false
 export var sticky_shift = false
 
 # 表示制御 {{{
@@ -27,6 +27,7 @@ export def Popup()
   midasi = g:vim9skkp.keep_midasi_mode
   SetText('')
   active = true
+  g:vim9skkp_status.is_cand_selected = false
 enddef
 
 export def Close()
@@ -75,20 +76,19 @@ def FilterImpl(_key: string, mapping: bool): bool
   if sticky_shift
     key = key->toupper()
   endif
-  if U.IsBackSpace(key)
-    return BackSpace(mapping)
-  elseif InputAlphabet(key)
-    return true
-  elseif IgnoreKeys(key)
+  if IgnoreKeys(key)
     # NOTE: 無視したいキーもマッピング後は有効なキーになっている可能性がある
     return mapping
-  elseif CommonFunctions(key)
+  elseif U.IsBackSpace(key)
+    return BackSpace(mapping)
+  elseif Select(key)
     return true
-  elseif ChangeCharType(key)
-    doautocmd User Vim9skkpStatusChanged
-    return true
-  elseif !!text && g:vim9skkp.keymap.commit->Contains(key)
+  elseif g:vim9skkp_status.is_cand_selected
     Commit()
+  endif
+  if InputAlphabet(key, mapping)
+    return mapping
+  elseif CommonFunctions(key)
     return true
   endif
   if key !~ '\p'
@@ -144,13 +144,17 @@ def CommonFunctions(key: string): bool
     Commit()
     SetMidasiMode(!midasi)
     return true
-  elseif Select(key)
+  elseif !!text && g:vim9skkp.keymap.commit->Contains(key)
+    Commit()
     return true
   elseif g:vim9skkp.keymap.sticky_shift->Contains(key)
     SetStickyShift(true)
     return true
   elseif g:vim9skkp.keymap.userjisyo->Contains(key)
     doautocmd User vim9skkp-userjisyo
+    return true
+  elseif ChangeCharType(key)
+    doautocmd User Vim9skkpStatusChanged
     return true
   else
     return false
@@ -167,8 +171,10 @@ def BackSpace(mapping: bool): bool
   return true
 enddef
 
-def InputAlphabet(key: string): bool
-  if C.abbr_chars->index(key) ==# -1
+def InputAlphabet(key: string, mapping: bool): bool
+  if !mapping
+    return true
+  elseif C.abbr_chars->index(key) ==# -1
     return false
   elseif chartype ==# C.Type.Abbr
     SetText(text .. key)
@@ -291,6 +297,10 @@ export def Commit()
     setpos('.', p)
   endif
   SetText('')
+  if chartype ==# C.Type.Abbr
+    ToggleCharType(C.Type.Abbr)
+    midasi = g:vim9skkp.keep_midasi_mode
+  endif
   SetMidasiMode(g:vim9skkp.keep_midasi_mode && midasi)
   doautocmd User vim9skkp-m-commit
 enddef
@@ -298,7 +308,7 @@ enddef
 def Select(key: string): bool
   if !text
     return false
-  elseif !midasi
+  elseif !midasi && chartype !=# C.Type.Abbr
     return false
   elseif g:vim9skkp.keymap.select->Contains(key)
     doautocmd User vim9skkp-m-start
