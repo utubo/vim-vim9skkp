@@ -115,6 +115,7 @@ def Select(i: number)
   const c = len(cands) - 1
   index = i < 0 ? c : c < i ? 0 : i
   selected = cands[index]->matchstr('^[^;]\+') .. okuri
+  g:vim9skkp_status.is_cand_selected = true
   win_execute(winid, $':{index + 1}')
   popup_setoptions(winid, { cursorline: true })
   doautocmd User vim9skkp-s-select
@@ -123,6 +124,7 @@ enddef
 export def UnSelect()
   index = -1
   selected = ''
+  g:vim9skkp_status.is_cand_selected = false
   popup_setoptions(winid, { cursorline: false })
 enddef
 

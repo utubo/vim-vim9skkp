@@ -124,7 +124,6 @@ def SetupAutocmd()
           redraw
         endif
       endif
-      g:vim9skkp_status.is_cand_selected = false
     }
     au User vim9skkp-m-cancel {
       if !M.text
@@ -137,19 +136,16 @@ def SetupAutocmd()
     # subwinが発行するイベント
     au User vim9skkp-s-select {
       M.SetText(S.selected)
-      g:vim9skkp_status.is_cand_selected = true
     }
     au User vim9skkp-s-commit {
       J.AddRecent(S.src, S.cands[S.index])
       J.AddHistory(S.selected)
       M.Commit()
-      g:vim9skkp_status.is_cand_selected = false
     }
     au User vim9skkp-s-cancel {
       M.SetText(S.src)
       S.Reset()
       S.Show()
-      g:vim9skkp_status.is_cand_selected = false
     }
 
     # global
@@ -169,7 +165,7 @@ def SetupAutocmd()
     au User vim9skkp-userjisyo {
       const yomi = S.yomi ?? M.text
       if !yomi
-        feedkeys("\<Cmd>Vim9skkpRegisterToUserJisyo\<CR>")
+        feedkeys("\<Cmd>Vim9skkpRegisterToUserJisyo\<CR>", 'n')
       else
         M.SetText(yomi)
         UJ.RegisterWithInstant(yomi)
