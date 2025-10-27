@@ -83,15 +83,15 @@ enddef
 
 def CheckPopupExistsImpl()
   if !M.active
-    doautocmd User vim9skkp-abort
+    Abort()
   elseif !U.IsPopupExists(M.winid)
-    doautocmd User vim9skkp-abort
+    Abort()
   elseif !U.IsPopupExists(S.winid)
-    doautocmd User vim9skkp-abort
+    Abort()
   elseif mode() ==# 'n'
     # noautocmd normal! "\<Esc>"
     # とかされると有効のままノーマルモードになってしまうので…
-    doautocmd User vim9skkp-abort
+    Abort()
   endif
 enddef
 # }}}
@@ -175,7 +175,6 @@ def SetupAutocmd()
         UJ.RegisterWithInstant(yomi)
       endif
     }
-    au User vim9skkp-abort U.Silent(Close)
   augroup END
 enddef
 
@@ -243,6 +242,11 @@ export def Toggle()
   else
     Close()
   endif
+enddef
+
+# 不意にポップアップがクローズされた場合
+def Abort()
+   U.Silent(Close)
 enddef
 # }}}
 
