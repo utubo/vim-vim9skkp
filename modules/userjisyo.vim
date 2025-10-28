@@ -2,6 +2,7 @@ vim9script
 
 # ユーザー辞書登録のプロンプト
 
+import './const.vim' as C
 import './jisyo.vim' as J
 import './mainwin.vim' as M
 import './subwin.vim' as S
@@ -9,7 +10,7 @@ import './core.vim' as Core # TODO: 相互参照になってる
 
 var registerToUserJisyo = false
 var winid = 0
-var yomi = ''
+var bak = { yomi: '', src: '', cur: [], chartype: C.Type.Hira }
 
 # 読みを入力するプロンプト
 export def InputYomi(is_instant: bool): string
@@ -17,7 +18,7 @@ export def InputYomi(is_instant: bool): string
     return ''
   endif
   if is_instant
-    return yomi
+    return bak.yomi
   endif
   registerToUserJisyo = true
   var value = ''
@@ -51,7 +52,7 @@ export def Register(_yomi: string, is_instant: bool): string
 enddef
 
 # 変換候補が無かった時にインスタントに呼び出す用
-export def RegisterWithInstant(_yomi: string)
+export def RegisterWithInstant()
   if registerToUserJisyo
     return
   endif
@@ -62,10 +63,14 @@ export def RegisterWithInstant(_yomi: string)
       col: p.col, line: p.line, highlight: 'Vim9skkpBlur'
     })
   endif
+  const [_, __, yomi] = J.ToJisyoKey(M.text)
+  bak.cur = getcurpos()
+  bak.yomi = yomi
+  bak.src = S.src
+  bak.chartype = M.chartype
   S.Reset()
-  yomi = _yomi
   # NOTE: なぜかfeedkeysからcallで呼び出すとfilterが機能する…
-  feedkeys("\<Cmd>call vim9skkp#RegisterToUserJisyo('', v:true)\<CR>")
+  feedkeys("\<Cmd>call vim9skkp#RegisterToUserJisyo('', v:true)\<CR>", 'n')
 enddef
 
 # インスタントに呼び出した場合
@@ -76,8 +81,11 @@ def EndOfInstant(value: string)
     popup_close(winid)
     winid = 0
   endif
+  Core.Close()
+  setpos('.', bak.cur)
   Core.Popup()
-  M.SetText(value ?? yomi)
+  M.SetText(value ?? bak.src)
+  M.ToggleCharType(bak.chartype)
   if !value
     M.SetMidasiMode(true)
   else

@@ -110,7 +110,8 @@ def SetupAutocmd()
         M.PreStart()
         S.ShowCands(M.text)
         if len(S.cands) < 2 && get(S.cands, 0, ';無変換') =~ ';無変換'
-          UJ.RegisterWithInstant(S.yomi)
+          M.SetText(S.src)
+          UJ.RegisterWithInstant()
         endif
       endif
     }
@@ -162,13 +163,14 @@ def SetupAutocmd()
         g:vim9skkp_status.sticky_shift = false
       endif
     }
+    # ショートカットキーでユーザー辞書登録を起動したとき
     au User vim9skkp-userjisyo {
-      const yomi = S.yomi ?? M.text
-      if !yomi
+      const src = S.src ?? M.text
+      if !src
         feedkeys("\<Cmd>Vim9skkpRegisterToUserJisyo\<CR>", 'n')
       else
-        M.SetText(yomi)
-        UJ.RegisterWithInstant(yomi)
+        M.SetText(src)
+        UJ.RegisterWithInstant()
       endif
     }
   augroup END

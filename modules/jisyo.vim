@@ -82,16 +82,10 @@ def GetCandsFromJisyo(path: string, key: string): list<string>
   return []
 enddef
 
-# 指定したテキスト(ほげ*ふが)に対して[変換候補, 読み(ほげf), 送り仮名(ふが)]を返す
-export def GetAllCands(text: string): list<any>
-  if !text
-    return [[], '', '']
-  endif
-  # `▽ほげ*ふが`を語幹と送り仮名に分割する
+# 指定したテキスト(ほげ*ふが)に対して[語幹(ほげ), 送り仮名(ふが), 読み(ほげf)]を返す
+export def ToJisyoKey(text: string): list<string>
   const [gokan, okuri] = text
     ->Split(g:vim9skkp.marker_okuri)
-  var cands = []
-  # 候補を検索する
   const gokan_key = gokan
     ->Tr(C.kata_chars, C.hira_chars)
   const okuri_key = okuri
@@ -99,6 +93,16 @@ export def GetAllCands(text: string): list<any>
     ->substitute('^っ*', '', '')
     ->matchstr('^.')
   const yomi = $'{gokan_key}{C.okuri_table->get(okuri_key, '')}' # `ほげf`
+  return [gokan, okuri, yomi]
+enddef
+
+# 指定したテキスト(ほげ*ふが)に対して[変換候補, 読み(ほげf), 送り仮名(ふが)]を返す
+export def GetAllCands(text: string): list<any>
+  if !text
+    return [[], '', '']
+  endif
+  const [gokan, okuri, yomi] = ToJisyoKey(text)
+  var cands = []
   cands += GetCandsFromJisyo(g:vim9skkp.jisyo_recent, yomi)
     ->filter((k, v): bool => k < g:vim9skkp.recent_per_yomi)
     ->map((k, v): string => $'{v};変換履歴')
