@@ -27,7 +27,6 @@ export def Popup()
   midasi = g:vim9skkp.keep_midasi_mode
   SetText('')
   active = true
-  g:vim9skkp_status.is_cand_selected = false
 enddef
 
 export def Close()
