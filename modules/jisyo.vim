@@ -255,19 +255,16 @@ enddef
 # }}}
 
 # 変換履歴と入力履歴 {{{
-export def AddRecent(_before: string, after: string)
-  if !after || after =~ ';入力履歴$'
+export def AddRecent(_before: string, _after: string)
+  if !_after || _after =~ ';入力履歴$'
     return
   endif
-  var before = after =~ ';変換履歴 .\+'
-    ? after->substitute('.*;変換履歴 ', '', '')
-    : _before
-  if !before
-    return
-  endif
+  const [before, after] = _after =~ ';変換履歴 .\+'
+    ? FromRecentCand(_after)
+    : [_before, _after->substitute(';.*', '', '')]
   # 新規に追加する行
   const afters = GetCandsFromJisyo(g:vim9skkp.jisyo_recent, before)
-    ->insert(after->substitute(';.*', '', ''))
+    ->insert(after)
     ->Uniq()
     ->join('/')
   const newline = $'{before} /{afters}/'
@@ -298,10 +295,22 @@ def GetRecent(text: string): list<string>
       const kv = l->IconvFrom(j.enc)->Split(' ')
       cands += kv[1]
         ->split('/')
-        ->map((k, v): string => $'{v};変換履歴 {kv[0]}')
+        ->map((k, v): string => ToRecentCand(v, kv[0]))
     endif
   endfor
   return cands
+enddef
+
+def ToRecentCand(cand: string, yomi: string): string
+  const okuri = yomi->Split(g:vim9skkp.marker_okuri)[1]
+  return $'{cand}{okuri};変換履歴 {yomi}'
+enddef
+
+def FromRecentCand(_cand: string): list<string>
+  const yomi = _cand->substitute('^.*;変換履歴 ', '', '')
+  const okuri = _cand->Split(g:vim9skkp.marker_okuri)[1]
+  const cand = _cand->substitute($'{okuri};変換履歴 .*$', '', '')
+  return [yomi, cand]
 enddef
 
 export def AddHistory(next_word: string)
