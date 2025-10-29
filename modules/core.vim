@@ -148,6 +148,10 @@ def SetupAutocmd()
       S.Reset()
       S.Show()
     }
+    au User vim9skkp-s-chartype {
+      M.SetText(S.src)
+      S.Reset()
+    }
 
     # global
     au User Vim9skkpStatusChanged {

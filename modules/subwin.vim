@@ -172,6 +172,12 @@ export def Filter(key: string, _: bool): bool
     endif
   elseif g:vim9skkp.keymap.userjisyo->Contains(key)
     doautocmd User vim9skkp-userjisyo
+  elseif g:vim9skkp.keymap.kata->Contains(key)
+    doautocmd User vim9skkp-s-chartype
+    return false
+  elseif g:vim9skkp.keymap.hankaku->Contains(key)
+    doautocmd User vim9skkp-s-chartype
+    return false
   else
     return false
   endif
