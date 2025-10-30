@@ -5,6 +5,8 @@ vim9script
 import './const.vim' as C
 import './util.vim' as U
 
+export const prefix = '>'
+
 var jisyo = {}
 var recent = {}
 var is_registering_user_jisyo = false

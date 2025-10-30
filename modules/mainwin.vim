@@ -93,7 +93,11 @@ def FilterImpl(_key: string, mapping: bool): bool
   if key !~ '\p'
     return false
   endif
-  Midasi(key)
+  if midasi && key ==# J.prefix
+    Commit()
+  else
+    Midasi(key)
+  endif
   var ret = true
   if Roman(key)
     if !midasi && text !~ '[っッ][a-z]$'
