@@ -18,7 +18,7 @@ var default = {
     midasi: '▽',
   },
   zindex: 200,
-  popup_maxheight: 20,
+  popup_maxheight: 10,
   search_limit: 100,
   keymap: {
     enable: [],
