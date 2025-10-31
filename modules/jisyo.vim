@@ -269,14 +269,19 @@ export def AddRecent(_before: string, _after: string)
     ->insert(after)
     ->Uniq()
     ->join('/')
-  const newline = $'{before} /{afters}/'
+  # 送り仮名を考慮
+  const [_, __, yomi] = ToJisyoKey(before)
   # 既存の行を削除してから先頭に追加する
   var j = ReadRecent()
   const head = $'{before} '->IconvTo(j.enc)
+  const head2 = $'{yomi} '->IconvTo(j.enc)
   j.lines = j.lines
-    ->filter((_, v) => !v->StartsWith(head))
-    ->slice(0, g:vim9skkp.recent)
-    ->insert(newline->IconvTo(j.enc))
+    ->filter((_, v) => !v->StartsWith(head) && !v->StartsWith(head2))
+  j.lines += [$'{before} /{afters}/'->IconvTo(j.enc)]
+  if before !=# yomi
+    j.lines += [$'{yomi} /{afters}/'->IconvTo(j.enc)]
+  endif
+  j.lines = j.lines->slice(0, g:vim9skkp.recent)
   # 候補探索用の辞書にはソート済のものをセットする
   jisyo[g:vim9skkp.jisyo_recent] = {
     lines: j.lines->copy()->sort(),
