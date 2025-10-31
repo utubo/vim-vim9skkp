@@ -90,7 +90,7 @@ def FilterImpl(_key: string, mapping: bool): bool
   elseif CommonFunctions(key)
     return true
   endif
-  if key !~ '\p'
+  if key !~ '\p' || key !=# key->keytrans()
     return false
   endif
   if midasi && key ==# J.prefix
