@@ -57,6 +57,9 @@ export def Popup()
 enddef
 
 def ClosePumLazy()
+  # NOTE: pumvisible()～feedkeys()の間に何かの処理をしている間に
+  # pumが消えると<C-e>が暴発するので、チェックと閉じるのはできる
+  # だけ近くで実行する
   timer_start(10, (_) => {
     if pumvisible()
       feedkeys("\<C-e>", 'nt')
