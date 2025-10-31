@@ -160,6 +160,9 @@ export def Filter(key: string, _: bool): bool
   elseif shortcut->Contains(key)
     return ShortCut(key)
   elseif g:vim9skkp.keymap.commit->Contains(key)
+    if index < 0
+      return false
+    endif
     doautocmd User vim9skkp-s-commit
   elseif g:vim9skkp.keymap.cancel->Contains(key)
     doautocmd User vim9skkp-s-cancel
