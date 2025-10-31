@@ -280,7 +280,7 @@ export def AddRecent(_before: string, _after: string)
     j.lines->insert($'{yomi} /{afters}/'->IconvTo(j.enc))
   endif
   j.lines->insert($'{before} /{afters}/'->IconvTo(j.enc))
-  j.lines = j.lines->slice(0, g:vim9skkp.recent)
+  silent! j.lines->remove(g:vim9skkp.recent, -1)
   # 候補探索用の辞書にはソート済のものをセットする
   jisyo[g:vim9skkp.jisyo_recent] = {
     lines: j.lines->copy()->sort(),
