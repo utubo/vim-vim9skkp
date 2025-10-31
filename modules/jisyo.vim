@@ -277,9 +277,9 @@ export def AddRecent(_before: string, _after: string)
   const head2 = $'{yomi} '->IconvTo(j.enc)
   j.lines = j.lines
     ->filter((_, v) => !v->StartsWith(head) && !v->StartsWith(head2))
-  j.lines += [$'{before} /{afters}/'->IconvTo(j.enc)]
+  j.lines = j.lines->insert($'{before} /{afters}/'->IconvTo(j.enc))
   if before !=# yomi
-    j.lines += [$'{yomi} /{afters}/'->IconvTo(j.enc)]
+    j.lines += j.lines->insert($'{yomi} /{afters}/'->IconvTo(j.enc))
   endif
   j.lines = j.lines->slice(0, g:vim9skkp.recent)
   # 候補探索用の辞書にはソート済のものをセットする
