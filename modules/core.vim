@@ -66,6 +66,9 @@ def FollowCursor(_: number = 0)
     const c = g:vim9skkp.getcurpos(U.GetCurPos())
     M.FollowCursor(c)
     S.FollowCursor(c, M.text)
+    if !M.text && pumvisible()
+      feedkeys("\<C-e>", 'n')
+    endif
   endif
 enddef
 
