@@ -48,11 +48,20 @@ export def Popup()
   )
   FollowCursor()
   HideCursor()
+  ClosePumLazy()
   redraw
   doautocmd User Vim9skkpStatusChanged
   augroup vim9skkp-cursormoved
     au! CursorMovedI,CursorMovedC * U.Silent(OnCursorMoved)
   augroup END
+enddef
+
+def ClosePumLazy()
+  timer_start(10, (_) => {
+    if pumvisible()
+      feedkeys("\<C-e>", 'nt')
+    endif
+  })
 enddef
 
 def OnCursorMoved()
@@ -66,9 +75,6 @@ def FollowCursor(_: number = 0)
     const c = g:vim9skkp.getcurpos(U.GetCurPos())
     M.FollowCursor(c)
     S.FollowCursor(c, M.text)
-    if !M.text && pumvisible()
-      feedkeys("\<C-e>", 'n')
-    endif
   endif
 enddef
 
@@ -191,6 +197,9 @@ def OnSetText()
     S.ShowRecentAndHistory(M.text)
   else
     S.Show()
+  endif
+  if !M.text
+    ClosePumLazy()
   endif
   FollowCursor()
   redraw
