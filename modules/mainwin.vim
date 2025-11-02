@@ -80,6 +80,8 @@ def FilterImpl(_key: string, mapping: bool): bool
     return mapping
   elseif U.IsBackSpace(key)
     return BackSpace(mapping)
+  elseif ZenkakuSpace(key)
+    return true
   elseif Select(key)
     return true
   elseif midasi && !!text && g:vim9skkp.keymap.commit->Contains(key)
@@ -170,6 +172,17 @@ def BackSpace(mapping: bool): bool
     ->substitute('.$', '', '')
     ->SetText()
   return true
+enddef
+
+# <Space>は被りがちなので応急対応
+# TODO: ちゃんと整理すればこの処理は不要になるはず
+def ZenkakuSpace(key: string): bool
+  if key ==# ' ' && midasi && chartype.zenspace && text =~# 'z$'
+    SetText(text->substitute('z$', '　', ''))
+    return true
+  else
+    return false
+  endif
 enddef
 
 def InputAlphabet(key: string, mapping: bool): bool

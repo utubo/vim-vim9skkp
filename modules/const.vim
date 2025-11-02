@@ -8,15 +8,16 @@ export var roman_chars: list<string> = []
 export var okuri_table: dict<any> = {}
 
 export enum Type
-  Hira(true, false, 'hira', 'ん'),
-  Kata(true, true, 'kata', 'ン'),
-  Hank(true, true, 'hankaku', 'ﾝ'),
-  Alph(false, true, 'alphabet', 'ｎ'),
-  Abbr(false, false, 'abbr', 'n')
+  Hira(true, false, 'hira', 'ん', true),
+  Kata(true, true, 'kata', 'ン', true),
+  Hank(true, true, 'hankaku', 'ﾝ', false),
+  Alph(false, true, 'alphabet', 'ｎ', false),
+  Abbr(false, false, 'abbr', 'n', false)
   var roman: bool
   var direct: bool
   var label: string
   var n: string
+  var zenspace: bool
 endenum
 
 export var roman_table_base = {
