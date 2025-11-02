@@ -82,6 +82,9 @@ def FilterImpl(_key: string, mapping: bool): bool
     return BackSpace(mapping)
   elseif Select(key)
     return true
+  elseif midasi && !!text && g:vim9skkp.keymap.commit->Contains(key)
+    Commit()
+    return true
   elseif g:vim9skkp_status.is_cand_selected
     Commit()
   endif
@@ -144,9 +147,6 @@ def CommonFunctions(key: string): bool
   elseif g:vim9skkp.keymap.midasi->Contains(key)
     Commit()
     SetMidasiMode(!midasi)
-    return true
-  elseif !!text && g:vim9skkp.keymap.commit->Contains(key)
-    Commit()
     return true
   elseif g:vim9skkp.keymap.sticky_shift->Contains(key)
     SetStickyShift(true)
@@ -284,9 +284,9 @@ export def Commit()
   if midasi && chartype ==# C.Type.Hira
     t = t->substitute(g:vim9skkp.marker_okuri, '', 'n')
   endif
-  feedkeys("\<ScriptCmd>vim9skkp#Keyhook(false)\<CR>", 'nt')
+  feedkeys("\<Cmd>call vim9skkp#Keyhook(v:false)\<CR>", 'nt')
   feedkeys(t, 'nt')
-  feedkeys("\<ScriptCmd>vim9skkp#Keyhook(true)\<CR>", 'nt')
+  feedkeys("\<Cmd>call vim9skkp#Keyhook(v:true)\<CR>", 'nt')
   SetText('')
   if chartype ==# C.Type.Abbr
     ToggleCharType(C.Type.Abbr)
