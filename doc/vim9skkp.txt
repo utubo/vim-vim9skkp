@@ -43,7 +43,7 @@ INTRODUCTION					*vim9skkp-introduction*
 
 ポップアップウインドウを使うことで以下を実現しています
 ・確定するまでバッファが汚れない
-・起動時のキーマッピングの上書きを最低限に(特にメリットは無いですが…)
+・キーマッピングは最低限(有効、無効、トグルだけ)
 
 Latest version:
 https://github.com/utubo/vim-vim9skkp.vim
