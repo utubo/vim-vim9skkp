@@ -95,18 +95,17 @@ def FilterImpl(_key: string, mapping: bool): bool
   endif
   if midasi && key ==# J.prefix
     Commit()
+  elseif !mapping
+    return false
   else
     Midasi(key)
   endif
-  var ret = true
   if Roman(key)
     if !midasi && text !~ '[っッ][a-z]$'
       Commit()
     endif
-  elseif mapping
-    $'{text}{key->tolower()}'->SetText()
   else
-    ret = false
+    $'{text}{key->tolower()}'->SetText()
   endif
   if text =~ g:vim9skkp.auto_commit_regex
     Commit()
@@ -115,7 +114,7 @@ def FilterImpl(_key: string, mapping: bool): bool
       text =~ g:vim9skkp.auto_suggest_regex
     doautocmd User vim9skkp-m-start
   endif
-  return ret
+  return true
 enddef
 
 def SetStickyShift(b: bool)
