@@ -5,6 +5,7 @@ import '../modules/core.vim' as Core
 import '../modules/jisyo.vim' as J
 import '../modules/userjisyo.vim' as UJ
 import '../modules/subwin.vim' as S
+import '../modules/keyhook.vim' as K
 
 export def Enable()
   Core.Popup()
@@ -44,3 +45,8 @@ export def RegisterToUserJisyo(_yomi: string = '', is_instant: bool = false)
     UJ.Register(yomi, is_instant)
   endif
 enddef
+
+export def Keyhook(enable: bool)
+  K.enable = enable
+enddef
+

@@ -284,19 +284,9 @@ export def Commit()
   if midasi && chartype ==# C.Type.Hira
     t = t->substitute(g:vim9skkp.marker_okuri, '', 'n')
   endif
-  if mode() ==# 'c'
-    const p = getcmdpos()
-    getcmdline()
-      ->substitute($'\%{p}c', t, '')
-      ->setcmdline(p + t->len())
-  else
-    var p = getpos('.')
-    getline('.')
-      ->substitute($'\%{p[2]}c', t, '')
-      ->setline('.')
-    p[2] += t->len()
-    setpos('.', p)
-  endif
+  feedkeys("\<ScriptCmd>vim9skkp#Keyhook(false)\<CR>", 'nt')
+  feedkeys(t, 'nt')
+  feedkeys("\<ScriptCmd>vim9skkp#Keyhook(true)\<CR>", 'nt')
   SetText('')
   if chartype ==# C.Type.Abbr
     ToggleCharType(C.Type.Abbr)

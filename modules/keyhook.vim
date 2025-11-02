@@ -7,6 +7,8 @@ vim9script
 import './mainwin.vim' as M
 import './subwin.vim' as S
 
+export var enable = true
+
 var mapping = false
 var ctrlr = false
 
@@ -22,6 +24,8 @@ enddef
 
 def Filter(_: number, key: string): bool
   if key ==# "\<CursorHold>"
+    return false
+  elseif !enable
     return false
   elseif ctrlr
     return false
