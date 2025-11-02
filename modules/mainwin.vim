@@ -80,7 +80,17 @@ def FilterImpl(_key: string, mapping: bool): bool
     return mapping
   elseif U.IsBackSpace(key)
     return BackSpace(mapping)
-  elseif ZenkakuSpace(key)
+  endif
+  const is_normal_char = key ==# ' ' || key ==# key->keytrans()
+  if chartype.roman && is_normal_char && Roman(key)
+    if midasi && key ==# J.prefix
+      Commit()
+    endif
+    Midasi(key)
+    if !midasi && text !~ '[っッ][a-z]$'
+      Commit()
+    endif
+    AfterAddChar()
     return true
   elseif Select(key)
     return true
@@ -94,24 +104,15 @@ def FilterImpl(_key: string, mapping: bool): bool
     return mapping
   elseif CommonFunctions(key)
     return true
-  endif
-  if key !~ '\p' || key !=# key->keytrans()
-    return false
-  endif
-  if midasi && key ==# J.prefix
-    Commit()
-  elseif !mapping
-    return false
-  else
-    Midasi(key)
-  endif
-  if Roman(key)
-    if !midasi && text !~ '[っッ][a-z]$'
-      Commit()
-    endif
-  else
+  elseif mapping && is_normal_char
     $'{text}{key->tolower()}'->SetText()
+    AfterAddChar()
+    return true
   endif
+  return false
+enddef
+
+def AfterAddChar()
   if text =~ g:vim9skkp.auto_commit_regex
     Commit()
   endif
@@ -119,7 +120,6 @@ def FilterImpl(_key: string, mapping: bool): bool
       text =~ g:vim9skkp.auto_suggest_regex
     doautocmd User vim9skkp-m-start
   endif
-  return true
 enddef
 
 def SetStickyShift(b: bool)
@@ -172,17 +172,6 @@ def BackSpace(mapping: bool): bool
     ->substitute('.$', '', '')
     ->SetText()
   return true
-enddef
-
-# <Space>は被りがちなので応急対応
-# TODO: ちゃんと整理すればこの処理は不要になるはず
-def ZenkakuSpace(key: string): bool
-  if key ==# ' ' && midasi && chartype.zenspace && text =~# 'z$'
-    SetText(text->substitute('z$', '　', ''))
-    return true
-  else
-    return false
-  endif
 enddef
 
 def InputAlphabet(key: string, mapping: bool): bool
