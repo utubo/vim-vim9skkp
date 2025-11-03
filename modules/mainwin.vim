@@ -82,17 +82,20 @@ def FilterImpl(_key: string, mapping: bool): bool
     return BackSpace(mapping)
   endif
   const is_normal_char = key ==# ' ' || key ==# key->keytrans()
-  if chartype.roman && is_normal_char && Roman(key)
+  if chartype.roman && is_normal_char
     if midasi && key ==# J.prefix
       Commit()
     endif
     Midasi(key)
-    if !midasi && text !~ '[っッ][a-z]$'
-      Commit()
+    if Roman(key)
+      if !midasi && text !~ '[っッ][a-z]$'
+        Commit()
+      endif
+      AfterAddChar()
+      return true
     endif
-    AfterAddChar()
-    return true
-  elseif Select(key)
+  endif
+  if Select(key)
     return true
   elseif midasi && !!text && g:vim9skkp.keymap.commit->Contains(key)
     Commit()
