@@ -36,15 +36,25 @@ export def Close()
   redraw
 enddef
 
+# textが空の場合はカーソル位置の文字を空かしておく
+def ShowCharAtCursor()
+  popup_settext(winid, U.GetCharAtCursor() ?? ' ')
+enddef
+
 export def FollowCursor(p: dict<any>)
   popup_move(winid, p)
+  if !text
+    ShowCharAtCursor()
+  endif
 enddef
 
 export def SetText(_text: string)
+  if text ==# _text
+    return
+  endif
   text = _text
   if !text
-    # textが空の場合はカーソル位置の文字を空かしておく
-    popup_settext(winid, U.GetCharAtCursor() ?? ' ')
+    ShowCharAtCursor()
   else
     # textの末尾にカーソルを表示
     popup_settext(winid, text .. ' ')
@@ -75,9 +85,8 @@ def FilterImpl(_key: string, mapping: bool): bool
   if sticky_shift
     key = key->toupper()
   endif
-  if IgnoreKeys(key)
-    # NOTE: 無視したいキーもマッピング後は有効なキーになっている可能性がある
-    return mapping
+  if C.arrows->Contains(key)
+    return mapping && !!text
   elseif U.IsBackSpace(key)
     return BackSpace(mapping)
   endif
@@ -130,16 +139,6 @@ def SetStickyShift(b: bool)
     sticky_shift = b
     doautocmd User Vim9skkpStatusChanged
   endif
-enddef
-
-def IgnoreKeys(key: string): bool
-  return Contains([
-    # カーソル移動されると面倒なので
-    "\<Left>",
-    "\<Right>",
-    "\<Up>",
-    "\<Down>",
-  ], key)
 enddef
 
 def CommonFunctions(key: string): bool

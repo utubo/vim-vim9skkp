@@ -6,6 +6,7 @@ export var roman_table: dict<any> = {}
 export var roman_keys: list<string> = []
 export var roman_chars: list<string> = []
 export var okuri_table: dict<any> = {}
+export var arrows = ["\<Left>", "\<Right>", "\<Up>", "\<Down>"]
 
 export enum Type
   Hira(true, false, 'hira', 'ん', true),
