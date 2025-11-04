@@ -9,15 +9,14 @@ export var okuri_table: dict<any> = {}
 export var arrows = ["\<Left>", "\<Right>", "\<Up>", "\<Down>"]
 
 export enum Type
-  Hira(true, 'hira', 'ん', true),
-  Kata(true, 'kata', 'ン', true),
-  Hank(true, 'hankaku', 'ﾝ', false),
-  Alph(false, 'alphabet', 'ｎ', false),
-  Abbr(false, 'abbr', 'n', false)
+  Hira(true, 'hira', 'ん'),
+  Kata(true, 'kata', 'ン'),
+  Hank(true, 'hankaku', 'ﾝ'),
+  Alph(false, 'alphabet', 'ｎ'),
+  Abbr(false, 'abbr', 'n')
   var roman: bool
   var label: string
   var n: string
-  var zenspace: bool
 endenum
 
 export var roman_table_base = {
