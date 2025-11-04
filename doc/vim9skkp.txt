@@ -57,7 +57,7 @@ INSTALLATION					*vim9skkp-instllation*
 	wget http://openlab.jp/skk/dic/SKK-JISYO.L.gz
 	gunzip -f SKK-JISYO.L.gz
 
-お好きな方法でvimにvim9skkpを読み込ませる
+お好きな方法でvim9skkpにパスを通す
 (以下はpack以下に置いて読み込ませる例) >
 	mkdir -p ~/.vim/pack/foo/start
 	cd ~/.vim/pack/foo/start
@@ -66,8 +66,8 @@ INSTALLATION					*vim9skkp-instllation*
 ==============================================================================
 USAGE						*vim9skkp-usage*
 
-挿入モードで`<C-j>`で起動します
-基本的にはよくあるSKKの入力形式と同様です
+挿入モードやコマンドモードにて`<C-j>`で起動します
+入力形式は基本的によくあるSKKと同様です
 
 ひらがなモードまたはカタカナモードで以下の変換が用意されています
 	`z<Space>` 全角スペース
@@ -105,12 +105,10 @@ g:vim9skkp					*g:vim9skkp*
 		「最後に実行した変換」辞書の一つの読みに対する最大候補数
 	marker_okuri
 		送り仮名のマーカーです
-		デフォルト: `*`
 	mode_label
 		現在の入力モードを表す文字です
 	popup_maxheight
 		変換候補の最大表示行数です
-		0で非表示
 	search_limit
 		候補探索の試行上限です
 	keymap
@@ -267,7 +265,7 @@ g:vim9skkp_status				*g:vim9skkp_status*
 g:vim9skkp_exception				*g:vim9skkp_exception*
 	vim9skkpで最後に発生した例外です
 	CursorMovedなどで例外が発生したとき、操作不能にならないように
-	スローする代わりに例外をこの変数に代入しています
+	例外をスローする代わりにこの変数に代入しています
 
 ------------------------------------------------------------------------------
 COMMANDS					*vim9skkp-commands*
@@ -322,7 +320,7 @@ Vim9skkpCand		変換候補
 Vim9skkpCandExtra	変換候補の補足
 Vim9skkpCandShortCut	変換候補のショートカットキー
 
-Note:  ポップアップを使っているのでベースのハイライトはPMenuになります
+Note:  ポップアップを使っているのでハイライトのベースはPMenuになります
 
 
 ==============================================================================
