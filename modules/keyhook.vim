@@ -60,7 +60,7 @@ enddef
 def CtrlR(key: string): bool
   if key ==# "\<C-r>" || key ==# "\<Cmd>" || key ==# "\<ScriptCmd>"
     ctrlr = true
-    timer_start(10, (_) => {
+    timer_start(0, (_) => {
       ctrlr = false
     })
     return true

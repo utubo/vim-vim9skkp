@@ -59,7 +59,7 @@ enddef
 def ClosePumLazy()
   # NOTE: pumvisible()～feedkeys()の間で何かの処理をしている間に
   # pumが消えると<C-e>が暴発するので、できるだけ間を置かず実行する
-  timer_start(10, (_) => {
+  timer_start(0, (_) => {
     if pumvisible()
       feedkeys("\<C-e>", 'nt')
     endif
@@ -77,6 +77,9 @@ def FollowCursor(_: number = 0)
     const c = g:vim9skkp.getcurpos(U.GetCurPos())
     M.FollowCursor(c)
     S.FollowCursor(c, M.text)
+    if mode() ==# 'c'
+      redraw
+    endif
   endif
 enddef
 
@@ -131,10 +134,8 @@ def SetupAutocmd()
         S.Reset()
         S.cands = J.GetHistory()
         S.Show()
-        FollowCursor()
-        if mode() ==# 'c'
-          redraw
-        endif
+        # Note: feedkeysを待ってから再描画する
+        timer_start(0, FollowCursor)
       endif
     }
     au User vim9skkp-m-cancel {
