@@ -244,6 +244,10 @@ def Roman(key: string): bool
     endif
     const r = repeat('.', len(k))
     var v = ToKata(C.roman_table[k], chartype)
+    if !v
+      # NOTE: roman_tableの値に空文字を指定して無効にした場合
+      continue
+    endif
     all
       ->substitute($'n{r}$', $'{chartype.n}{r}', '')
       ->substitute($'{r}$', v, '')
