@@ -261,7 +261,6 @@ def ChangeCharType(key: string): bool
         const before = text
         ToKata(text, t)->SetText()
         J.AddRecent(before, text)
-        J.AddHistory(text)
         Commit()
         return true
       else
@@ -293,6 +292,7 @@ export def Commit()
   feedkeys(t, 'nt')
   feedkeys("\<Cmd>call vim9skkp#Keyhook(v:true)\<CR>", 'nt')
   SetText('')
+  J.AddHistory(t)
   if chartype ==# C.Type.Abbr
     ToggleCharType(C.Type.Abbr)
     midasi = g:vim9skkp.keep_midasi_mode

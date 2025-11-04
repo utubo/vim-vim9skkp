@@ -336,6 +336,7 @@ export def GetHistory(text: string = ''): list<string>
   if history->has_key(last_input)
     return history[last_input]
       ->filter((k, v) => !text || v->StartsWith(text))
+      ->copy() # NOTE: ここでcopyをしとかないと候補が増殖する
       ->map((k, v) => $'{v};入力履歴')
   else
     return []

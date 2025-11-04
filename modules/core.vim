@@ -151,7 +151,6 @@ def SetupAutocmd()
     }
     au User vim9skkp-s-commit {
       J.AddRecent(S.src, S.cands[S.index])
-      J.AddHistory(S.selected)
       M.Commit()
     }
     au User vim9skkp-s-cancel {
