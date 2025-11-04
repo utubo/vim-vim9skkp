@@ -86,6 +86,8 @@ def FilterImpl(_key: string, mapping: bool): bool
     key = key->toupper()
   endif
   if C.arrows->Contains(key)
+    # NOTE: 入力が入ったままカーソル移動されると面倒だが、
+    # コマンドモードではカーソル移動したいので入力が空のときは矢印キーを許可する
     return mapping && !!text
   elseif U.IsBackSpace(key)
     return BackSpace(mapping)
