@@ -179,10 +179,10 @@ def BackSpace(mapping: bool): bool
 enddef
 
 def InputAlphabet(key: string, mapping: bool): bool
-  if !mapping
+  if C.abbr_chars->index(key) ==# -1
+    return mapping
+  elseif !mapping
     return true
-  elseif C.abbr_chars->index(key) ==# -1
-    return false
   elseif chartype ==# C.Type.Abbr
     SetText(text .. key)
     return true

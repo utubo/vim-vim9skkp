@@ -12,14 +12,17 @@ export def Tr(str: string, from_chars: list<string>, to_chars: list<string>): st
 enddef
 
 # カーソル位置を { col, line }のdictで返す
+# NOTE: terminalはどうやってもカーソル位置を取得できない
 export def GetCurPos(): dict<any>
   var p = { col: 0, line: 0 }
   const m = mode()
   if m ==# 'c'
     const q = getcmdscreenpos()
+    const t = GetTabpanelWidth()
+    const w = &columns - t[0] - t[1]
     p = {
-      line: &lines + q / &columns - &cmdheight + 1,
-      col: q % &columns,
+      line: &lines - &cmdheight + 1 + q / w,
+      col: q % w + t[0],
     }
   else
     const c = getcurpos()[1 : 2]
@@ -29,8 +32,25 @@ export def GetCurPos(): dict<any>
       col: q.col,
     }
   endif
-  # NOTE: terminalはどうやってもカーソル位置を取得できない
   return p
+enddef
+
+def GetTabpanelWidth(): list<number>
+  if !has('tabpanel')
+    return [0, 0]
+  endif
+  var s = 0
+  silent! s = execute('echon &showtabpanel')->str2nr()
+  if s ==# 0 || s ==# 1 && tabpagenr('$') ==# 1
+    return [0, 0]
+  endif
+  var opt = ''
+  silent! opt = execute('echon &tabpanelopt')
+  const c = opt->matchstr('\(columns:\)\@<=\d\+')->str2nr() ?? 20
+  if &columns < c
+    return [0, 0]
+  endif
+  return opt->stridx('align:right') ==# -1 ? [c, 0] : [0, c]
 enddef
 
 # カーソル位置の文字を返す
