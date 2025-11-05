@@ -180,7 +180,7 @@ enddef
 
 def InputAlphabet(key: string, mapping: bool): bool
   if C.abbr_chars->index(key) ==# -1
-    return mapping
+    return false
   elseif !mapping
     return true
   elseif chartype ==# C.Type.Abbr
