@@ -185,6 +185,9 @@ g:vim9skkp					*g:vim9skkp*
 
 			foo(pos: any): any
 <
+	getcurpos
+		デバッグ用です。ポップアップに飛んできた入力を
+		このサイズの分だけ保存します。
 
 	デフォルトは以下です >
 	{
@@ -233,6 +236,7 @@ g:vim9skkp					*g:vim9skkp*
 	  auto_suggest_regex: '*[っッ]\?[^a-zA-Zっッ]$',
 	  getcurpos: vim9skkp#NoChangeCurPos,
 	  hide_cursor: true,
+	  dumpsize: 0,
 	}
 
 Note:  カスタマイズする際は、デフォルトから変更したい項目だけをセットすれば
@@ -298,6 +302,10 @@ vim9skkp#ReadJisyo({パス})			*vim9skkpReadJisyo*
 
 vim9skkp#RefreshCands()				*vim9skkpRefreshCands*
 	候補を再描画します
+
+vim9skkp#Dump()					*vim9skkpDump*
+	入力履歴を表示します
+	Note: 事前にg:vim9skkp.dumpsizeを設定してください
 
 ------------------------------------------------------------------------------
 EVENTS						*vim9skkp-events*

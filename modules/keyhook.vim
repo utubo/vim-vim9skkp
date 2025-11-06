@@ -11,11 +11,13 @@ export var enable = true
 
 var mapping = false
 var ctrlr = false
+var dump = []
 
 export def SetupKeyHook(_: number = 0)
   popup_setoptions(M.winid, {
     mapping: false,
     filter: Filter,
+    # TODO: これだとimap <Esc> <Esc>hodeに対応できない
     filtermode: 'ic',
   })
   mapping = false
@@ -23,6 +25,7 @@ export def SetupKeyHook(_: number = 0)
 enddef
 
 def Filter(_: number, key: string): bool
+  Dump(key)
   if key ==# "\<CursorHold>"
     return false
   elseif !enable
@@ -67,5 +70,24 @@ def CtrlR(key: string): bool
   else
     return false
   endif
+enddef
+
+def Dump(key: string)
+  if !g:vim9skkp.dumpsize
+    return
+  endif
+  dump->add({
+    key: key, enable: enable, mapping: mapping, ctrlr: ctrlr,
+  })
+  const offset = len(dump) - g:vim9skkp.dumpsize
+  if 0 < offset
+    dump->remove(0, offset)
+  endif
+enddef
+
+export def ShowDump()
+  for d in dump
+    echo $'key:{d.key} {char2nr(d.key)} enable:{d.enable} mapping:{d.mapping} ctrlr:{d.ctrlr}'
+  endfor
 enddef
 

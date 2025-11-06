@@ -47,6 +47,7 @@ var default = {
   auto_suggest_regex: '*[っッ]\?[^a-zA-Zっッ]$',
   getcurpos: vim9skkp#NoChangeCurPos,
   hide_cursor: true,
+  dumpsize: 0,
 }
 g:vim9skkp = get(g:, 'vim9skkp', {})
 g:vim9skkp->extend(default, 'keep')

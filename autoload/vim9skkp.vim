@@ -50,3 +50,7 @@ export def Keyhook(enable: bool)
   K.enable = enable
 enddef
 
+export def Dump()
+  K.ShowDump()
+enddef
+
