@@ -1,6 +1,6 @@
 vim9script
 
-# 文字の入力と表示するポップアップウィンドウ
+# 文字入力ポップアップウィンドウ
 
 import './const.vim' as C
 import './util.vim' as U
@@ -67,15 +67,25 @@ enddef
 
 # 入力制御の大枠
 export def Filter(key: string, mapping: bool): bool
-  if FilterImpl(key, mapping)
+  const done = FilterImpl(key, mapping)
+  if done
     SetStickyShift(false)
     return true
   endif
-  if mapping
-    # 処理対象外なら入力中のものは確定してしまう
-    Commit()
-    SetStickyShift(false)
+
+  # マッピング済みのキーをkeyhook#Filterから貰うため一旦falseで返す
+  if !mapping
+    return false
   endif
+
+  # 以下、マッピング済みのキーでもやることが無かった場合
+  SetStickyShift(false)
+  if !!text
+    # 入力中のものは確定してしまう
+    Commit(key)
+    return true
+  endif
+
   return false
 enddef
 
@@ -108,11 +118,15 @@ def FilterImpl(_key: string, mapping: bool): bool
   endif
   if Select(key)
     return true
-  elseif midasi && !!text && g:vim9skkp.keymap.commit->Contains(key)
-    Commit()
-    return true
-  elseif g:vim9skkp_status.is_cand_selected
-    Commit()
+  elseif (midasi || chartype ==# C.Type.Abbr) && !!text
+    if g:vim9skkp.keymap.commit->Contains(key)
+      Commit()
+      return true
+    elseif g:vim9skkp_status.is_cand_selected
+      Commit()
+      Filter(key, true)
+      return true
+    endif
   endif
   if InputAlphabet(key, mapping)
     return mapping
@@ -288,13 +302,13 @@ export def ToggleCharType(ct: C.Type)
   doautocmd User Vim9skkpStatusChanged
 enddef
 
-export def Commit()
+export def Commit(lastkey: string = '')
   var t = text
   if midasi && chartype ==# C.Type.Hira
     t = t->substitute(g:vim9skkp.marker_okuri, '', 'n')
   endif
   feedkeys("\<Cmd>call vim9skkp#Keyhook(v:false)\<CR>", 'nt')
-  feedkeys(t, 'nt')
+  feedkeys(t .. lastkey, 'nt')
   feedkeys("\<Cmd>call vim9skkp#Keyhook(v:true)\<CR>", 'nt')
   SetText('')
   J.AddHistory(t)

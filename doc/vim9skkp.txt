@@ -279,7 +279,6 @@ COMMANDS					*vim9skkp-commands*
 :Vim9skkpRegisterToUserJisyo [{読み}]		*:Vim9skkpRegisterToUserJisyo*
 	ユーザー辞書に登録します
 
-
 ------------------------------------------------------------------------------
 FUNCTIONS					*vim9skkp-functions*
 
@@ -305,7 +304,6 @@ EVENTS						*vim9skkp-events*
 
 Vim9skkpStatusChanged				*Vim9skkpModeChanged*
 	`g:vim9skkp_status`が変更されたときに発火します
-
 
 ------------------------------------------------------------------------------
 HIGHLIGHTS					*vim9skkp-highlights*
