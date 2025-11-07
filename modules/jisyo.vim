@@ -120,19 +120,28 @@ export def GetAllCands(text: string): list<any>
     cands += GetCandsFromJisyo(j, yomi)
   endfor
   cands = cands->Uniq()
-  # NOTE: 参考
-  # https://www.bunka.go.jp/kokugo_nihongo/sisaku/joho/joho/kijun/naikaku/gairai
-  if gokan =~# '[ゔーぱぴぷぺぽ]\|[いうくぐしじつとふ][ぁぃぇぉ]\|[てで][ぃぅ]\|ふゅ\|ちぇ'
-    cands += [U.Tr(gokan, C.hira_chars, C.kata_chars) .. tag_gairai]
-  endif
+  cands += GetGairaigo(gokan)
   if !cands
     cands += GetAllCandsWithFix(text)
   endif
   cands += [$'{gokan}{tag_muhen}']
   return [cands, yomi, okuri]
 enddef
+# }}}
 
-# `にゃ`→`んや`等の入力ミスをフォロー
+# 変換補完 {{{
+# 外来語判別
+# NOTE: 参考
+# https://www.bunka.go.jp/kokugo_nihongo/sisaku/joho/joho/kijun/naikaku/gairai
+def GetGairaigo(text: string): list<string>
+  if text =~# '[ゔーぱぴぷぺぽ]\|[いうくぐしじつとふ][ぁぃぇぉ]\|[てで][ぃぅ]\|ふゅ\|ちぇ'
+    return [U.Tr(text, C.hira_chars, C.kata_chars) .. tag_gairai]
+  else
+    return []
+  endif
+enddef
+
+# 入力修正(`にゃ`→`んや`等の入力ミスをフォロー)
 def GetAllCandsWithFix(text: string): list<string>
   const fixed_text = text
     ->substitute('にゃ', 'んや', 'g')
@@ -145,7 +154,6 @@ def GetAllCandsWithFix(text: string): list<string>
   fixed[-1] = fixed[-1]->substitute(tag_muhen, tag_fixed, 'n')
   return fixed
 enddef
-
 # }}}
 
 # 辞書操作 {{{
