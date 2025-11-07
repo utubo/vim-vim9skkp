@@ -40,11 +40,8 @@ def Filter(_: number, key: string): bool
   # マッピング済みの入力を受け取ったらポップアップのmappingを元に戻しておく
   const m = mapping
   if m
-    # `inoremap " ""<Left>`等に対応するため遅延させる
-    timer_start(0, (_) => {
-      popup_setoptions(M.winid, { mapping: false })
-      mapping = false
-    })
+    popup_setoptions(M.winid, { mapping: false })
+    mapping = false
   endif
 
   # キー処理メイン
@@ -52,7 +49,7 @@ def Filter(_: number, key: string): bool
     return true
   elseif M.Filter(key, m)
     return true
-  elseif m
+  elseif m || state('m') ==# 'm'
     return false
   else
     # 一旦mapping: trueにしてマッピング済みの入力をFilterで受けなおす
