@@ -92,6 +92,24 @@ export def Filter(key: string, mapping: bool): bool
 enddef
 
 # `imap foo <Esc>buz`等への対応
+# feedkeysを跨いでモードが変ると入力がくずれるので
+# queueに貯めてCommitと共に一気に開放する
+def QueueCommit(key: string)
+  normal_mode = key ==# "\<Esc>"
+  if normal_mode
+    queue = key
+    timer_start(0, (_) => {
+      Commit(queue)
+      normal_mode = false
+      queue = ''
+    })
+  else
+    # モードが変らないのならqueueする必要なし
+    Commit()
+    Filter(key, true)
+  endif
+enddef
+
 export def AddQueue(key: string): bool
   if normal_mode
     queue ..= key
@@ -99,16 +117,6 @@ export def AddQueue(key: string): bool
   else
     return false
   endif
-enddef
-
-def QueueCommit(key: string)
-  normal_mode = key ==# "\<Esc>"
-  queue = key
-  timer_start(0, (_) => {
-    Commit(queue)
-    normal_mode = false
-    queue = ''
-  })
 enddef
 
 # 入力制御のメイン
@@ -144,7 +152,7 @@ def FilterImpl(_key: string, mapping: bool): bool
     if g:vim9skkp.keymap.commit->Contains(key)
       Commit()
       return true
-    elseif g:vim9skkp_status.is_cand_selected && mapping
+    elseif mapping && g:vim9skkp_status.is_cand_selected
       QueueCommit(key)
       return true
     endif
