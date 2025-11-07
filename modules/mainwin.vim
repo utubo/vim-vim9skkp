@@ -304,7 +304,10 @@ def ChangeCharType(key: string): bool
     if g:vim9skkp.keymap[t.label]->Contains(key)
       if midasi && !!text
         const before = text
-        ToKata(text, t)->SetText()
+        text
+          ->substitute($'n$', $'{chartype.n}', '')
+          ->ToKata(t)
+          ->SetText()
         J.AddRecent(before, text)
         Commit()
         return true
