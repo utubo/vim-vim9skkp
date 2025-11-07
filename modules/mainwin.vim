@@ -15,7 +15,7 @@ export var text = ''
 export var chartype = C.Type.Hira
 export var midasi = false
 export var sticky_shift = false
-var normal_mode = false
+export var normal_mode = false
 var queue = ''
 
 # 表示制御 {{{
@@ -69,11 +69,6 @@ enddef
 
 # 入力制御の大枠
 export def Filter(key: string, mapping: bool): bool
-  if normal_mode
-    queue ..= key
-    return true
-  endif
-
   const done = FilterImpl(key, mapping)
   if done
     SetStickyShift(false)
@@ -89,18 +84,31 @@ export def Filter(key: string, mapping: bool): bool
   SetStickyShift(false)
   if !!text
     # 入力中のものは確定してしまう
-    # `imap foo <Esc>buz`等への対応
-    normal_mode = key ==# "\<Esc>"
-    queue = key
-    timer_start(0, (_) => {
-      normal_mode = false
-      Commit(queue)
-      queue = ''
-    })
+    QueueCommit(key)
     return true
   endif
 
   return false
+enddef
+
+# `imap foo <Esc>buz`等への対応
+export def AddQueue(key: string): bool
+  if normal_mode
+    queue ..= key
+    return true
+  else
+    return false
+  endif
+enddef
+
+def QueueCommit(key: string)
+  normal_mode = key ==# "\<Esc>"
+  queue = key
+  timer_start(0, (_) => {
+    Commit(queue)
+    normal_mode = false
+    queue = ''
+  })
 enddef
 
 # 入力制御のメイン
@@ -136,9 +144,8 @@ def FilterImpl(_key: string, mapping: bool): bool
     if g:vim9skkp.keymap.commit->Contains(key)
       Commit()
       return true
-    elseif g:vim9skkp_status.is_cand_selected
-      Commit()
-      Filter(key, true)
+    elseif g:vim9skkp_status.is_cand_selected && mapping
+      QueueCommit(key)
       return true
     endif
   endif

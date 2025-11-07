@@ -29,6 +29,8 @@ def Filter(_: number, key: string): bool
     return false
   elseif !enable
     return false
+  elseif M.AddQueue(key)
+    return true
   elseif ctrlr
     return false
   elseif CtrlR(key)
