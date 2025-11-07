@@ -222,7 +222,7 @@ export def AddUserWord(key: string, value: string): bool
     return false
   endif
   j.lines += [newline]
-  WriteJisyo(j.lines, g:vim9skkp.jisyo_user, 'a')
+  WriteJisyo([newline], g:vim9skkp.jisyo_user, 'a')
   # 候補探索用の辞書にはソート済のものをセットする
   jisyo[g:vim9skkp.jisyo_user] = {
     lines: j.lines->copy()->sort(),
