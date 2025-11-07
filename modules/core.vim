@@ -121,7 +121,7 @@ def SetupAutocmd()
     au User vim9skkp-m-settext OnSetText()
     au User vim9skkp-m-start {
       S.ShowCands(M.text)
-      if len(S.cands) < 2 && get(S.cands, 0, ';無変換') =~ ';無変換'
+      if len(S.cands) < 2 && get(S.cands, 0, J.tag_muhen) =~ J.tag_muhen
         M.SetText(S.src)
         UJ.RegisterWithInstant()
       endif

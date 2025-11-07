@@ -6,6 +6,12 @@ import './const.vim' as C
 import './util.vim' as U
 
 export const prefix = '>'
+export const tag_muhen = ';無変換'
+const tag_history = ';入力履歴'
+const tag_recent = ';変換履歴'
+const tag_gairai = ';外来語'
+const tag_fixed = ';入力修正'
+const tag_user = ';ユーザー辞書'
 
 var jisyo = {}
 var recent = {}
@@ -107,9 +113,9 @@ export def GetAllCands(text: string): list<any>
   var cands = []
   cands += GetCandsFromJisyo(g:vim9skkp.jisyo_recent, yomi)
     ->filter((k, v): bool => k < g:vim9skkp.recent_per_yomi)
-    ->map((k, v): string => $'{v};変換履歴')
+    ->map((k, v): string => $'{v}{tag_recent}')
   cands += GetCandsFromJisyo(g:vim9skkp.jisyo_user, yomi)
-    ->map((k, v): string => $'{v};ユーザー辞書')
+    ->map((k, v): string => $'{v}{tag_user}')
   for j in g:vim9skkp.jisyo
     cands += GetCandsFromJisyo(j, yomi)
   endfor
@@ -117,11 +123,29 @@ export def GetAllCands(text: string): list<any>
   # NOTE: 参考
   # https://www.bunka.go.jp/kokugo_nihongo/sisaku/joho/joho/kijun/naikaku/gairai
   if gokan =~# '[ゔーぱぴぷぺぽ]\|[いうくぐしじつとふ][ぁぃぇぉ]\|[てで][ぃぅ]\|ふゅ\|ちぇ'
-    cands += [U.Tr(gokan, C.hira_chars, C.kata_chars) .. ';外来語']
+    cands += [U.Tr(gokan, C.hira_chars, C.kata_chars) .. tag_gairai]
   endif
-  cands += [$'{gokan};無変換']
+  if !cands
+    cands += GetAllCandsWithFix(text)
+  endif
+  cands += [$'{gokan}{tag_muhen}']
   return [cands, yomi, okuri]
 enddef
+
+# `にゃ`→`んや`等の入力ミスをフォロー
+def GetAllCandsWithFix(text: string): list<string>
+  const fixed_text = text
+    ->substitute('にゃ', 'んや', 'g')
+    ->substitute('にゅ', 'んゆ', 'g')
+    ->substitute('にょ', 'んよ', 'g')
+  if fixed_text ==# text
+    return []
+  endif
+  var [fixed, _, __] = GetAllCands(fixed_text)
+  fixed[-1] = fixed[-1]->substitute(tag_muhen, tag_fixed, 'n')
+  return fixed
+enddef
+
 # }}}
 
 # 辞書操作 {{{
@@ -258,10 +282,10 @@ enddef
 
 # 変換履歴と入力履歴 {{{
 export def AddRecent(_before: string, _after: string)
-  if !_after || _after =~ ';入力履歴$'
+  if !_after || _after =~ $'{tag_history}$'
     return
   endif
-  const [before, after] = _after =~ ';変換履歴 .\+'
+  const [before, after] = _after =~ $'{tag_recent} .\+'
     ? FromRecentCand(_after)
     : [_before, _after->substitute(';.*', '', '')]
   # 新規に追加する行
@@ -308,13 +332,13 @@ enddef
 
 def ToRecentCand(cand: string, yomi: string): string
   const okuri = yomi->Split(g:vim9skkp.marker_okuri)[1]
-  return $'{cand}{okuri};変換履歴 {yomi}'
+  return $'{cand}{okuri}{tag_recent} {yomi}'
 enddef
 
 def FromRecentCand(_cand: string): list<string>
-  const yomi = _cand->substitute('^.*;変換履歴 ', '', '')
+  const yomi = _cand->substitute($'^.*{tag_recent} ', '', '')
   const okuri = _cand->Split(g:vim9skkp.marker_okuri)[1]
-  const cand = _cand->substitute($'{okuri};変換履歴 .*$', '', '')
+  const cand = _cand->substitute($'{okuri}{tag_recent} .*$', '', '')
   return [yomi, cand]
 enddef
 
@@ -337,7 +361,7 @@ export def GetHistory(text: string = ''): list<string>
     return history[last_input]
       ->filter((k, v) => !text || v->StartsWith(text))
       ->copy() # NOTE: ここでcopyをしとかないと候補が増殖する
-      ->map((k, v) => $'{v};入力履歴')
+      ->map((k, v) => $'{v}{tag_history}')
   else
     return []
   endif
