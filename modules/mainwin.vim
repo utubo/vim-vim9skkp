@@ -300,20 +300,20 @@ enddef
 
 def ChangeCharType(key: string): bool
   const oldtype = chartype
-  for t in C.Type.values
-    if g:vim9skkp.keymap[t.label]->Contains(key)
+  for ct in C.Type.values
+    if g:vim9skkp.keymap[ct.label]->Contains(key)
       if midasi && !!text
         const before = text
         text
           ->substitute($'n$', $'{chartype.n}', '')
-          ->ToKata(t)
+          ->ToKata(ct)
           ->SetText()
         J.AddRecent(before, text)
         Commit()
         return true
       else
         noautocmd SetMidasiMode(false)
-        noautocmd ToggleCharType(t)
+        noautocmd ToggleCharType(ct)
       endif
       break
     endif
