@@ -172,7 +172,7 @@ def AfterAddChar()
   endif
   if !!g:vim9skkp.auto_suggest_regex &&
       text =~ g:vim9skkp.auto_suggest_regex
-    doautocmd User vim9skkp-m-start
+    StartSelect()
   endif
 enddef
 
@@ -352,19 +352,23 @@ def Select(key: string): bool
   elseif !midasi && chartype !=# C.Type.Abbr
     return false
   elseif g:vim9skkp.keymap.select->Contains(key)
-    doautocmd User vim9skkp-m-start
-    return true
+    return StartSelect()
   else
     return false
   endif
 enddef
 
-export def PreStart()
+def StartSelect(): bool
+  if g:vim9skkp_status.is_cand_selected
+    return false
+  endif
   if chartype !=# C.Type.Abbr
     text
       ->substitute('n$', chartype.n, '')
       ->SetText()
   endif
+  doautocmd User vim9skkp-m-start
+  return true
 enddef
 # }}}
 
