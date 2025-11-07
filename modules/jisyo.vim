@@ -380,8 +380,11 @@ export def GetRecentAndHistory(text: string): list<string>
 enddef
 # }}}
 
+# その他 {{{
 export def RefreshJisyo()
   jisyo = {}
   recent = {}
   echo '辞書をリフレッシュしました'
 enddef
+# }}}
+
