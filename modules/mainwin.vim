@@ -128,6 +128,7 @@ def FilterImpl(_key: string, mapping: bool): bool
     return mapping && !!text
   elseif U.IsBackSpace(key)
     return BackSpace(mapping)
+  endif
   const is_normal_char = key ==# ' ' || key ==# key->keytrans()
   if chartype.roman && is_normal_char
     if midasi && key ==# J.prefix
