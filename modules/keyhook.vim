@@ -17,7 +17,6 @@ export def SetupKeyHook(_: number = 0)
   popup_setoptions(M.winid, {
     mapping: false,
     filter: Filter,
-    # TODO: これだとimap <Esc> <Esc>hodeに対応できない
     filtermode: 'ic',
   })
   mapping = false

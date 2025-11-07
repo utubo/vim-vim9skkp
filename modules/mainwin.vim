@@ -15,6 +15,8 @@ export var text = ''
 export var chartype = C.Type.Hira
 export var midasi = false
 export var sticky_shift = false
+var normal_mode = false
+var queue = ''
 
 # 表示制御 {{{
 export def Popup()
@@ -67,6 +69,11 @@ enddef
 
 # 入力制御の大枠
 export def Filter(key: string, mapping: bool): bool
+  if normal_mode
+    queue ..= key
+    return true
+  endif
+
   const done = FilterImpl(key, mapping)
   if done
     SetStickyShift(false)
@@ -82,7 +89,14 @@ export def Filter(key: string, mapping: bool): bool
   SetStickyShift(false)
   if !!text
     # 入力中のものは確定してしまう
-    Commit(key)
+    # `imap foo <Esc>buz`等への対応
+    normal_mode = key ==# "\<Esc>"
+    queue = key
+    timer_start(0, (_) => {
+      normal_mode = false
+      Commit(queue)
+      queue = ''
+    })
     return true
   endif
 
