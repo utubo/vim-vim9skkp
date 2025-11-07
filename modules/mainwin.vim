@@ -61,7 +61,7 @@ export def SetText(_text: string)
     # textの末尾にカーソルを表示
     popup_settext(winid, text .. ' ')
   endif
-  doautocmd vim9skkp User vim9skkp-m-settext
+  doautocmd User vim9skkp-m-settext
 enddef
 # }}}
 
@@ -143,7 +143,7 @@ def FilterImpl(_key: string, mapping: bool): bool
       return true
     endif
   endif
-  if Select(key)
+  if StartSelect(key)
     return true
   elseif (midasi || chartype ==# C.Type.Abbr) && !!text
     if g:vim9skkp.keymap.commit->Contains(key)
@@ -253,7 +253,7 @@ enddef
 export def SetMidasiMode(b: bool)
   if midasi !=# b
     midasi = b
-    doautocmd User Vim9skkpStatusChanged
+    silent! doautocmd User Vim9skkpStatusChanged
   endif
 enddef
 
@@ -311,7 +311,6 @@ def ChangeCharType(key: string): bool
       else
         noautocmd SetMidasiMode(false)
         noautocmd ToggleCharType(t)
-        doautocmd User Vim9skkpStatusChanged
       endif
       break
     endif
@@ -325,7 +324,7 @@ export def ToggleCharType(ct: C.Type)
   else
     chartype = ct
   endif
-  doautocmd User Vim9skkpStatusChanged
+  silent! doautocmd User Vim9skkpStatusChanged
 enddef
 
 export def Commit(lastkey: string = '')
@@ -346,27 +345,19 @@ export def Commit(lastkey: string = '')
   doautocmd User vim9skkp-m-commit
 enddef
 
-def Select(key: string): bool
+def StartSelect(key: string = ''): bool
   if !text
+    return false
+  elseif g:vim9skkp_status.is_cand_selected
     return false
   elseif !midasi && chartype !=# C.Type.Abbr
     return false
-  elseif g:vim9skkp.keymap.select->Contains(key)
-    return StartSelect()
-  else
+  elseif !!key && !g:vim9skkp.keymap.select->Contains(key)
     return false
   endif
-enddef
-
-def StartSelect(): bool
-  if g:vim9skkp_status.is_cand_selected
-    return false
-  endif
-  if chartype !=# C.Type.Abbr
-    text
-      ->substitute('n$', chartype.n, '')
-      ->SetText()
-  endif
+  text
+    ->substitute('n$', chartype.n, '')
+    ->SetText()
   doautocmd User vim9skkp-m-start
   return true
 enddef
