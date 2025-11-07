@@ -15,7 +15,7 @@ export var text = ''
 export var chartype = C.Type.Hira
 export var midasi = false
 export var sticky_shift = false
-export var normal_mode = false
+var normal_mode = false
 var queue = ''
 
 # 表示制御 {{{
