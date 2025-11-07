@@ -73,17 +73,14 @@ export def Filter(key: string, mapping: bool): bool
   if done
     SetStickyShift(false)
     return true
-  endif
-
-  # マッピング済みのキーをkeyhook#Filterから貰うため一旦falseで返す
-  if !mapping
+  elseif !mapping
+    # マッピング後のキーをkeyhook#Filterから貰うため一旦falseで返す
     return false
   endif
 
-  # 以下、マッピング済みのキーでもやることが無かった場合
+  # マッピング後のキーでもやることが無かった場合
   SetStickyShift(false)
   if !!text
-    # 入力中のものは確定してしまう
     QueueCommit(key)
     return true
   endif
