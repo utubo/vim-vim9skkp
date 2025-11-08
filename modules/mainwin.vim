@@ -335,9 +335,9 @@ export def Commit(lastkey: string = '')
   if midasi && chartype ==# C.Type.Hira
     t = t->substitute(g:vim9skkp.marker_okuri, '', 'n')
   endif
-  feedkeys("\<Cmd>call vim9skkp#Keyhook(v:false)\<CR>", 'nt')
+  feedkeys("\<Cmd>call vim9skkp#KeyHook(v:false)\<CR>", 'nt')
   feedkeys(t .. lastkey, 'nt')
-  feedkeys("\<Cmd>call vim9skkp#Keyhook(v:true)\<CR>", 'nt')
+  feedkeys("\<Cmd>call vim9skkp#KeyHook(v:true)\<CR>", 'nt')
   SetText('')
   J.AddHistory(t)
   if chartype ==# C.Type.Abbr

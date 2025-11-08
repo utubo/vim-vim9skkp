@@ -45,7 +45,7 @@ var default = {
   keep_midasi_mode: false,
   auto_commit_regex: '[ をヲ、。「」]',
   auto_suggest_regex: '*[っッ]\?[^a-zA-Zっッ]$',
-  getcurpos: vim9skkp#NoChangeCurPos,
+  getcurpos: vim9skkp#Nop,
   hide_cursor: true,
   dumpsize: 0,
 }

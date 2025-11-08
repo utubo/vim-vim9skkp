@@ -7,6 +7,7 @@ import '../modules/userjisyo.vim' as UJ
 import '../modules/subwin.vim' as S
 import '../modules/keyhook.vim' as K
 
+# API {{{
 export def Enable()
   Core.Popup()
 enddef
@@ -19,12 +20,8 @@ export def Toggle()
   Core.Toggle()
 enddef
 
-export def RefreshCands()
-  S.Show()
-enddef
-
-export def NoChangeCurPos(popup_pos: any): any
-  return popup_pos
+export def Nop(a: any): any
+  return a
 enddef
 
 export def TerminalInput()
@@ -46,11 +43,14 @@ export def RegisterToUserJisyo(_yomi: string = '', is_instant: bool = false)
   endif
 enddef
 
-export def Keyhook(enable: bool)
-  K.enable = enable
-enddef
-
 export def Dump()
   K.ShowDump()
 enddef
+# }}}
+
+# Plugin local {{{
+export def KeyHook(enable: bool)
+  K.enable = enable
+enddef
+# }}}
 

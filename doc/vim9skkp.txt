@@ -234,7 +234,7 @@ g:vim9skkp					*g:vim9skkp*
 	  keep_midasi_mode: false,
 	  auto_commit_regex: '[ をヲ、。「」]',
 	  auto_suggest_regex: '*[っッ]\?[^a-zA-Zっッ]$',
-	  getcurpos: vim9skkp#NoChangeCurPos,
+	  getcurpos: vim9skkp#Nop,
 	  hide_cursor: true,
 	  dumpsize: 0,
 	}
@@ -299,9 +299,6 @@ vim9skkp#ReadJisyo({パス})			*vim9skkpReadJisyo*
 	パスで指定した辞書を読み込み、
 	{ line: list<string>, enc: string }
 	をreturnします
-
-vim9skkp#RefreshCands()				*vim9skkpRefreshCands*
-	候補を再描画します
 
 vim9skkp#Dump()					*vim9skkpDump*
 	入力履歴を表示します
