@@ -18,7 +18,7 @@ export def GetCurPos(): dict<any>
   const m = mode()
   if m ==# 'c'
     const q = getcmdscreenpos()
-    const t = GetTabpanelWidth()
+    const t = GetLeftTabpanelWidth()
     const w = &columns - t
     p = {
       line: &lines - &cmdheight + 1 + q / w,
@@ -35,15 +35,17 @@ export def GetCurPos(): dict<any>
   return p
 enddef
 
-def GetTabpanelWidth(): number
-  var s = 0
-  silent! s = execute('echon &showtabpanel')->str2nr()
-  if s ==# 0 || s ==# 1 && tabpagenr('$') ==# 1
+def GetLeftTabpanelWidth(): number
+  if !&showtabpanel
     return 0
   endif
-  var opt = ''
-  silent! opt = execute('echon &tabpanelopt')
-  const c = opt->matchstr('\(columns:\)\@<=\d\+')->str2nr() ?? 20
+  if &showtabpanel ==# 1 && tabpagenr('$') ==# 1
+    return 0
+  endif
+  if &tabpanelopt =~ 'align:right'
+    return 0
+  endif
+  const c = &tabpanelopt->matchstr('\(columns:\)\@<=\d\+')->str2nr() ?? 20
   return &columns < c ? 0 : c
 enddef
 
