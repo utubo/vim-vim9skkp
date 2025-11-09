@@ -182,7 +182,6 @@ g:vim9skkp					*g:vim9skkp*
 		ポップアップなどの表示位置を微調整したい場合は
 		以下の関数を用意しカーソル位置を返却してください
 		引数posはvim9skkpが算出したカーソル位置です >
-
 			foo(pos: any): any
 <
 	getcurpos

@@ -19,10 +19,10 @@ export def GetCurPos(): dict<any>
   if m ==# 'c'
     const q = getcmdscreenpos()
     const t = GetTabpanelWidth()
-    const w = &columns - t[0] - t[1]
+    const w = &columns - t
     p = {
       line: &lines - &cmdheight + 1 + q / w,
-      col: q % w + t[0],
+      col: q % w,
     }
   else
     const c = getcurpos()[1 : 2]
@@ -35,22 +35,16 @@ export def GetCurPos(): dict<any>
   return p
 enddef
 
-def GetTabpanelWidth(): list<number>
-  if !has('tabpanel')
-    return [0, 0]
-  endif
+def GetTabpanelWidth(): number
   var s = 0
   silent! s = execute('echon &showtabpanel')->str2nr()
   if s ==# 0 || s ==# 1 && tabpagenr('$') ==# 1
-    return [0, 0]
+    return 0
   endif
   var opt = ''
   silent! opt = execute('echon &tabpanelopt')
   const c = opt->matchstr('\(columns:\)\@<=\d\+')->str2nr() ?? 20
-  if &columns < c
-    return [0, 0]
-  endif
-  return opt->stridx('align:right') ==# -1 ? [c, 0] : [0, c]
+  return &columns < c ? 0 : c
 enddef
 
 # カーソル位置の文字を返す
