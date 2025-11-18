@@ -23,9 +23,6 @@ def Init()
   C.roman_table = C.roman_table_base->extend(g:vim9skkp.roman_table)
   C.roman_keys = C.roman_table->keys()->sort((a, b) => len(b) - len(a))
   C.roman_chars = C.roman_keys->join()->split('\zs')
-  for [k, v] in C.roman_table->items()
-    C.okuri_table[v->strcharpart(0, 1)] = k[0]
-  endfor
   SetupAutocmd()
   g:vim9skkp.jisyo = J.ExpandPaths(g:vim9skkp.jisyo)
   initialized = true

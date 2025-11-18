@@ -73,6 +73,10 @@ export var roman_table_base = {
   '!': '！', '?': '？', '~': '～',
 }
 
+for [k, v] in roman_table_base->items()
+  okuri_table[v->strcharpart(0, 1)] = k[0]
+endfor
+
 export const hira_chars = ('ぁあぃいぅうぇえぉおかがきぎくぐけげこご' ..
   'さざしじすずせぜそぞただちぢっつづてでとど' ..
   'なにぬねのはばぱひびぴふぶぷへべぺほぼぽ' ..
