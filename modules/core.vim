@@ -74,7 +74,9 @@ def FollowCursor(_: number = 0)
     const c = g:vim9skkp.getcurpos(U.GetCurPos())
     M.FollowCursor(c)
     S.FollowCursor(c, M.text)
-    redraw
+    if mode() ==# 'c'
+      redraw
+    endif
   endif
 enddef
 
