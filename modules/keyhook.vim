@@ -40,8 +40,8 @@ def Filter(_: number, key: string): bool
   # マッピング済みの入力を受け取ったらポップアップのmappingを元に戻しておく
   const m = mapping
   if m
-    if state('m') !=# ''
-      # NOTE: imap -> imapのように複数のマッピングを跨ぐ場合はここに来る
+    if state('m') !=# '' && key !=# "\<ESC>"
+      # NOTE: imap -> imapのようにインサートモードのまま複数のマッピングを跨いでいる最中は何もしない
       return false
     endif
     popup_setoptions(M.winid, { mapping: false })
