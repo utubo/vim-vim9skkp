@@ -31,19 +31,15 @@ def Filter(_: number, key: string): bool
     return false
   elseif M.AddQueue(key)
     return true
-  elseif ctrlr
-    return false
   elseif CtrlR(key)
+    return false
+  elseif IsHalfWayMappingAndKeepAMode(key)
     return false
   endif
 
   # マッピング済みの入力を受け取ったらポップアップのmappingを元に戻しておく
   const m = mapping
   if m
-    if state('m') !=# '' && key !=# "\<ESC>"
-      # NOTE: imap -> imapのようにインサートモードのまま複数のマッピングを跨いでいる最中は何もしない
-      return false
-    endif
     popup_setoptions(M.winid, { mapping: false })
     mapping = false
   endif
@@ -66,7 +62,9 @@ def Filter(_: number, key: string): bool
 enddef
 
 def CtrlR(key: string): bool
-  if key ==# "\<C-r>" || key ==# "\<Cmd>" || key ==# "\<ScriptCmd>"
+  if ctrlr
+    return true
+  elseif key ==# "\<C-r>" || key ==# "\<Cmd>" || key ==# "\<ScriptCmd>"
     ctrlr = true
     timer_start(0, (_) => {
       ctrlr = false
@@ -75,6 +73,10 @@ def CtrlR(key: string): bool
   else
     return false
   endif
+enddef
+
+def IsHalfWayMappingAndKeepAMode(key: string): bool
+  return mapping && key !=# "\<ESC>" && state('m') !=# ''
 enddef
 
 def Dump(key: string)
