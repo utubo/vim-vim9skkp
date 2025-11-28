@@ -131,6 +131,7 @@ def FilterImpl(_key: string, mapping: bool): bool
   endif
   const is_normal_char = key ==# ' ' || key ==# key->keytrans()
   if chartype.roman && is_normal_char
+    doautocmd User vim9skkp-m-preinput
     if midasi && key ==# J.prefix
       Commit()
     endif
@@ -145,6 +146,8 @@ def FilterImpl(_key: string, mapping: bool): bool
   endif
   if StartSelect(key)
     return true
+  elseif InputAlphabet(key, mapping)
+    return mapping
   elseif (midasi || chartype ==# C.Type.Abbr) && !!text
     if g:vim9skkp.keymap.commit->Contains(key)
       Commit()
@@ -154,9 +157,7 @@ def FilterImpl(_key: string, mapping: bool): bool
       return true
     endif
   endif
-  if InputAlphabet(key, mapping)
-    return mapping
-  elseif CommonFunctions(key)
+  if CommonFunctions(key)
     return true
   elseif mapping && is_normal_char
     $'{text}{key->tolower()}'->SetText()
