@@ -81,8 +81,7 @@ export def Filter(key: string, mapping: bool): bool
   # マッピング後のキーでもやることが無かった場合
   SetStickyShift(false)
   if !!text
-    QueueCommit(key)
-    return true
+    return QueueCommit(key)
   endif
 
   return false
@@ -91,7 +90,7 @@ enddef
 # `imap foo <Esc>buz`等への対応
 # feedkeysを跨いでモードが変ると入力がくずれるので
 # queueに貯めてCommitと共に一気に開放する
-def QueueCommit(key: string)
+def QueueCommit(key: string): bool
   normal_mode = key ==# "\<Esc>"
   if normal_mode
     queue = key
@@ -105,6 +104,8 @@ def QueueCommit(key: string)
     Commit()
     Filter(key, true)
   endif
+  # この関数の後は必ずretur tureするのでここでreturnを返して1ステップ楽をする
+  return true
 enddef
 
 export def AddQueue(key: string): bool
@@ -128,15 +129,18 @@ def FilterImpl(_key: string, mapping: bool): bool
     return mapping && !!text
   elseif U.IsBackSpace(key)
     return BackSpace(mapping)
+  elseif IsAutoCommit(key, mapping)
+    return QueueCommit(key)
   endif
   const is_normal_char = key ==# ' ' || key ==# key->keytrans()
   if chartype.roman && is_normal_char
-    doautocmd User vim9skkp-m-preinput
-    if midasi && key ==# J.prefix
-      Commit()
-    endif
-    Midasi(key)
-    if Roman(key)
+    ProcessMidasi(key)
+    const newtext = InputRoman(key)
+    if newtext !=# text
+      if g:vim9skkp_status.is_cand_selected
+        return QueueCommit(key)
+      endif
+      SetText(newtext)
       if !midasi && text !~ '[っッ][a-z]$'
         Commit()
       endif
@@ -148,14 +152,6 @@ def FilterImpl(_key: string, mapping: bool): bool
     return true
   elseif InputAlphabet(key, mapping)
     return mapping
-  elseif (midasi || chartype ==# C.Type.Abbr) && !!text
-    if g:vim9skkp.keymap.commit->Contains(key)
-      Commit()
-      return true
-    elseif mapping && g:vim9skkp_status.is_cand_selected
-      QueueCommit(key)
-      return true
-    endif
   endif
   if CommonFunctions(key)
     return true
@@ -165,6 +161,20 @@ def FilterImpl(_key: string, mapping: bool): bool
     return true
   endif
   return false
+enddef
+
+def IsAutoCommit(key: string, mapping: bool): bool
+  if !text
+    return false
+  elseif !mapping
+    return false
+  elseif g:vim9skkp_status.is_cand_selected
+    return true
+  elseif midasi && key ==# J.prefix
+    return true
+  else
+    return false
+  endif
 enddef
 
 def AfterAddChar()
@@ -203,6 +213,11 @@ def CommonFunctions(key: string): bool
     return true
   elseif ChangeCharType(key)
     doautocmd User Vim9skkpStatusChanged
+    return true
+  elseif !!text &&
+    (midasi && chartype !=# C.Type.Abbr) &&
+    g:vim9skkp.keymap.commit->Contains(key)
+    Commit()
     return true
   else
     return false
@@ -258,7 +273,7 @@ export def SetMidasiMode(b: bool)
   endif
 enddef
 
-def Midasi(key: string): bool
+def ProcessMidasi(key: string): bool
   if key !~ '[A-Z]' ||
       text->stridx(g:vim9skkp.marker_okuri) !=# -1
     return false
@@ -272,16 +287,16 @@ def Midasi(key: string): bool
   return true
 enddef
 
-def Roman(key: string): bool
+def InputRoman(key: string): string
   const lower = key->tolower()
-  const all = text .. lower
-  const l = len(all)
+  const newtext = text .. lower
+  const l = len(newtext)
   for k in C.roman_keys
     const i = l - len(k)
     if i < 0
       continue
     endif
-    if all->strpart(i) !=# k
+    if newtext->strpart(i) !=# k
       continue
     endif
     const r = repeat('.', len(k))
@@ -290,13 +305,11 @@ def Roman(key: string): bool
       # NOTE: roman_tableの値に空文字を指定して無効にした場合
       continue
     endif
-    all
+    return newtext
       ->substitute($'n{r}$', $'{chartype.n}{r}', '')
       ->substitute($'{r}$', v, '')
-      ->SetText()
-    return true
   endfor
-  return false
+  return text
 enddef
 
 def ChangeCharType(key: string): bool

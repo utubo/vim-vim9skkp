@@ -139,11 +139,6 @@ def SetupAutocmd()
         M.SetText('')
       endif
     }
-    au User vim9skkp-m-preinput {
-      if S.index !=# -1
-        M.Commit()
-      endif
-    }
 
     # subwinが発行するイベント
     au User vim9skkp-s-select {
