@@ -83,18 +83,21 @@ export def ShowCands(text: string = '')
   var i = 0
   var lines = []
   for k in cands
-    const l = k->substitute(';', "\t", '')
     const s = get(shortcut, i, '')->keytrans()
+    const [c, d] = U.Split(k, ';')
     if !s
-      lines += [l]
+      lines += [c]
+    elseif !d
+      lines += [$'{s}:{c}']
     else
-      lines += [$'{s}:{l}']
+      const p = $"{repeat(' ', C.cand_width - strdisplaywidth(c))}\t"
+      lines += [$'{s}:{c}{p}{d}']
     endif
     i += 1
   endfor
   popup_settext(winid, lines)
   popup_setoptions(winid, { highlight: 'Vim9skkpCand' })
-  win_execute(winid, 'setlocal tabstop=12')
+  win_execute(winid, 'setlocal tabstop=1')
   win_execute(winid, 'syntax match Vim9skkpCandExtra /\t\zs.*/')
   win_execute(winid, 'syntax match Vim9skkpCandShortCut /^.*:/')
   popup_show(winid)

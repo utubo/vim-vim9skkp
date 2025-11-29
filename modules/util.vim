@@ -75,6 +75,12 @@ export def Contains(keys: any, key: string): bool
   endif
 enddef
 
+# 文字列を必ず2つに分割する
+export def Split(str: string, dlm: string): list<string>
+  const i = str->stridx(dlm)
+  return i ==# - 1 ? [str, ''] : [str->strpart(0, i), str->strpart(i + 1)]
+enddef
+
 # keyがバックスペースであるか返す
 export def IsBackSpace(key: string): bool
   return key ==# "\<BS>" || key ==# "\<80>kb"

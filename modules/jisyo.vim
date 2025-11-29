@@ -22,6 +22,7 @@ var last_input = ''
 # アローが使えない関数への対応 {{{
 const Tr = U.Tr
 const Contains = U.Contains
+const Split = U.Split
 # }}}
 
 # ユーティリティー {{{
@@ -35,12 +36,6 @@ enddef
 
 def StartsWith(str: string, expr: string): bool
   return str->strcharpart(0, expr->strchars()) ==# expr
-enddef
-
-# 文字列を必ず2つに分割する
-def Split(str: string, dlm: string): list<string>
-  const i = str->stridx(dlm)
-  return i ==# - 1 ? [str, ''] : [str->strpart(0, i), str->strpart(i + 1)]
 enddef
 
 # 順番を保ったままuniqする
