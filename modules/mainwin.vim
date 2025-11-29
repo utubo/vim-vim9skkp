@@ -104,7 +104,7 @@ def QueueCommit(key: string): bool
     Commit()
     Filter(key, true)
   endif
-  # この関数の後は必ずretur tureするのでここでreturnを返して1ステップ楽をする
+  # この関数の後は必ずreturn trueするのでここでreturnを返して1ステップ楽をする
   return true
 enddef
 
