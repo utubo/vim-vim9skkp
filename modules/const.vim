@@ -2,7 +2,7 @@ vim9script
 
 export const update_interval = 50
 export const bot_margin = 10
-export const cand_width = 10
+export const cand_width = 8
 export var roman_table: dict<any> = {}
 export var roman_keys: list<string> = []
 export var roman_chars: list<string> = []
