@@ -215,7 +215,7 @@ def CommonFunctions(key: string): bool
     doautocmd User Vim9skkpStatusChanged
     return true
   elseif !!text &&
-    (midasi && chartype !=# C.Type.Abbr) &&
+    (midasi || chartype ==# C.Type.Abbr) &&
     g:vim9skkp.keymap.commit->Contains(key)
     Commit()
     return true
