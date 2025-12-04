@@ -5,6 +5,7 @@ vim9script
 import './const.vim' as C
 import './util.vim' as U
 import './jisyo.vim' as J
+import './keyhook.vim' as K
 
 const Tr = U.Tr
 const Contains = U.Contains
@@ -349,9 +350,7 @@ export def Commit(lastkey: string = '')
   if midasi && chartype ==# C.Type.Hira
     t = t->substitute(g:vim9skkp.marker_okuri, '', 'n')
   endif
-  feedkeys("\<Cmd>call vim9skkp#KeyHook(v:false)\<CR>", 'nt')
-  feedkeys(t .. lastkey, 'nt')
-  feedkeys("\<Cmd>call vim9skkp#KeyHook(v:true)\<CR>", 'nt')
+  K.FeedKeys(t .. lastkey)
   SetText('')
   J.AddHistory(t)
   if chartype ==# C.Type.Abbr
