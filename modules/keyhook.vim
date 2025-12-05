@@ -23,12 +23,6 @@ export def SetupKeyHook(_: number = 0)
   ctrlr = false
 enddef
 
-export def FeedKeys(k: string)
-  feedkeys("\<Cmd>call vim9skkp#KeyHook(v:false)\<CR>", 'nt')
-  feedkeys(k, 'nt')
-  feedkeys("\<Cmd>call vim9skkp#KeyHook(v:true)\<CR>", 'nt')
-enddef
-
 def Filter(_: number, key: string): bool
   Dump(key)
   if key ==# "\<CursorHold>"
