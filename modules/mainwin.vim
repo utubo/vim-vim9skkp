@@ -90,7 +90,7 @@ export def Filter(key: string, mapping: bool): bool
 enddef
 
 # `imap foo <Esc>buz`等への対応
-# feedkeysを跨いでモードが変ると入力がくずれるので
+# feedkeysを跨いでモードが変わると入力がくずれるので
 # queueに貯めてCommitと共に一気に開放する
 def QueueCommit(key: string): bool
   normal_mode = key ==# "\<Esc>"
