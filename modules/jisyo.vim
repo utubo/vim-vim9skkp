@@ -116,9 +116,7 @@ export def GetAllCands(text: string): list<any>
   endfor
   cands = cands->Uniq()
   cands += GetGairaigo(gokan)
-  if !cands
-    cands += GetAllCandsWithFix(text)
-  endif
+  cands += GetAllCandsWithFix(text)
   cands += [$'{gokan}{tag_muhen}']
   return [cands, yomi, okuri]
 enddef
