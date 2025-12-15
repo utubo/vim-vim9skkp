@@ -11,10 +11,6 @@ var ctrlr = false
 var dump = []
 
 # FeedKeys {{{
-
-# `imap foo <Esc>buz`等への対応あり
-# feedkeysを跨いでモードが変わると入力がくずれるので
-
 export var state = 0
 var queue = ''
 const st_enabled = 0
