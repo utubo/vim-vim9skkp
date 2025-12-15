@@ -5,16 +5,19 @@ vim9script
 # とか面倒なことはここで吸収する
 
 import './mainwin.vim' as M
-import './subwin.vim' as S
 
 export var enable = true
 
+var winid = 0
+var filters = []
 var mapping = false
 var ctrlr = false
 var dump = []
 
-export def SetupKeyHook(_: number = 0)
-  popup_setoptions(M.winid, {
+export def SetupKeyHook(_winid: number, _filters: list<func>)
+  winid = _winid
+  filters = _filters
+  popup_setoptions(winid, {
     mapping: false,
     filter: Filter,
     filtermode: 'ic',
@@ -40,20 +43,22 @@ def Filter(_: number, key: string): bool
   # マッピング済みの入力を受け取ったらポップアップのmappingを元に戻しておく
   const m = mapping
   if m
-    popup_setoptions(M.winid, { mapping: false })
+    popup_setoptions(winid, { mapping: false })
     mapping = false
   endif
 
   # キー処理メイン
-  if S.Filter(key, m)
-    return true
-  elseif M.Filter(key, m)
-    return true
-  elseif m || state('m') ==# 'm'
+  for f in filters
+    if call(f, [key, m])
+      return true
+    endif
+  endfor
+
+  if m || state('m') ==# 'm'
     return false
   else
     # 一旦mapping: trueにしてマッピング済みの入力をFilterで受けなおす
-    popup_setoptions(M.winid, { mapping: true })
+    popup_setoptions(winid, { mapping: true })
     mapping = true
     feedkeys(key, 'i')
   endif

@@ -36,7 +36,7 @@ export def Popup()
   StopCheckPopupExists()
   M.Popup()
   S.Show()
-  K.SetupKeyHook()
+  K.SetupKeyHook(M.winid, [S.Filter, M.Filter])
   J.ReadyHistory()
   timerForCheckPopupExists = timer_start(
     C.update_interval,
