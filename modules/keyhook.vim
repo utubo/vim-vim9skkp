@@ -4,16 +4,43 @@ vim9script
 # mapping: falseとmapping: trueの両方でキー入力を受け取るよう頑張る
 # とか面倒なことはここで吸収する
 
-import './mainwin.vim' as M
-
-export var enable = true
-
 var winid = 0
 var filters = []
 var mapping = false
 var ctrlr = false
 var dump = []
 
+# FeedKeys {{{
+
+# `imap foo <Esc>buz`等への対応あり
+# feedkeysを跨いでモードが変わると入力がくずれるので
+
+export var state = 0
+var queue = ''
+const st_enabled = 0
+const st_feedkeys = 1
+const st_queueing = 2
+
+export def FeedKeys(keys: string, _queue: string = '')
+  if !queue && !_queue
+    FeedKeysImpl(0, keys)
+  else
+    state = st_queueing
+    queue ..= $"{keys}{_queue}"
+    timer_start(0, FeedKeysImpl)
+  endif
+enddef
+
+export def FeedKeysImpl(timer: number, keys: string = '')
+  state = st_feedkeys
+  feedkeys(keys, 'nt')
+  feedkeys(queue, 'nt')
+  feedkeys($"\<Cmd>call vim9skkp#SetKeyHookState({st_enabled})\<CR>", 'nt')
+  queue = ''
+enddef
+# }}}
+
+# キー処理メイン {{{
 export def SetupKeyHook(_winid: number, _filters: list<func>)
   winid = _winid
   filters = _filters
@@ -30,9 +57,10 @@ def Filter(_: number, key: string): bool
   Dump(key)
   if key ==# "\<CursorHold>"
     return false
-  elseif !enable
+  elseif state ==# st_feedkeys
     return false
-  elseif M.AddQueue(key)
+  elseif state ==# st_queueing
+    queue ..= key
     return true
   elseif CtrlR(key)
     return false
@@ -83,13 +111,15 @@ enddef
 def IsHalfWayMappingAndKeepAMode(key: string): bool
   return mapping && key !=# "\<ESC>" && state('m') !=# ''
 enddef
+# }}}
 
+# デバッグ用 {{{
 def Dump(key: string)
   if !g:vim9skkp.dumpsize
     return
   endif
   dump->add({
-    key: key, enable: enable, mapping: mapping, ctrlr: ctrlr,
+    key: key, state: state, mapping: mapping, ctrlr: ctrlr,
   })
   const offset = len(dump) - g:vim9skkp.dumpsize
   if 0 < offset
@@ -99,7 +129,7 @@ enddef
 
 export def ShowDump()
   for d in dump
-    echo $'key:{d.key} {char2nr(d.key)} enable:{d.enable} mapping:{d.mapping} ctrlr:{d.ctrlr}'
+    echo $'key:{d.key} {char2nr(d.key)} state:{d.state} mapping:{d.mapping} ctrlr:{d.ctrlr}'
   endfor
 enddef
-
+# }}}

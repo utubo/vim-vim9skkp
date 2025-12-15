@@ -5,8 +5,7 @@ vim9script
 import './const.vim' as C
 import './util.vim' as U
 import './jisyo.vim' as J
-# NOTE: これをすると相互参照になっちゃうな…
-# import './keyhook.vim' as K
+import './keyhook.vim' as K
 
 const Tr = U.Tr
 const Contains = U.Contains
@@ -17,8 +16,6 @@ export var text = ''
 export var chartype = C.Type.Hira
 export var midasi = false
 export var sticky_shift = false
-var normal_mode = false
-var queue = ''
 
 # 表示制御 {{{
 export def Popup()
@@ -83,36 +80,7 @@ export def Filter(key: string, mapping: bool): bool
   # マッピング後のキーでもやることが無かった場合
   SetStickyShift(false)
   if !!text
-    return QueueCommit(key)
-  endif
-
-  return false
-enddef
-
-# `imap foo <Esc>buz`等への対応
-# feedkeysを跨いでモードが変わると入力がくずれるので
-# queueに貯めてCommitと共に一気に開放する
-def QueueCommit(key: string): bool
-  normal_mode = key ==# "\<Esc>"
-  if normal_mode
-    queue = key
-    timer_start(0, (_) => {
-      Commit(queue)
-      normal_mode = false
-      queue = ''
-    })
-  else
-    # モードが変らないのならqueueする必要なし
-    Commit()
-    Filter(key, true)
-  endif
-  # この関数の後は必ずreturn trueするのでここでreturnを返して1ステップ楽をする
-  return true
-enddef
-
-export def AddQueue(key: string): bool
-  if normal_mode
-    queue ..= key
+    Commit(key)
     return true
   else
     return false
@@ -131,17 +99,18 @@ def FilterImpl(_key: string, mapping: bool): bool
     return mapping && !!text
   elseif U.IsBackSpace(key)
     return BackSpace(mapping)
-  elseif IsAutoCommit(key, mapping)
-    return QueueCommit(key)
   endif
+
+  if CommitBeforeInput(key, mapping)
+    return false
+  endif
+
+  # 文字入力
   const is_normal_char = key ==# ' ' || key ==# key->keytrans()
   if chartype.roman && is_normal_char
     ProcessMidasi(key)
     const newtext = InputRoman(key)
     if newtext !=# text
-      if g:vim9skkp_status.is_cand_selected
-        return QueueCommit(key)
-      endif
       SetText(newtext)
       if !midasi && text !~ '[っッ][a-z]$'
         Commit()
@@ -163,20 +132,6 @@ def FilterImpl(_key: string, mapping: bool): bool
     return true
   endif
   return false
-enddef
-
-def IsAutoCommit(key: string, mapping: bool): bool
-  if !text
-    return false
-  elseif !mapping
-    return false
-  elseif g:vim9skkp_status.is_cand_selected
-    return true
-  elseif midasi && key ==# J.prefix
-    return true
-  else
-    return false
-  endif
 enddef
 
 def AfterAddChar()
@@ -234,6 +189,24 @@ def BackSpace(mapping: bool): bool
     ->substitute('.$', '', '')
     ->SetText()
   return true
+enddef
+
+# 文字入力前に項目が選択されていた場合などは確定する
+# Filterの処理を中断するならtrueを返す
+def CommitBeforeInput(key: string, mapping: bool): bool
+  if !text || !mapping
+    # NOP
+  elseif midasi && key ==# J.prefix
+    Commit()
+  elseif g:vim9skkp_status.is_cand_selected
+    if key ==# "\<ESC>"
+      # ノーマルモードに戻るパターン
+      return true
+    else
+      Commit()
+    endif
+  endif
+  return false
 enddef
 
 def InputAlphabet(key: string, mapping: bool): bool
@@ -346,16 +319,13 @@ export def ToggleCharType(ct: C.Type)
   silent! doautocmd User Vim9skkpStatusChanged
 enddef
 
-export def Commit(lastkey: string = '')
-  var t = text
+export def Commit(queue: string = '')
   if midasi && chartype ==# C.Type.Hira
-    t = t->substitute(g:vim9skkp.marker_okuri, '', 'n')
+    text = text->substitute(g:vim9skkp.marker_okuri, '', 'n')
   endif
-  feedkeys("\<Cmd>call vim9skkp#KeyHook(v:false)\<CR>", 'nt')
-  feedkeys(t .. lastkey, 'nt')
-  feedkeys("\<Cmd>call vim9skkp#KeyHook(v:true)\<CR>", 'nt')
+  J.AddHistory(text)
+  K.FeedKeys(text, queue)
   SetText('')
-  J.AddHistory(t)
   if chartype ==# C.Type.Abbr
     ToggleCharType(C.Type.Abbr)
     midasi = g:vim9skkp.keep_midasi_mode

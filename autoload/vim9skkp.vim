@@ -49,8 +49,8 @@ enddef
 # }}}
 
 # Plugin local {{{
-export def KeyHook(enable: bool)
-  K.enable = enable
+export def SetKeyHookState(state: number)
+  K.state = state
 enddef
 # }}}
 
