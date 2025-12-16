@@ -81,13 +81,6 @@ def FollowCursor(_: number = 0)
 enddef
 
 # <C-c>などでポップアップが閉じられた場合に終了させる
-def StopCheckPopupExists()
-  if !!timerForCheckPopupExists
-    timer_stop(timerForCheckPopupExists)
-    timerForCheckPopupExists = 0
-  endif
-enddef
-
 def CheckPopupExists(_: number)
   U.Silent(CheckPopupExistsImpl)
 enddef
@@ -103,6 +96,13 @@ def CheckPopupExistsImpl()
     # noautocmd normal! "\<Esc>"
     # とかされると有効のままノーマルモードになってしまうので…
     Abort()
+  endif
+enddef
+
+def StopCheckPopupExists()
+  if !!timerForCheckPopupExists
+    timer_stop(timerForCheckPopupExists)
+    timerForCheckPopupExists = 0
   endif
 enddef
 # }}}
