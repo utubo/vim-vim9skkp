@@ -312,9 +312,10 @@ Vim9skkpStatusChanged				*Vim9skkpModeChanged*
 ------------------------------------------------------------------------------
 HIGHLIGHTS					*vim9skkp-highlights*
 
+Vim9skkpCursor		カーソル
+
 Vim9skkp		入力文字列
-Vim9skkpBlur		非アクティブ時
-			(変換候補が無く、ユーザー辞書登録が起動したとき)
+Vim9skkpBlur		非アクティブ時(ユーザー辞書登録が起動)
 
 Vim9skkpMode		モード表示の色
 
