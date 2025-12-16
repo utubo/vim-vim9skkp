@@ -66,10 +66,9 @@ def Filter(_: number, key: string): bool
   endif
 
   # マッピング済みの入力を受け取ったらポップアップのmappingを元に戻しておく
-  const m = mapping
+  const m = mapping # 元の値は各Filterを呼ぶときに渡す
   if m
-    popup_setoptions(winid, { mapping: false })
-    mapping = false
+    SetMapping(false)
   endif
 
   # キー処理メイン
@@ -80,16 +79,20 @@ def Filter(_: number, key: string): bool
   endfor
 
   if m || state('m') ==# 'm'
-    # マッピング済みの入力なら終り
+    # マッピング適用済みでやることがなかった場合
     return false
   else
     # マッピング未適用の入力なら
-    # 一旦mapping: trueにしてマッピング済みの入力をFilterで受けなおす
-    popup_setoptions(winid, { mapping: true })
-    mapping = true
+    # 一旦mapping: trueにして入力をFilterで受けなおす
+    SetMapping(true)
     feedkeys(key, 'i')
     return true
   endif
+enddef
+
+def SetMapping(b: bool)
+  popup_setoptions(winid, { mapping: b })
+  mapping = b
 enddef
 
 def CtrlR(key: string): bool
