@@ -17,19 +17,19 @@ const st_enabled = 0
 const st_feedkeys = 1
 const st_queueing = 2
 
-export def FeedKeys(keys: string, _queue: string = '')
-  if !queue && !_queue
-    FeedKeysImpl(0, keys)
+export def FeedKeys(keys: string, async: bool)
+  if !queue && !async
+    queue = keys
+    FeedKeysImpl()
   else
     state = st_queueing
-    queue ..= $"{keys}{_queue}"
+    queue ..= keys
     timer_start(0, FeedKeysImpl)
   endif
 enddef
 
-export def FeedKeysImpl(timer: number, keys: string = '')
+export def FeedKeysImpl(_: number = 0)
   state = st_feedkeys
-  feedkeys(keys, 'nt')
   feedkeys(queue, 'nt')
   feedkeys($"\<Cmd>call vim9skkp#SetKeyHookState({st_enabled})\<CR>", 'nt')
   queue = ''

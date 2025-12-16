@@ -319,12 +319,12 @@ export def ToggleCharType(ct: C.Type)
   silent! doautocmd User Vim9skkpStatusChanged
 enddef
 
-export def Commit(queue: string = '')
+export def Commit(key: string = '')
   if midasi && chartype ==# C.Type.Hira
     text = text->substitute(g:vim9skkp.marker_okuri, '', 'n')
   endif
   J.AddHistory(text)
-  K.FeedKeys(text, queue)
+  K.FeedKeys($'{text}{key}', !!key)
   SetText('')
   if chartype ==# C.Type.Abbr
     ToggleCharType(C.Type.Abbr)
