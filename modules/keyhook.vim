@@ -1,22 +1,19 @@
 vim9script
 
 # <Space>等が他のプラグインの影響を受けやすいので
-# ポップアップではmapping: falseとmapping: trueの両方で
-# キー入力を受け取るよう頑張る
+# ポップアップではmapping: false/trueの両方で入力を受け取る
 # とか面倒なことはここで吸収する
+
+const st_enabled = 1
+const st_feedkeys = 2
+const st_queueing = 3
+export var state = st_enabled
 
 var winid = 0
 var filters = []
-var mapping = false
-var ctrlr = false
-var dump = []
 
 # FeedKeys {{{
-export var state = 0
 var queue = ''
-const st_enabled = 0
-const st_feedkeys = 1
-const st_queueing = 2
 
 export def FeedKeys(keys: string, async: bool)
   if !queue && !async
@@ -38,6 +35,9 @@ enddef
 # }}}
 
 # キー処理メイン {{{
+var mapping = false
+var ctrlr = false
+
 export def SetupKeyHook(_winid: number, _filters: list<func>)
   winid = _winid
   filters = _filters
@@ -115,6 +115,8 @@ enddef
 # }}}
 
 # デバッグ用 {{{
+var dump = []
+
 def Dump(key: string)
   if !g:vim9skkp.dumpsize
     return

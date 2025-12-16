@@ -1,10 +1,8 @@
 vim9script
 
-import '../modules/const.vim' as C
 import '../modules/core.vim' as Core
 import '../modules/jisyo.vim' as J
 import '../modules/userjisyo.vim' as UJ
-import '../modules/subwin.vim' as S
 import '../modules/keyhook.vim' as K
 
 # API {{{
