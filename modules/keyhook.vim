@@ -80,15 +80,16 @@ def Filter(_: number, key: string): bool
   endfor
 
   if m || state('m') ==# 'm'
+    # マッピング済みの入力なら終り
     return false
   else
+    # マッピング未適用の入力なら
     # 一旦mapping: trueにしてマッピング済みの入力をFilterで受けなおす
     popup_setoptions(winid, { mapping: true })
     mapping = true
     feedkeys(key, 'i')
+    return true
   endif
-
-  return true
 enddef
 
 def CtrlR(key: string): bool
