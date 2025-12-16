@@ -1,7 +1,8 @@
 vim9script
 
 # <Space>等が他のプラグインの影響を受けやすいので
-# mapping: falseとmapping: trueの両方でキー入力を受け取るよう頑張る
+# ポップアップではmapping: falseとmapping: trueの両方でキー入力を
+# 受け取るよう頑張る
 # とか面倒なことはここで吸収する
 
 var winid = 0
