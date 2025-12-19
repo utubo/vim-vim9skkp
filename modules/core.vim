@@ -70,7 +70,7 @@ enddef
 
 # ポップアップウィンドウをカーソル付近に追従させる
 def FollowCursor(_: number = 0)
-  if M.active
+  if M.active && !M.prevent_redraw
     const c = g:vim9skkp.getcurpos(U.GetCurPos())
     M.FollowCursor(c)
     S.FollowCursor(c, M.text)

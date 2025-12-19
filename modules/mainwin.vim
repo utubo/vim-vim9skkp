@@ -16,7 +16,7 @@ export var text = ''
 export var chartype = C.Type.Hira
 export var midasi = false
 export var sticky_shift = false
-var prevent_redraw = false
+export var prevent_redraw = false
 
 # 表示制御 {{{
 export def Popup()
