@@ -16,6 +16,7 @@ export var text = ''
 export var chartype = C.Type.Hira
 export var midasi = false
 export var sticky_shift = false
+var prevent_redraw = false
 
 # 表示制御 {{{
 export def Popup()
@@ -39,10 +40,16 @@ enddef
 
 # textが空の場合はカーソル位置の文字を空かしておく
 def ShowCharAtCursor()
+  if prevent_redraw
+    return
+  endif
   popup_settext(winid, U.GetCharAtCursor() ?? ' ')
 enddef
 
 export def FollowCursor(p: dict<any>)
+  if prevent_redraw
+    return
+  endif
   popup_move(winid, p)
   if !text
     ShowCharAtCursor()
@@ -54,13 +61,30 @@ export def SetText(_text: string)
     return
   endif
   text = _text
+  RedrawText()
+  doautocmd User vim9skkp-m-settext
+enddef
+
+def RedrawText()
+  if prevent_redraw
+    return
+  endif
   if !text
     ShowCharAtCursor()
   else
     # textの末尾にカーソルを表示
     popup_settext(winid, text .. ' ')
   endif
-  doautocmd User vim9skkp-m-settext
+enddef
+
+# ちらつき防止
+def SetRedrawAfterFeedKeys()
+  timer_start(1, (_) => {
+    prevent_redraw = false
+    const c = g:vim9skkp.getcurpos(U.GetCurPos())
+    FollowCursor(c)
+    RedrawText()
+  })
 enddef
 # }}}
 
@@ -323,6 +347,8 @@ export def Commit(key: string = '')
   if midasi && chartype ==# C.Type.Hira
     text = text->substitute(g:vim9skkp.marker_okuri, '', 'n')
   endif
+  prevent_redraw = true
+  SetRedrawAfterFeedKeys()
   J.AddHistory(text)
   K.FeedKeys($'{text}{key}', !!key)
   SetText('')
