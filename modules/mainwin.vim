@@ -79,6 +79,7 @@ enddef
 
 # ちらつき防止
 def SetRedrawAfterFeedKeys()
+  prevent_redraw = true
   timer_start(1, (_) => {
     prevent_redraw = false
     const c = g:vim9skkp.getcurpos(U.GetCurPos())
@@ -344,11 +345,10 @@ export def ToggleCharType(ct: C.Type)
 enddef
 
 export def Commit(key: string = '')
+  SetRedrawAfterFeedKeys()
   if midasi && chartype ==# C.Type.Hira
     text = text->substitute(g:vim9skkp.marker_okuri, '', 'n')
   endif
-  prevent_redraw = true
-  SetRedrawAfterFeedKeys()
   J.AddHistory(text)
   K.FeedKeys($'{text}{key}', !!key)
   SetText('')
