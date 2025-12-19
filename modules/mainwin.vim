@@ -136,7 +136,7 @@ def FilterImpl(_key: string, mapping: bool): bool
     const newtext = InputRoman(key)
     if newtext !=# text
       SetText(newtext)
-      if !midasi && text !~ '[っッ][a-z]$'
+      if !midasi && text !~ '[っッｯ][a-z]$'
         Commit()
       endif
       AfterAddChar()
