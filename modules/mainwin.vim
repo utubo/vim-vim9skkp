@@ -31,7 +31,6 @@ export def Popup()
     endfor
   endif
   chartype = C.Type.Hira
-
   midasi = g:vim9skkp.keep_midasi_mode
   SetText('')
   active = true
