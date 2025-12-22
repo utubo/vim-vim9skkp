@@ -94,7 +94,7 @@ Map('tnoremap', g:vim9skkp.keymap.terminal, '<Plug>(vim9skkp-terminal)')
 # }}}
 
 # 色 {{{
-if !hlexists('Vim9skkp')
+def Color()
   hi default Vim9skkp gui=underline cterm=underline
   hi default link Vim9skkpCursor CursorIM
   hi default link Vim9skkpBlur PMenuExtra
@@ -102,6 +102,10 @@ if !hlexists('Vim9skkp')
   hi default link Vim9skkpCand PMenu
   hi default link Vim9skkpCandExtra PMenuExtra
   hi default link Vim9skkpCandShortCut PMenuKind
-endif
+enddef
+Color()
+augroup vim9skkp-cs
+  au! ColorScheme * Color()
+augroup END
 # }}}
 
