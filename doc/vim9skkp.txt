@@ -189,7 +189,7 @@ g:vim9skkp					*g:vim9skkp*
 		引数posはvim9skkpが算出したカーソル位置です >
 			foo(pos: any): any
 <
-	getcurpos
+	dumpsize
 		デバッグ用です。ポップアップに飛んできた入力を
 		このサイズの分だけ保存します。
 
