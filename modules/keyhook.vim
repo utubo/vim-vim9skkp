@@ -51,7 +51,7 @@ export def SetupKeyHook(_winid: number, _filters: list<func>)
   ctrlr = false
   # TODO: 補完プラグインなどが起動直後にCTRL-Eを投げてくることがあるので一時凌ぎ
   ignore_ctrle = true
-  timer_start(30, (_) => {
+  timer_start(100, (_) => {
     ignore_ctrle = false
   })
 enddef
