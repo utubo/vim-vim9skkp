@@ -37,6 +37,7 @@ enddef
 # キー処理メイン {{{
 var mapping = false
 var ctrlr = false
+var ignore_ctrle = false
 
 export def SetupKeyHook(_winid: number, _filters: list<func>)
   winid = _winid
@@ -48,6 +49,11 @@ export def SetupKeyHook(_winid: number, _filters: list<func>)
   })
   mapping = false
   ctrlr = false
+  # TODO: 補完プラグインなどが起動直後にCTRL-Eを投げてくることがあるので一時凌ぎ
+  ignore_ctrle = true
+  timer_start(30, (_) => {
+    ignore_ctrle = false
+  })
 enddef
 
 def Filter(_: number, key: string): bool
@@ -62,6 +68,8 @@ def Filter(_: number, key: string): bool
   elseif CtrlR(key)
     return false
   elseif IsHalfWayMappingAndKeepAMode(key)
+    return false
+  elseif ignore_ctrle && key ==# "\<C-E>"
     return false
   endif
 
