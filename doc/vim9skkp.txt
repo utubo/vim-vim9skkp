@@ -107,6 +107,10 @@ g:vim9skkp					*g:vim9skkp*
 		送り仮名のマーカーです
 	mode_label
 		現在の入力モードを表す文字です
+	showmode
+		入力モードの表示形式です
+		"|popup|"カーソルの下にポップアップで表示します
+		"|cursor|"カーソル位置に表示します
 	popup_maxheight
 		変換候補の最大表示行数です
 	search_limit
@@ -205,6 +209,7 @@ g:vim9skkp					*g:vim9skkp*
 	    abbr: 'ab',
 	    midasi: '▽',
 	  },
+	  showmode: 'popup',
 	  zindex: 200,
 	  popup_maxheight: 10,
 	  search_limit: 100,

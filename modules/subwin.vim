@@ -61,6 +61,10 @@ enddef
 def ShowMode()
   Create()
   UnSelect()
+  if g:vim9skkp.showmode !=# 'popup'
+    popup_hide(winid)
+    return
+  endif
   if g:vim9skkp_status.midasi
     popup_settext(winid, g:vim9skkp.mode_label.midasi)
   else

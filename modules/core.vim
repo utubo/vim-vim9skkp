@@ -166,6 +166,7 @@ def SetupAutocmd()
         g:vim9skkp_status.mode = g:vim9skkp.mode_label[M.chartype.label]
         g:vim9skkp_status.sticky_shift = M.sticky_shift
         S.Show()
+        M.RedrawText()
       else
         g:vim9skkp_status.midasi = false
         g:vim9skkp_status.mode = g:vim9skkp.mode_label.off

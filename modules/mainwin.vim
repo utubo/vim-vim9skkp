@@ -25,6 +25,8 @@ export def Popup()
   endif
   win_execute(winid, 'syntax match Vim9skkp /./')
   win_execute(winid, 'syntax match Vim9skkpCursor /.$/')
+  win_execute(winid, 'syntax match Vim9skkpCursor /ab$/')
+  win_execute(winid, 'syntax match Vim9skkpCursor /_A$/')
   chartype = C.Type.Hira
   midasi = g:vim9skkp.keep_midasi_mode
   SetText('')
@@ -38,21 +40,13 @@ export def Close()
   redraw
 enddef
 
-# textが空の場合はカーソル位置の文字を空かしておく
-def ShowCharAtCursor()
-  if prevent_redraw
-    return
-  endif
-  popup_settext(winid, U.GetCharAtCursor() ?? ' ')
-enddef
-
 export def FollowCursor(p: dict<any>)
   if prevent_redraw
     return
   endif
   popup_move(winid, p)
   if !text
-    ShowCharAtCursor()
+    RedrawText()
   endif
 enddef
 
@@ -65,12 +59,18 @@ export def SetText(_text: string)
   doautocmd User vim9skkp-m-settext
 enddef
 
-def RedrawText()
+export def RedrawText()
   if prevent_redraw
     return
   endif
-  if !text
-    ShowCharAtCursor()
+  if g:vim9skkp.showmode ==# 'cursor'
+    const cur = midasi
+      ? g:vim9skkp.mode_label.midasi
+      : g:vim9skkp_status.mode
+    popup_settext(winid, text .. cur)
+  elseif !text
+    # textが空の場合はカーソル位置の文字を空かしておく
+    popup_settext(winid, U.GetCharAtCursor() ?? ' ')
   else
     # textの末尾にカーソルを表示
     popup_settext(winid, text .. ' ')
