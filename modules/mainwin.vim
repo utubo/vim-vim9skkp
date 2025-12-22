@@ -25,8 +25,9 @@ export def Popup()
   endif
   win_execute(winid, 'syntax match Vim9skkp /./')
   win_execute(winid, 'syntax match Vim9skkpCursor /.$/')
-  win_execute(winid, 'syntax match Vim9skkpCursor /ab$/')
-  win_execute(winid, 'syntax match Vim9skkpCursor /_A$/')
+  for l in values(g:vim9skkp.mode_label)
+    win_execute(winid, $'syntax match Vim9skkpCursor /{l->escape('/\')}$/')
+  endfor
   chartype = C.Type.Hira
   midasi = g:vim9skkp.keep_midasi_mode
   SetText('')
