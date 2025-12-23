@@ -49,11 +49,13 @@ export def SetupKeyHook(_winid: number, _filters: list<func>)
   })
   mapping = false
   ctrlr = false
-  # TODO: 補完プラグインなどが起動直後にCTRL-Eを投げてくることがあるので一時凌ぎ
-  ignore_ctrle = true
-  timer_start(100, (_) => {
-    ignore_ctrle = false
-  })
+  # &autocomplettimeout後にCTRL-Eが飛んでくるので無視する
+  if &autocomplete
+    ignore_ctrle = true
+    timer_start(&autocompletetimeout + 1, (_) => {
+      ignore_ctrle = false
+    })
+  endif
 enddef
 
 def Filter(_: number, key: string): bool
