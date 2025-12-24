@@ -96,7 +96,9 @@ enddef
 
 # 入力制御の大枠
 export def Filter(key: string, mapping: bool): bool
-  const done = FilterImpl(key, mapping)
+  const done = key
+    ->ApplyStickyShift()
+    ->FilterImpl(mapping)
   if done
     SetStickyShift(false)
     return true
@@ -116,11 +118,7 @@ export def Filter(key: string, mapping: bool): bool
 enddef
 
 # 入力制御のメイン
-def FilterImpl(_key: string, mapping: bool): bool
-  var key = _key
-  if sticky_shift
-    key = key->toupper()
-  endif
+def FilterImpl(key: string, mapping: bool): bool
   if C.arrows->Contains(key)
     # NOTE: 入力が入ったままカーソル移動されると面倒だが、
     # コマンドモードではカーソル移動したいので入力が空のときは矢印キーを許可する
@@ -161,6 +159,10 @@ def AfterAddChar()
       text =~ g:vim9skkp.auto_suggest_regex
     StartSelect()
   endif
+enddef
+
+def ApplyStickyShift(key: string): string
+  return sticky_shift ? key->toupper() : key
 enddef
 
 def SetStickyShift(b: bool)
