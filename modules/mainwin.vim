@@ -182,7 +182,11 @@ def CommonFunctions(key: string): bool
     SetMidasiMode(!midasi)
     return true
   elseif g:vim9skkp.keymap.sticky_shift->Contains(key)
-    SetStickyShift(true)
+    # TODO: いまいち…
+    # Filter抜けたあとにリセットしてるので、ちょっと待ってからtrueをセット
+    timer_start(0, (_) => {
+      SetStickyShift(true)
+    })
     return true
   elseif g:vim9skkp.keymap.userjisyo->Contains(key)
     doautocmd User vim9skkp-userjisyo
