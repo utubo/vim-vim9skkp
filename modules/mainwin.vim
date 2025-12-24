@@ -94,13 +94,16 @@ enddef
 
 # キー入力制御 {{{
 
+var new_sticky_shift = false # TODO: このフラグはいまいち…
+
 # 入力制御の大枠
 export def Filter(key: string, mapping: bool): bool
+  new_sticky_shift = false
   const done = key
     ->ApplyStickyShift()
     ->FilterImpl(mapping)
   if done
-    SetStickyShift(false)
+    SetStickyShift(new_sticky_shift)
     return true
   elseif !mapping
     # マッピング後のキーをkeyhook#Filterから貰うため一旦falseで返す
@@ -184,11 +187,7 @@ def CommonFunctions(key: string): bool
     SetMidasiMode(!midasi)
     return true
   elseif g:vim9skkp.keymap.sticky_shift->Contains(key)
-    # TODO: いまいち…
-    # Filter抜けたあとにリセットしてるので、ちょっと待ってからtrueをセット
-    timer_start(0, (_) => {
-      SetStickyShift(true)
-    })
+    new_sticky_shift = true
     return true
   elseif g:vim9skkp.keymap.userjisyo->Contains(key)
     doautocmd User vim9skkp-userjisyo
