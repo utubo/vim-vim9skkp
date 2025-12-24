@@ -65,11 +65,7 @@ def ShowMode()
     popup_hide(winid)
     return
   endif
-  if g:vim9skkp_status.midasi
-    popup_settext(winid, g:vim9skkp.mode_label.midasi)
-  else
-    popup_settext(winid, g:vim9skkp_status.mode)
-  endif
+  popup_settext(winid, g:vim9skkp_status.mode_label)
   popup_setoptions(winid, { highlight: 'Vim9skkpMode' })
   popup_show(winid)
 enddef

@@ -172,6 +172,9 @@ def SetupAutocmd()
         g:vim9skkp_status.mode = g:vim9skkp.mode_label.off
         g:vim9skkp_status.sticky_shift = false
       endif
+      g:vim9skkp_status.mode_label = g:vim9skkp_status.midasi
+        ? g:vim9skkp.mode_label.midasi
+        : g:vim9skkp_status.mode
     }
     # ショートカットキーでユーザー辞書登録を起動したとき
     au User vim9skkp-userjisyo {
