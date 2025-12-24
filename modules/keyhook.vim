@@ -16,7 +16,9 @@ var filters = []
 var queue = ''
 
 export def FeedKeys(keys: string, async: bool)
-  if !queue && !async
+  if !keys
+    return
+  elseif !queue && !async
     queue = keys
     FeedKeysImpl()
   else
@@ -37,7 +39,6 @@ enddef
 # キー処理メイン {{{
 var mapping = false
 var ctrlr = false
-var ignore_ctrle = false
 
 export def SetupKeyHook(_winid: number, _filters: list<func>)
   winid = _winid
@@ -49,13 +50,6 @@ export def SetupKeyHook(_winid: number, _filters: list<func>)
   })
   mapping = false
   ctrlr = false
-  # &autocomplettimeout後にCTRL-Eが飛んでくるので無視する
-  if &autocomplete
-    ignore_ctrle = true
-    timer_start(&autocompletetimeout + 1, (_) => {
-      ignore_ctrle = false
-    })
-  endif
 enddef
 
 def Filter(_: number, key: string): bool
@@ -70,8 +64,6 @@ def Filter(_: number, key: string): bool
   elseif CtrlR(key)
     return false
   elseif IsHalfWayMappingAndKeepAMode(key)
-    return false
-  elseif ignore_ctrle && key ==# "\<C-E>"
     return false
   endif
 

@@ -58,7 +58,7 @@ def ClosePumLazy()
   # pumが消えると<C-e>が暴発するので、できるだけ間を置かず実行する
   timer_start(0, (_) => {
     if pumvisible()
-      feedkeys("\<C-e>", 'nt')
+      K.FeedKeys("\<C-e>", false)
     endif
   })
 enddef
@@ -177,7 +177,7 @@ def SetupAutocmd()
     au User vim9skkp-userjisyo {
       const src = S.src ?? M.text
       if !src
-        feedkeys("\<Cmd>Vim9skkpRegisterToUserJisyo\<CR>", 'n')
+        K.FeedKeys("\<Cmd>Vim9skkpRegisterToUserJisyo\<CR>", true)
       else
         M.SetText(src)
         UJ.RegisterWithInstant()
