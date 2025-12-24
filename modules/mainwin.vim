@@ -127,39 +127,30 @@ def FilterImpl(_key: string, mapping: bool): bool
     return mapping && !!text
   elseif U.IsBackSpace(key)
     return BackSpace(mapping)
-  endif
-
-  if CommitBeforeInput(key, mapping)
+  elseif CommitBeforeInput(key, mapping)
     return false
-  endif
-
-  # 文字入力
-  const is_normal_char = key ==# ' ' || key ==# key->keytrans()
-  if chartype.roman && is_normal_char
-    ProcessMidasi(key)
-    const newtext = InputRoman(key)
-    if newtext !=# text
-      SetText(newtext)
-      if !midasi && text !~ '[っッｯ][a-z]$'
-        Commit()
-      endif
-      AfterAddChar()
-      return true
-    endif
-  endif
-  if StartSelect(key)
+  elseif StartSelect(key)
+    # NOTE: <Space>をabbrよりも優先
     return true
   elseif InputAlphabet(key, mapping)
     return mapping
-  endif
-  if CommonFunctions(key)
+  elseif CommonFunctions(key)
     return true
-  elseif mapping && is_normal_char
+  elseif !IsNormalChar(key)
+    return false
+  elseif InputRoman(key)
+    return true
+  elseif mapping
     $'{text}{key->tolower()}'->SetText()
     AfterAddChar()
     return true
+  else
+    return false
   endif
-  return false
+enddef
+
+def IsNormalChar(key: string): bool
+  return key ==# ' ' || key ==# key->keytrans()
 enddef
 
 def AfterAddChar()
@@ -200,8 +191,8 @@ def CommonFunctions(key: string): bool
     doautocmd User Vim9skkpStatusChanged
     return true
   elseif !!text &&
-    (midasi || chartype ==# C.Type.Abbr) &&
-    g:vim9skkp.keymap.commit->Contains(key)
+      (midasi || chartype ==# C.Type.Abbr) &&
+      g:vim9skkp.keymap.commit->Contains(key)
     Commit()
     return true
   else
@@ -223,7 +214,7 @@ enddef
 # Filterの処理を中断するならtrueを返す
 def CommitBeforeInput(key: string, mapping: bool): bool
   if !text || !mapping
-    # NOP
+  # NOP
   elseif midasi && key ==# J.prefix
     Commit()
   elseif g:vim9skkp_status.is_cand_selected
@@ -276,6 +267,23 @@ export def SetMidasiMode(b: bool)
   endif
 enddef
 
+def InputRoman(key: string): bool
+  if !chartype.roman
+    return false
+  endif
+  ProcessMidasi(key)
+  const newtext = AddRoman(key)
+  if newtext !=# text
+    SetText(newtext)
+    if !midasi && text !~ '[っッｯ][a-z]$'
+      Commit()
+    endif
+    AfterAddChar()
+    return true
+  endif
+  return false
+enddef
+
 def ProcessMidasi(key: string): bool
   if key !~ '[A-Z]' ||
       text->stridx(g:vim9skkp.marker_okuri) !=# -1
@@ -290,9 +298,8 @@ def ProcessMidasi(key: string): bool
   return true
 enddef
 
-def InputRoman(key: string): string
-  const lower = key->tolower()
-  const newtext = text .. lower
+def AddRoman(key: string): string
+  const newtext = text .. key->tolower()
   const l = len(newtext)
   for k in C.roman_keys
     const i = l - len(k)
