@@ -266,11 +266,9 @@ g:vim9skkp_status				*g:vim9skkp_status*
 		見出しモードならg:vim9skkp.mode_label.midasi
 		それ以外の場合g:vim9skkp.mode_labelに対応する文字列
 	mode
-		非推奨
-		見出しモードを考慮しない入力モード
+		入力モード(見出しモードを考慮しない)
 		g:vim9skkp.mode_labelに対応する文字列
 	midasi
-		非推奨
 		見出しモードならtrue、それ以外ならfalse
 	sticky_shift
 		スティッキーシフトによってシフトが有効ならtrue、
