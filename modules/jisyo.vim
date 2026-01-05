@@ -252,7 +252,7 @@ def DeleteCandFromJisyo(j: any, cand: string): list<string>
   return newlines
 enddef
 
-def AddCand(jisyo_path: string, before: string, after: string)
+def AddCand(jisyo_path: string, before: string, after: string): dict<any>
   # 新規に追加する行
   const afters = GetCandsFromJisyo(jisyo_path, before)
     ->insert(after)
@@ -269,11 +269,17 @@ def AddCand(jisyo_path: string, before: string, after: string)
       ->insert($'{k} /{afters}/'->IconvTo(j.enc))
   endfor
   silent! j.lines->remove(g:vim9skkp.recent, -1) # TODO
-  # 候補探索用の辞書にはソート済のものをセットする
-  jisyo[jisyo_path] = {
-    lines: j.lines->copy()->sort(),
-    enc: j.enc,
-  }
+  if (jisyo_path ==# g:vim9skkp.jisyo_recent)
+    # 変換履歴はソートしない
+    jisyo[jisyo_path] = {lines: j.lines, enc: j.enc }
+  else
+    # 候補探索用の辞書はソート済のものをセットする
+    jisyo[jisyo_path] = {
+      lines: j.lines->copy()->sort(),
+      enc: j.enc,
+    }
+  endif
+  return jisyo[jisyo_path]
 enddef
 # }}}
 
@@ -306,7 +312,7 @@ export def AddRecent(_before: string, _after: string)
   const [before, after] = _after =~ $'{tag_recent} .\+'
     ? FromRecentCand(_after)
     : [_before, _after->substitute(';.*', '', '')]
-  AddCand(g:vim9skkp.jisyo_recent, before, after)
+  recent = AddCand(g:vim9skkp.jisyo_recent, before, after)
   SetSaveRecent()
 enddef
 
@@ -317,6 +323,7 @@ def GetRecent(text: string): list<string>
   const j = ReadRecent()
   const head = text->IconvTo(j.enc)
   var cands = []
+  # 変換履歴はソートしないので、上からコツコツ探索する
   for l in j.lines
     if l->StartsWith(head)
       const kv = l->IconvFrom(j.enc)->Split(' ')
