@@ -315,10 +315,13 @@ def AddRoman(key: string): string
       continue
     endif
     const r = repeat('.', len(k))
-    var v = ToKata(C.roman_table[k], chartype)
+    var v = C.roman_table[k]
     if !v
       # NOTE: roman_tableの値に空文字を指定して無効にした場合
       continue
+    endif
+    if chartype !=# C.Type.Hira
+      v = v->ToKata(chartype)
     endif
     return newtext
       ->substitute($'n{r}$', $'{chartype.n}{r}', '')
