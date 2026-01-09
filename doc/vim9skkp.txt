@@ -172,8 +172,7 @@ g:vim9skkp					*g:vim9skkp*
 		ローマ字入力の追加・上書き設定です
 		例: `{ kn: 'かん' }`
 	roman_abbrev
-		roman_tableと似ていますが、こちらは確定まで
-		実行します
+		roman_tableと似ていますが、こちらは確定まで実行します
 		例: `{ mt: 'ました。', kj: '漢字' }`
 	keep_midasi_mode
 		vim9skkpが有効になったとき、変換が確定したときに
