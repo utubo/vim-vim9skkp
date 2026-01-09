@@ -277,10 +277,10 @@ def InputRoman(key: string): bool
     return false
   endif
   ProcessMidasi(key)
-  const newtext = AddRoman(key)
+  const [newtext, is_abbr] = AddRoman(key)
   if newtext !=# text
     SetText(newtext)
-    if !midasi && text !~ '[っッｯ][a-z]$'
+    if is_abbr || !midasi && text !~ '[っッｯ][a-z]$'
       Commit()
     endif
     AfterAddChar()
@@ -303,10 +303,11 @@ def ProcessMidasi(key: string): bool
   return true
 enddef
 
-def AddRoman(key: string): string
+def AddRoman(key: string): list<any>
+  var is_abbr = false # TODO: お試し中
   const newtext = text .. key->tolower()
   const l = len(newtext)
-  for k in C.roman_keys
+  for k in C.roman_keys + g:vim9skkp.roman_abbr->keys()
     const i = l - len(k)
     if i < 0
       continue
@@ -315,7 +316,12 @@ def AddRoman(key: string): string
       continue
     endif
     const r = repeat('.', len(k))
-    var v = C.roman_table[k]
+    var v = get(g:vim9skkp.roman_abbr, k, '')
+    if !!v
+      is_abbr = true
+    else
+      v = C.roman_table[k]
+    endif
     if !v
       # NOTE: roman_tableの値に空文字を指定して無効にした場合
       continue
@@ -323,11 +329,11 @@ def AddRoman(key: string): string
     if chartype !=# C.Type.Hira
       v = v->ToKata(chartype)
     endif
-    return newtext
+    return [newtext
       ->substitute($'n{r}$', $'{chartype.n}{r}', '')
-      ->substitute($'{r}$', v, '')
+      ->substitute($'{r}$', v, ''), is_abbr]
   endfor
-  return text
+  return [text, is_abbr]
 enddef
 
 def ChangeCharType(key: string): bool
