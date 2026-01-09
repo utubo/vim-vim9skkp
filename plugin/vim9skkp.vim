@@ -43,7 +43,7 @@ var default = {
     sticky_shift: [],
   },
   roman_table: {},
-  roman_abbr: {},
+  roman_abbrev: {},
   keep_midasi_mode: false,
   auto_commit_regex: '[ をヲ、。「」]',
   auto_suggest_regex: '*[っッ]\?[^a-zA-Zっッ]$',

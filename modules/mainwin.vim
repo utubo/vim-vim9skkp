@@ -304,10 +304,10 @@ def ProcessMidasi(key: string): bool
 enddef
 
 def AddRoman(key: string): list<any>
-  var is_abbr = false # TODO: お試し中
+  var is_abbr = false
   const newtext = text .. key->tolower()
   const l = len(newtext)
-  for k in C.roman_keys + g:vim9skkp.roman_abbr->keys()
+  for k in C.roman_keys + g:vim9skkp.roman_abbrev->keys()
     const i = l - len(k)
     if i < 0
       continue
@@ -316,7 +316,7 @@ def AddRoman(key: string): list<any>
       continue
     endif
     const r = repeat('.', len(k))
-    var v = get(g:vim9skkp.roman_abbr, k, '')
+    var v = get(g:vim9skkp.roman_abbrev, k, '')
     if !!v
       is_abbr = true
     else
