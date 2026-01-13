@@ -133,7 +133,7 @@ def FilterImpl(key: string, mapping: bool): bool
   elseif StartSelect(key)
     # NOTE: <Space>をabbrよりも優先
     return true
-  elseif InputAlphabet(key, mapping) && !IsParen(key)
+  elseif InputAlphabet(key, mapping) && !IsRomanChars(key)
     return mapping
   elseif CommonFunctions(key)
     return true
@@ -250,8 +250,8 @@ def InputAlphabet(key: string, mapping: bool): bool
   endif
 enddef
 
-def IsParen(key: string): bool
-  return key =~# '[]{(<"''>)}[]'
+def IsRomanChars(key: string): bool
+  return C.roman_chars->Contains(key)
 enddef
 
 def ToKata(s: string, ct: C.Type): string
