@@ -133,8 +133,8 @@ def FilterImpl(key: string, mapping: bool): bool
   elseif StartSelect(key)
     # NOTE: <Space>をabbrよりも優先
     return true
-  elseif InputAlphabet(key, mapping) && !IsRomanChars(key)
-    return mapping
+  elseif InputAlphabet(key, mapping)
+    return !mapping
   elseif CommonFunctions(key)
     return true
   elseif !IsNormalChar(key)
@@ -234,10 +234,10 @@ def CommitBeforeInput(key: string, mapping: bool): bool
 enddef
 
 def InputAlphabet(key: string, mapping: bool): bool
-  if C.abbr_chars->index(key) ==# -1
+  if chartype.roman
     return false
-  elseif !mapping
-    return true
+  elseif C.abbr_chars->index(key) ==# -1
+    return false
   elseif chartype ==# C.Type.Abbr
     SetText(text .. key)
     return true
