@@ -311,7 +311,7 @@ def AddRoman(key: string): list<any>
   var is_abbr = false
   const newtext = text .. key->tolower()
   const l = len(newtext)
-  for k in C.roman_keys + g:vim9skkp.roman_abbrev->keys()
+  for k in g:vim9skkp.roman_abbrev->keys() + C.roman_keys
     const i = l - len(k)
     if i < 0
       continue
@@ -319,7 +319,6 @@ def AddRoman(key: string): list<any>
     if newtext->strpart(i) !=# k
       continue
     endif
-    const r = repeat('.', len(k))
     var v = get(g:vim9skkp.roman_abbrev, k, '')
     if !!v
       is_abbr = true
@@ -333,6 +332,7 @@ def AddRoman(key: string): list<any>
     if chartype !=# C.Type.Hira
       v = v->ToKata(chartype)
     endif
+    const r = repeat('.', len(k))
     return [newtext
       ->substitute($'n{r}$', $'{chartype.n}{r}', '')
       ->substitute($'{r}$', v, ''), is_abbr]
