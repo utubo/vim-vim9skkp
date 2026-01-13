@@ -133,7 +133,7 @@ def FilterImpl(key: string, mapping: bool): bool
   elseif StartSelect(key)
     # NOTE: <Space>をabbrよりも優先
     return true
-  elseif InputAlphabet(key, mapping)
+  elseif InputAlphabet(key, mapping) && !IsParen(key)
     return mapping
   elseif CommonFunctions(key)
     return true
@@ -248,6 +248,10 @@ def InputAlphabet(key: string, mapping: bool): bool
   else
     return false
   endif
+enddef
+
+def IsParen(key: string): bool
+  return key =~# '[]{(<"''>)}[]'
 enddef
 
 def ToKata(s: string, ct: C.Type): string
