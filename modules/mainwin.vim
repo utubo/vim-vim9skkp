@@ -135,12 +135,12 @@ def FilterImpl(key: string, mapping: bool): bool
     return true
   elseif InputAlphabet(key, mapping)
     return !mapping
+  elseif InputRoman(key)
+    return true
   elseif CommonFunctions(key)
     return true
   elseif !IsNormalChar(key)
     return false
-  elseif InputRoman(key)
-    return true
   elseif mapping
     $'{text}{key->tolower()}'->SetText()
     AfterAddChar()
@@ -182,12 +182,14 @@ def CommonFunctions(key: string): bool
   elseif g:vim9skkp.keymap.cancel->Contains(key)
     doautocmd User vim9skkp-m-cancel
     return true
-  elseif g:vim9skkp.keymap.midasi->Contains(key)
-    Commit()
-    SetMidasiMode(!midasi)
-    return true
   elseif g:vim9skkp.keymap.sticky_shift->Contains(key)
-    new_sticky_shift = true
+    new_sticky_shift = !sticky_shift
+    # NOTE:
+    # stick_shiftで見出しモードに遷移できるのと同様に、
+    # stick_shiftで見出しモードから抜けられるようにする
+    if !new_sticky_shift
+      midasi = false
+    endif
     return true
   elseif g:vim9skkp.keymap.userjisyo->Contains(key)
     doautocmd User vim9skkp-userjisyo

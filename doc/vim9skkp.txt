@@ -139,10 +139,6 @@ g:vim9skkp					*g:vim9skkp*
 			abbrevモードをトグルします
 		hira
 			ひらがなモードへ切り替えます
-		midasi
-			見出しモードへ切り替えます
-		midasi_toggle
-			見出しモードをトグルします
 		select
 			選択モードへ切り替えます
 			既に選択モードの場合は、次の候補を選択します
@@ -227,7 +223,6 @@ g:vim9skkp					*g:vim9skkp*
 	    hankaku: "\<C-q>",
 	    alphabet: 'L',
 	    abbr: '/',
-	    midasi: 'Q',
 	    select: [' '],
 	    next: "\<Tab>",
 	    prev: ["\<S-Tab>", 'x'],
@@ -236,7 +231,7 @@ g:vim9skkp					*g:vim9skkp*
 	    cancel: "\<C-g>",
 	    delete: "\<C-d>",
 	    userjisyo: "\<C-u>",
-	    sticky_shift: [],
+	    sticky_shift: 'Q',
 	  },
 	  roman_table: {},
 	  roman_abbrev: {},
