@@ -1,5 +1,7 @@
 vim9script
 
+silent doautocmd User Vim9skkpInitializePre
+
 # 設定 {{{
 var default = {
   jisyo: ['~/SKK-JISYO.L:EUC-JP', '~/SKK-JISYO.*.utf8:UTF8'],
