@@ -100,3 +100,7 @@ export def Silent(F: func)
   endtry
 enddef
 
+export def IsNormalChar(c: string): bool
+  return c ==# ' ' || c ==# c->keytrans()
+enddef
+

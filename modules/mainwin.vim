@@ -144,10 +144,6 @@ def FilterImpl(key: string, mapping: bool): bool
   endif
 enddef
 
-def IsNormalChar(key: string): bool
-  return key ==# ' ' || key ==# key->keytrans()
-enddef
-
 def AfterAddChar()
   if text =~ g:vim9skkp.auto_commit_regex
     Commit()
@@ -327,13 +323,13 @@ def AddRoman(key: string): list<any>
 enddef
 
 def InputConsonant(key: string, mapping: bool): bool
-  if !mapping || !IsNormalChar(key)
+  if !mapping || !U.IsNormalChar(key)
     return false
   endif
   if g:vim9skkp_status.is_cand_selected
     Commit()
   endif
-  $'{text}{key->tolower()}'->SetText()
+  SetText($'{text}{key->tolower()}')
   AfterAddChar()
   return true
 enddef
