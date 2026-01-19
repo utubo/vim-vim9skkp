@@ -122,16 +122,14 @@ enddef
 
 # 入力制御のメイン
 def FilterImpl(key: string, mapping: bool): bool
-  if C.arrows->Contains(key)
-    # NOTE: 入力が入ったままカーソル移動されると面倒だが、
-    # コマンドモードではカーソル移動したいので入力が空のときは矢印キーを許可する
-    return mapping && !!text
+  if mapping && key ==# "\<Esc>"
+    return false
+  elseif mapping && C.arrows->Contains(key)
+    # NOTE: 入力が入ったままカーソル移動されると色々と面倒なので…
+    return !!text
   elseif U.IsBackSpace(key)
     return BackSpace(mapping)
-  elseif CommitBeforeInput(key, mapping)
-    return false
   elseif StartSelect(key)
-    # NOTE: <Space>をabbrよりも優先
     return true
   elseif InputAlphabet(key, mapping)
     return !mapping
@@ -142,6 +140,9 @@ def FilterImpl(key: string, mapping: bool): bool
   elseif !IsNormalChar(key)
     return false
   elseif mapping
+    if g:vim9skkp_status.is_cand_selected
+      Commit()
+    endif
     $'{text}{key->tolower()}'->SetText()
     AfterAddChar()
     return true
@@ -202,6 +203,10 @@ def CommonFunctions(key: string): bool
       g:vim9skkp.keymap.commit->Contains(key)
     Commit()
     return true
+  elseif midasi && key ==# J.prefix
+    Commit()
+    SetText(J.prefix)
+    return true
   else
     return false
   endif
@@ -215,24 +220,6 @@ def BackSpace(mapping: bool): bool
     ->substitute('.$', '', '')
     ->SetText()
   return true
-enddef
-
-# 文字入力前に項目が選択されていた場合などは確定する
-# Filterの処理を中断するならtrueを返す
-def CommitBeforeInput(key: string, mapping: bool): bool
-  if !text || !mapping
-  # NOP
-  elseif midasi && key ==# J.prefix
-    Commit()
-  elseif g:vim9skkp_status.is_cand_selected
-    if key ==# "\<ESC>"
-      # ノーマルモードに戻るパターン
-      return true
-    else
-      Commit()
-    endif
-  endif
-  return false
 enddef
 
 def InputAlphabet(key: string, mapping: bool): bool
