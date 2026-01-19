@@ -137,14 +137,7 @@ def FilterImpl(key: string, mapping: bool): bool
     return true
   elseif CommonFunctions(key)
     return true
-  elseif !IsNormalChar(key)
-    return false
-  elseif mapping
-    if g:vim9skkp_status.is_cand_selected
-      Commit()
-    endif
-    $'{text}{key->tolower()}'->SetText()
-    AfterAddChar()
+  elseif InputConsonant(key, mapping)
     return true
   else
     return false
@@ -331,6 +324,18 @@ def AddRoman(key: string): list<any>
       ->substitute($'{r}$', v, ''), is_abbr]
   endfor
   return [text, is_abbr]
+enddef
+
+def InputConsonant(key: string, mapping: bool): bool
+  if !mapping || !IsNormalChar(key)
+    return false
+  endif
+  if g:vim9skkp_status.is_cand_selected
+    Commit()
+  endif
+  $'{text}{key->tolower()}'->SetText()
+  AfterAddChar()
+  return true
 enddef
 
 def ChangeCharType(key: string): bool
