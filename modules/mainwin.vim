@@ -228,10 +228,6 @@ def InputAlphabet(key: string, mapping: bool): bool
   endif
 enddef
 
-def IsRomanChars(key: string): bool
-  return C.roman_chars->Contains(key)
-enddef
-
 def ToKata(s: string, ct: C.Type): string
   const hira = s
     ->Tr(C.kata_chars, C.hira_chars)
@@ -329,7 +325,12 @@ def InputConsonant(key: string, mapping: bool): bool
   if g:vim9skkp_status.is_cand_selected
     Commit()
   endif
-  SetText($'{text}{key->tolower()}')
+  const low = key->tolower()
+  if C.roman_chars->Contains(low)
+    SetText($'{text}{low}')
+  else
+    SetText($'{text}{key}')
+  endif
   AfterAddChar()
   return true
 enddef

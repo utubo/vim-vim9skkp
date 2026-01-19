@@ -22,7 +22,7 @@ def Init()
   endif
   C.roman_table = C.roman_table_base->extend(g:vim9skkp.roman_table)
   C.roman_keys = C.roman_table->keys()->sort((a, b) => len(b) - len(a))
-  C.roman_chars = C.roman_keys->join()->split('\zs')
+  C.roman_chars = C.roman_keys->join()->split('\zs')->uniq()
   SetupAutocmd()
   g:vim9skkp.jisyo = J.ExpandPaths(g:vim9skkp.jisyo)
   initialized = true
