@@ -283,8 +283,12 @@ def InputRoman(key: string): bool
     return false
   endif
   ProcessMidasi(key)
-  const [newtext, is_abbr] = AddRoman(key)
+  var [newtext, is_abbr] = AddRoman(key)
   if newtext !=# text
+    if g:vim9skkp_status.is_cand_selected
+      newtext = newtext[strchars(text) :]
+      Commit()
+    endif
     SetText(newtext)
     if is_abbr || !midasi && text !~ '[っッｯ][a-z]$'
       Commit()
