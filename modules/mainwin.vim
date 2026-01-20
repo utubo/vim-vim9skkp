@@ -328,10 +328,11 @@ def InputConsonant(key: string, mapping: bool): bool
   const low = key->tolower()
   if C.roman_chars->Contains(low)
     SetText($'{text}{low}')
+    AfterAddChar()
   else
     SetText($'{text}{key}')
+    Commit()
   endif
-  AfterAddChar()
   return true
 enddef
 
