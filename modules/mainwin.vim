@@ -133,7 +133,7 @@ def FilterImpl(key: string, mapping: bool): bool
     return true
   elseif InputAlphabet(key, mapping)
     return !mapping
-  elseif InputRoman(key)
+  elseif InputVowel(key)
     return true
   elseif CommonFunctions(key)
     return true
@@ -250,12 +250,12 @@ export def SetMidasiMode(b: bool)
   endif
 enddef
 
-def InputRoman(key: string): bool
+def InputVowel(key: string): bool
   if !chartype.roman
     return false
   endif
   ProcessMidasi(key)
-  var [newtext, is_abbr] = AddRoman(key)
+  var [newtext, is_abbr] = AddVowel(key)
   if newtext !=# text
     if g:vim9skkp_status.is_cand_selected
       newtext = newtext[strchars(text) :]
@@ -285,7 +285,7 @@ def ProcessMidasi(key: string): bool
   return true
 enddef
 
-def AddRoman(key: string): list<any>
+def AddVowel(key: string): list<any>
   var is_abbr = false
   const newtext = text .. key->tolower()
   const l = len(newtext)
