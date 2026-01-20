@@ -25,7 +25,7 @@ export def Popup()
   endif
   win_execute(winid, 'syntax match Vim9skkp /./')
   win_execute(winid, 'syntax match Vim9skkpCursor /.$/')
-  if g:vim9skkp.showmode ==# 'cursor'
+  if g:vim9skkp.mode_display ==# 'cursor'
     for l in values(g:vim9skkp.mode_label)
       win_execute(winid, $'syntax match Vim9skkpCursor /{l->escape('/\')}$/')
     endfor
@@ -66,7 +66,7 @@ export def RedrawText()
   if prevent_redraw
     return
   endif
-  if g:vim9skkp.showmode ==# 'cursor'
+  if g:vim9skkp.mode_display ==# 'cursor'
     const cur = midasi
       ? g:vim9skkp.mode_label.midasi
       : g:vim9skkp_status.mode

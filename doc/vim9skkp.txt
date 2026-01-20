@@ -108,7 +108,7 @@ g:vim9skkp					*g:vim9skkp*
 		送り仮名のマーカーです
 	mode_label
 		現在の入力モードを表す文字です
-	showmode
+	mode_display
 		入力モードの表示形式です
 		"|popup|"カーソルの下にポップアップで表示します
 		"|cursor|"カーソル位置に表示します
@@ -181,6 +181,8 @@ g:vim9skkp					*g:vim9skkp*
 		変換を開始します
 	hide_cursor
 		trueの場合、vim9skkp起動中にカーソルを非表示にします
+		vi9skkp終了後にカーソルが表示されなくなってしまう場合は
+		falseにしてみてください
 	getcurpos
 		画面上のカーソル位置を返却するfuncrefです
 		ポップアップなどの表示位置を微調整したい場合は
@@ -209,7 +211,7 @@ g:vim9skkp					*g:vim9skkp*
 	    abbr: 'ab',
 	    midasi: '▽',
 	  },
-	  showmode: 'popup',
+	  mode_display: 'popup',
 	  zindex: 200,
 	  popup_maxheight: 10,
 	  search_limit: 100,

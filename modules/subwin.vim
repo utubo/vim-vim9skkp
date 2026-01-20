@@ -61,7 +61,7 @@ enddef
 def ShowMode()
   Create()
   UnSelect()
-  if g:vim9skkp.showmode !=# 'popup'
+  if g:vim9skkp.mode_display !=# 'popup'
     popup_hide(winid)
     return
   endif
