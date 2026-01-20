@@ -112,3 +112,5 @@ augroup vim9skkp-cs
 augroup END
 # }}}
 
+silent doautocmd User Vim9skkpInitializePost
+

@@ -316,11 +316,18 @@ vim9skkp#Dump()					*vim9skkpDump*
 ------------------------------------------------------------------------------
 EVENTS						*vim9skkp-events*
 
-Vim9skkpInitializePre				*Vim9skkpInitializePre*
-	vim9skkp初期化直前に発火します
-
 Vim9skkpStatusChanged				*Vim9skkpStatusChanged*
 	`g:vim9skkp_status`が変更されたときに発火します
+
+Vim9skkpInitializePre				*Vim9skkpInitializePre*
+	vim9skkp初期化直前に発火します
+	g:vim9skppにユーザーの設定をマージする前、
+	具体的にはplugin/vim9skkp.vimの最初にdoautocmdします
+
+Vim9skkpInitializePost				*Vim9skkpInitializePost*
+	vim9skkp初期化直前に発火します
+	g:vim9skppにユーザーの設定をマージした後、
+	具体的にはplugin/vim9skkp.vimの最後にdoautocmdします
 
 ------------------------------------------------------------------------------
 HIGHLIGHTS					*vim9skkp-highlights*
