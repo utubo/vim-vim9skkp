@@ -111,8 +111,6 @@ enddef
 def SetupAutocmd()
   augroup vim9skkp
     au!
-    au ModeChanged *:[nt] U.Silent(Close)
-
     # mainwinが発行するイベント
     au User vim9skkp-m-toggle Toggle()
     au User vim9skkp-m-settext OnSetText()
@@ -159,6 +157,7 @@ def SetupAutocmd()
     }
 
     # global
+    au ModeChanged *:[nt] U.Silent(Close)
     au User Vim9skkpStatusChanged {
       g:vim9skkp_status.active = M.active
       if M.active

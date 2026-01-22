@@ -370,10 +370,10 @@ enddef
 
 export def Commit(key: string = '')
   SetRedrawAfterFeedKeys()
-  if midasi && chartype ==# C.Type.Hira
+  if midasi && chartype !=# C.Type.Abbr
     text = text->substitute(g:vim9skkp.marker_okuri, '', 'n')
   endif
-  J.AddHistory(text)
+  J.AddHistory(text) # TODO: 直接入力が逐一保存されちゃう
   K.FeedKeys($'{text}{key}', !!key)
   SetText('')
   if chartype ==# C.Type.Abbr
