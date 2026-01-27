@@ -16,10 +16,6 @@ vim9skkp は、SKK日本語入力をVim9 scriptとポップアップウインド
   - `showmode`->`mode_display`へ名前変更
   - `keymap.midasi`を削除。
 
-## 設定とか
-
-[doc/vim9skkp.txt](doc/vim9skkp.txt)
-
 ## インストール
 
 辞書をダウンロードする
@@ -35,6 +31,10 @@ gunzip -f SKK-JISYO.L.gz
 cd ~/.vim/pack/foo/start
 git clone https://github.com/utubo/vim-vim9skkp.git
 ```
+
+## 設定とか
+
+[doc/vim9skkp.txt](doc/vim9skkp.txt)
 
 ## おすすめ設定
 
