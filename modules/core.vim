@@ -10,22 +10,25 @@ import './subwin.vim' as S
 import './keyhook.vim' as K
 import './jisyo.vim' as J
 import './userjisyo.vim' as UJ
+import './settings.vim' as SS
 
-var initialized = false
 var timerForCheckPopupExists = 0
 var bak = { t_ve: '', gcr: '' }
 
 # 初期化 {{{
 def Init()
-  if initialized
-    return
+  const initialized = get(g:vim9skkp, 'initialized', SS.none)
+  if initialized < SS.marged
+    SS.Initialize()
   endif
-  C.roman_table = C.roman_table_base->extend(g:vim9skkp.roman_table)
-  C.roman_keys = C.roman_table->keys()->sort((a, b) => len(b) - len(a))
-  C.roman_chars = C.roman_keys->join()->split('\zs')->uniq()
-  SetupAutocmd()
-  g:vim9skkp.jisyo = J.ExpandPaths(g:vim9skkp.jisyo)
-  initialized = true
+  if initialized < SS.initialized
+    C.roman_table = C.roman_table_base->extend(g:vim9skkp.roman_table)
+    C.roman_keys = C.roman_table->keys()->sort((a, b) => len(b) - len(a))
+    C.roman_chars = C.roman_keys->join()->split('\zs')->uniq()
+    g:vim9skkp.jisyo = J.ExpandPaths(g:vim9skkp.jisyo)
+    SetupAutocmd()
+  endif
+  g:vim9skkp.initialized = SS.initialized
 enddef
 # }}}
 
