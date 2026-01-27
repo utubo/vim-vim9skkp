@@ -162,7 +162,7 @@ g:vim9skkp					*g:vim9skkp*
 			選択モード中: 変換をキャンセルし見出しモードに移行
 			見出しモード中: 見出しモードのまま入力を削除
 			入力無し: vim9skkpをクローズ
-		sticky_shift: [],
+		sticky_shift
 			所謂スティッキーシフトです
 	roman_table
 		ローマ字入力の追加・上書き設定です
