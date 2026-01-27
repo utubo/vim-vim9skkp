@@ -31,7 +31,7 @@ export def Popup()
     endfor
   endif
   chartype = C.Type.Hira
-  midasi = g:vim9skkp.keep_midasi_mode
+  midasi = g:vim9skkp.sticky_lock
   SetText('')
   active = true
 enddef
@@ -378,9 +378,9 @@ export def Commit(key: string = '')
   SetText('')
   if chartype ==# C.Type.Abbr
     ToggleCharType(C.Type.Abbr)
-    midasi = g:vim9skkp.keep_midasi_mode
+    midasi = g:vim9skkp.sticky_lock
   endif
-  SetMidasiMode(g:vim9skkp.keep_midasi_mode && midasi)
+  SetMidasiMode(g:vim9skkp.sticky_lock && midasi)
   doautocmd User vim9skkp-m-commit
 enddef
 

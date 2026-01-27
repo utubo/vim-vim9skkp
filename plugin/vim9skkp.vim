@@ -45,7 +45,7 @@ var default = {
   },
   roman_table: {},
   roman_abbrev: {},
-  keep_midasi_mode: false,
+  sticky_lock: false,
   auto_commit_regex: '[ をヲ、。「」]',
   auto_suggest_regex: '*[っッ]\?[^a-zA-Zっッ]$',
   getcurpos: vim9skkp#Nop,
@@ -60,7 +60,7 @@ g:vim9skkp.roman_table->extend(default.roman_table, 'keep')
 g:vim9skkp_status = {
   active: false,
   mode: g:vim9skkp.mode_label.off,
-  midasi: g:vim9skkp.keep_midasi_mode,
+  midasi: g:vim9skkp.sticky_lock,
   mode_label: g:vim9skkp.mode_label.off,
   sticky_shift: false,
   is_cand_selected: false,
