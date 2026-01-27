@@ -36,7 +36,7 @@ git clone https://github.com/utubo/vim-vim9skkp.git
 
 [doc/vim9skkp.txt](doc/vim9skkp.txt)
 
-## おすすめ設定
+### おすすめ設定
 
 個人的には以下の設定をしてます
 
