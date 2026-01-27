@@ -170,8 +170,9 @@ g:vim9skkp					*g:vim9skkp*
 	roman_abbrev
 		roman_tableと似ていますが、こちらは確定まで実行します
 		例: `{ mt: 'ました。', kj: '漢字' }`
-	keep_midasi_mode
-		vim9skkpが有効になったとき、変換が確定したときに
+	stikcy_lock
+		trueの場合、見出しモードが基準になります。具体的には
+		vim9skkpが有効になったときや変換を確定した後に
 		即座に見出しモードに移行します
 	auto_commit_regex:
 		見出しモードで入力値がこの正規表現にマッチしたとき
@@ -239,7 +240,7 @@ g:vim9skkp					*g:vim9skkp*
 	  roman_abbrev: {
 
 	  },
-	  keep_midasi_mode: false,
+	  sticky_lock: false,
 	  auto_commit_regex: '[ をヲ、。「」]',
 	  auto_suggest_regex: '*[っッ]\?[^a-zA-Zっッ]$',
 	  getcurpos: vim9skkp#Nop,

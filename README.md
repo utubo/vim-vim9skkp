@@ -36,7 +36,7 @@ git clone https://github.com/utubo/vim-vim9skkp.git
 
 ```vimscript
 g:vim9skkp = {
-  keep_midasi_mode: false,
+  sticky_lock: false,
 }
 ```
 
