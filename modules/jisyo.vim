@@ -137,9 +137,9 @@ enddef
 # 入力修正(`にゃ`→`んや`等の入力ミスをフォロー)
 def GetAllCandsWithFix(text: string): list<string>
   const fixed_text = text
-    ->substitute('にゃ', 'んや', 'g')
-    ->substitute('にゅ', 'んゆ', 'g')
-    ->substitute('にょ', 'んよ', 'g')
+    ->substitute('.\@<=にゃ', 'んや', 'g')
+    ->substitute('.\@<=にゅ', 'んゆ', 'g')
+    ->substitute('.\@<=にょ', 'んよ', 'g')
   if fixed_text ==# text
     return []
   endif
