@@ -11,6 +11,7 @@ const tag_history = ';入力履歴'
 const tag_recent = ';変換履歴'
 const tag_gairai = ';外来語'
 const tag_fixed = ';入力修正'
+const tag_sahen = ';サ変'
 const tag_user = ';ユーザー辞書'
 
 var jisyo = {}
@@ -117,6 +118,9 @@ export def GetAllCands(text: string): list<any>
   cands = cands->Uniq()
   cands += GetGairaigo(gokan)
   cands += GetAllCandsWithFix(text)
+  if !cands
+    cands += GetSahen(gokan, okuri, yomi)
+  endif
   cands += [$'{gokan}{tag_muhen}']
   return [cands, yomi, okuri]
 enddef
@@ -145,6 +149,15 @@ def GetAllCandsWithFix(text: string): list<string>
   endif
   var [fixed, _, __] = GetAllCands(fixed_text)
   fixed[-1] = fixed[-1]->substitute(tag_muhen, tag_fixed, 'n')
+  return fixed
+enddef
+
+def GetSahen(gokan: string, okuri: string, yomi: string): list<string>
+  if yomi !~# 's$'
+    return []
+  endif
+  var [fixed, _, __] = GetAllCands(gokan)
+  fixed->map((k, v): string => v->substitute(';.*', tag_sahen, ''))
   return fixed
 enddef
 # }}}
