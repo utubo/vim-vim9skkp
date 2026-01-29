@@ -1,5 +1,6 @@
 vim9script
 
+# popupwinのfilter制御
 # <Space>等が他のプラグインの影響を受けやすいので
 # ポップアップではmapping: false/trueの両方で入力を受け取る
 # とか面倒なことはここで吸収する
