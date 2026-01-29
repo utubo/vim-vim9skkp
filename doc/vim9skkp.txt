@@ -33,6 +33,7 @@ INTERFACE			|vim9skkp-interface|
   FUNCTIONS			  |vim9skkp-functions|
   EVENTS			  |vim9skkp-events|
   HIGHLIGHTS			  |vim9skkp-highlights|
+  KEY-MAPPINGS			  |vim9skkp-key-mappings|
 KNOWNISSUES			|vim9skkp-knownissues|
 
 
@@ -347,6 +348,22 @@ Vim9skkpCandExtra	変換候補の補足
 Vim9skkpCandShortCut	変換候補のショートカットキー
 
 Note:  ポップアップを使っているのでハイライトのベースはPMenuになります
+
+------------------------------------------------------------------------------
+KEY-MAPPINGS					*vim9skkp-key-mappings*
+
+<Plug>(vim9skkp-toggle)
+	vim9skkpのオンオフをトグルします
+	全角英数モードやabbrevモードの場合は、ひらがなモードへ切り替えます
+
+<Plug>(vim9skkp-enable)
+	vim9skkpを有効にします
+
+<Plug>(vim9skkp-disable)
+	vim9skkpを無効にします
+
+<Plug>(vim9skkp-terminal)
+	terminalに入力するための入力プロンプトを表示します
 
 ==============================================================================
 KNOWNISSUES					*vim9skkp-knownissues*

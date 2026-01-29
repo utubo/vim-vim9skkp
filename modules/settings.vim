@@ -1,12 +1,12 @@
 vim9script
 
+import '../modules/keymap.vim' as KM
+
 export const none = 0
 export const marged = 1
 export const initialized = 2
 
 export def Initialize()
-
-  # 設定 {{{
   silent doautocmd User Vim9skkpInitializePre
   var default = {
     jisyo: ['~/SKK-JISYO.L:EUC-JP', '~/SKK-JISYO.*.utf8:UTF8'],
@@ -72,30 +72,9 @@ export def Initialize()
     is_cand_selected: false,
   }
   silent doautocmd User Vim9skkpInitializePost
-  # }}}
-
-  # キーマッピング {{{
-  def Map(lhs: string, keys: any, rhs: string)
-    if !keys
-      return
-    endif
-    for key in type(keys) ==# v:t_string ? [keys] : keys
-      if !!key
-        execute lhs key->keytrans() rhs
-      endif
-    endfor
-  enddef
-  Map('noremap!', g:vim9skkp.keymap.toggle, '<Plug>(vim9skkp-toggle)')
-  Map('noremap!', g:vim9skkp.keymap.enable, '<Plug>(vim9skkp-enable)')
-  Map('noremap!', g:vim9skkp.keymap.disable, '<Plug>(vim9skkp-disable)')
-  Map('tnoremap', g:vim9skkp.keymap.terminal, '<Plug>(vim9skkp-terminal)')
-  # }}}
-
+  KM.Apply()
 enddef
 
-# 以下は1回実行すればOK
-
-# 色 {{{
 def Color()
   hi default Vim9skkp gui=underline cterm=underline
   hi default link Vim9skkpCursor CursorIM
@@ -105,15 +84,10 @@ def Color()
   hi default link Vim9skkpCandExtra PMenuExtra
   hi default link Vim9skkpCandShortCut PMenuKind
 enddef
+
 Color()
+
 augroup vim9skkp-cs
   au! ColorScheme * Color()
 augroup END
-# }}}
-
-# コマンド {{{
-command! Vim9skkpTerminalInput vim9skkp#TerminalInput()
-command! Vim9skkpRefreshJisyo vim9skkp#RefreshJisyo()
-command! -nargs=? Vim9skkpRegisterToUserJisyo vim9skkp#RegisterToUserJisyo(<q-args>)
-# }}}
 
