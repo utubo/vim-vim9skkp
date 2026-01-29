@@ -1,4 +1,7 @@
 # 🧩vim9skkp
+
+<img width="659" height="316" alt="image" src="https://github.com/user-attachments/assets/042b833c-a843-4473-aec2-ad7c70a80d68" />
+
 vim9skkp は、SKK日本語入力をVim9 scriptとポップアップウインドウで実装した実験的なプラグインです
 
 ポップアップウインドウで頑張ることで以下を実現しています
