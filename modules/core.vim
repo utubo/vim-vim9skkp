@@ -17,7 +17,7 @@ var bak = { t_ve: '', gcr: '' }
 
 # 初期化 {{{
 def Init()
-  const initialized = get(g:vim9skkp, 'initialized', SS.none)
+  const initialized = get(g:, 'vim9skkp', {})->get('initialized', SS.none)
   if initialized < SS.marged
     SS.Initialize()
   endif
@@ -167,8 +167,6 @@ def SetupAutocmd()
         g:vim9skkp_status.midasi = M.midasi && M.chartype !=# C.Type.Abbr
         g:vim9skkp_status.mode = g:vim9skkp.mode_label[M.chartype.label]
         g:vim9skkp_status.sticky_shift = M.sticky_shift
-        S.Show()
-        M.RedrawText()
       else
         g:vim9skkp_status.midasi = false
         g:vim9skkp_status.mode = g:vim9skkp.mode_label.off
@@ -177,6 +175,10 @@ def SetupAutocmd()
       g:vim9skkp_status.mode_label = g:vim9skkp_status.midasi
         ? g:vim9skkp.mode_label.midasi
         : g:vim9skkp_status.mode
+      if M.active
+        S.Show()
+        M.RedrawText()
+      endif
     }
     # ショートカットキーでユーザー辞書登録を起動したとき
     au User vim9skkp-userjisyo {
