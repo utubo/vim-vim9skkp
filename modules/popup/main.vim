@@ -2,10 +2,10 @@ vim9script
 
 # 文字入力ポップアップウィンドウ
 
-import './const.vim' as C
-import './util.vim' as U
-import './jisyo.vim' as J
-import './keyhook.vim' as K
+import '../util/const.vim' as C
+import '../util/util.vim' as U
+import '../skk/jisyo.vim' as J
+import '../key/keyhook.vim' as K
 
 const Tr = U.Tr
 const Contains = U.Contains

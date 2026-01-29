@@ -2,11 +2,11 @@ vim9script
 
 # ユーザー辞書登録のプロンプト
 
-import './const.vim' as C
-import './jisyo.vim' as J
-import './mainwin.vim' as M
-import './subwin.vim' as S
-import './core.vim' as Core # TODO: 相互参照になってる
+import '../util/const.vim' as C
+import '../skk/jisyo.vim' as J
+import '../popup/main.vim' as M
+import '../popup/sub.vim' as S
+import '../popup/core.vim' as Core # TODO: 相互参照になってる
 
 var registerToUserJisyo = false
 var winid = 0

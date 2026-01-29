@@ -1,6 +1,6 @@
 vim9script
 
-import '../modules/keymap.vim' as KM
+import '../key/keymap.vim' as KM
 
 export const none = 0
 export const marged = 1
