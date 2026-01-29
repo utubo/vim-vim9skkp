@@ -1,7 +1,7 @@
 vim9script
 
 # 各ポップアップウィンドウの統括
-# 要はpopup_main.vimとpopup_sub.vimの橋渡し
+# 要はpopup/main.vimとpopup/sub.vimの橋渡し
 
 import '../util/const.vim' as C
 import '../util/util.vim' as U
