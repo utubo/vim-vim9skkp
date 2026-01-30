@@ -391,10 +391,9 @@ enddef
 # }}}
 
 # その他 {{{
-export def RefreshJisyo()
+export def ClearCache()
   jisyo = {}
   recent = {}
-  echo '辞書をリフレッシュしました'
 enddef
 # }}}
 

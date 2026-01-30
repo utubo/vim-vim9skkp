@@ -24,7 +24,7 @@ export def Nop(a: any): any
 enddef
 
 export def TerminalInput()
-  SS.Initialize() # NOTE: g:vim9skkpを読みこみ
+  SS.Initialize() # NOTE: g:vim9skkpがまだ初期化されてない可能性があるので
   autocmd CmdlineEnter * ++once Enable()
   const value = input(g:vim9skkp.terminal_prompt)->trim()
   if !!value
@@ -32,15 +32,17 @@ export def TerminalInput()
   endif
 enddef
 
-export def RefreshJisyo()
-  J.RefreshJisyo()
-enddef
-
 export def RegisterToUserJisyo(_yomi: string = '', is_instant: bool = false)
+  SS.Initialize() # NOTE: g:vim9skkpがまだ初期化されてない可能性があるので
   const yomi = _yomi ?? UJ.InputYomi(is_instant)
   if !!yomi
     UJ.Register(yomi, is_instant)
   endif
+enddef
+
+export def RefreshJisyo()
+  J.ClearCache()
+  echo '辞書をリフレッシュしました'
 enddef
 
 export def Dump()
