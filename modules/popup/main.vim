@@ -2,8 +2,8 @@ vim9script
 
 # 文字入力ポップアップウィンドウ
 
-import '../util/const.vim' as C
-import '../util/util.vim' as U
+import '../common/const.vim' as C
+import '../common/util.vim' as U
 import '../skk/jisyo.vim' as J
 import '../key/keyhook.vim' as K
 

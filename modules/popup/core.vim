@@ -3,14 +3,14 @@ vim9script
 # 各ポップアップウィンドウの統括
 # 要はpopup/main.vimとpopup/sub.vimの橋渡し
 
-import '../util/const.vim' as C
-import '../util/util.vim' as U
+import '../common/const.vim' as C
+import '../common/util.vim' as U
 import '../popup/main.vim' as M
 import '../popup/sub.vim' as S
 import '../key/keyhook.vim' as K
 import '../skk/jisyo.vim' as J
 import '../skk/userjisyo.vim' as UJ
-import '../util/settings.vim' as SS
+import '../common/settings.vim' as SS
 
 var timerForCheckPopupExists = 0
 var bak = { t_ve: '', gcr: '' }

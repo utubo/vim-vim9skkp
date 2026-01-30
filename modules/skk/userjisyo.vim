@@ -2,7 +2,7 @@ vim9script
 
 # ユーザー辞書登録のプロンプト
 
-import '../util/const.vim' as C
+import '../common/const.vim' as C
 import '../skk/jisyo.vim' as J
 import '../popup/main.vim' as M
 import '../popup/sub.vim' as S

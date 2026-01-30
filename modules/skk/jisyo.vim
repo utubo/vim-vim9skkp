@@ -2,8 +2,8 @@ vim9script
 
 # 辞書操作関係
 
-import '../util/const.vim' as C
-import '../util/util.vim' as U
+import '../common/const.vim' as C
+import '../common/util.vim' as U
 
 export const prefix = '>'
 export const tag_muhen = ';無変換'
