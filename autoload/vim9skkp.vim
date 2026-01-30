@@ -4,6 +4,7 @@ import '../modules/popup/core.vim' as Core
 import '../modules/skk/jisyo.vim' as J
 import '../modules/skk/userjisyo.vim' as UJ
 import '../modules/key/keyhook.vim' as K
+import '../modules/common/settings.vim' as SS
 
 # API {{{
 export def Enable()
@@ -23,8 +24,9 @@ export def Nop(a: any): any
 enddef
 
 export def TerminalInput()
+  SS.Initialize() # NOTE: g:vim9skkpを読みこみ
   autocmd CmdlineEnter * ++once Enable()
-  const value = input($'terminalに入力: ')->trim()
+  const value = input(g:vim9skkp.terminal_prompt)->trim()
   if !!value
     feedkeys(value, 'int')
   endif

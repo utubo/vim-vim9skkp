@@ -196,6 +196,8 @@ g:vim9skkp					*g:vim9skkp*
 		引数posはvim9skkpが算出したカーソル位置です >
 			foo(pos: any): any
 <
+	terminal_prompt
+		terminalに入力するための入力プロンプトです
 	dumpsize
 		デバッグ用です。ポップアップに飛んできた入力を
 		このサイズの分だけ保存します。
@@ -250,6 +252,7 @@ g:vim9skkp					*g:vim9skkp*
 	  auto_suggest_regex: '*[っッ]\?[^a-zA-Zっッ]$',
 	  getcurpos: vim9skkp#Nop,
 	  hide_cursor: true,
+	  terminal_prompt: 'terminalに入力: ',
 	  dumpsize: 0,
 	}
 
