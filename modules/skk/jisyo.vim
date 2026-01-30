@@ -119,7 +119,7 @@ export def GetAllCands(text: string): list<any>
   cands += GetGairaigo(gokan)
   cands += GetAllCandsWithFix(text)
   if !cands
-    cands += GetSahen(gokan, okuri, yomi)
+    cands += GetSahen(gokan, okuri)
   endif
   cands += [$'{gokan}{tag_muhen}']
   return [cands, yomi, okuri]
@@ -152,8 +152,8 @@ def GetAllCandsWithFix(text: string): list<string>
   return fixed
 enddef
 
-def GetSahen(gokan: string, okuri: string, yomi: string): list<string>
-  if yomi !~# 's$'
+def GetSahen(gokan: string, okuri: string): list<string>
+  if okuri !~# '^[さしすせ]'
     return []
   endif
   var [fixed, _, __] = GetAllCands(gokan)
