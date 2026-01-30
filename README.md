@@ -15,9 +15,10 @@ vim9skkp は、SKK日本語入力をVim9 scriptとポップアップウインド
 - 当面、破壊的変更がしょっちゅう入ります(特に設定まわり)
 
 ### 最近の破壊的変更
-  - `keep_midasi_mode`->`sticky_lock`へ名前変更
-  - `showmode`->`mode_display`へ名前変更
-  - `keymap.midasi`を削除。
+  - イベント: `Vim9skkpInitializePost`と`Vim9skkpInitializePost`を削除
+  - 設定名: `keep_midasi_mode`->`sticky_lock`へ名前変更
+  - 設定名: `showmode`->`mode_display`へ名前変更
+  - 設定名: `keymap.midasi`を削除。
 
 ## インストール
 

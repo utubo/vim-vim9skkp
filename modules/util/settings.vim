@@ -7,7 +7,6 @@ export const marged = 1
 export const initialized = 2
 
 export def Initialize()
-  silent doautocmd User Vim9skkpInitializePre
   var default = {
     jisyo: ['~/SKK-JISYO.L:EUC-JP', '~/SKK-JISYO.*.utf8:UTF8'],
     jisyo_user: '~/VIM9SKKP-JISYO.user',
@@ -71,7 +70,6 @@ export def Initialize()
     sticky_shift: false,
     is_cand_selected: false,
   }
-  silent doautocmd User Vim9skkpInitializePost
   KM.Apply()
 enddef
 

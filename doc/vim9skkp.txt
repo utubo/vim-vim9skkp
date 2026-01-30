@@ -327,12 +327,6 @@ EVENTS						*vim9skkp-events*
 Vim9skkpStatusChanged				*Vim9skkpStatusChanged*
 	`g:vim9skkp_status`が変更されたときに発火します
 
-Vim9skkpInitializePre				*Vim9skkpInitializePre*
-	g:vim9skppにユーザーの設定をマージする前に発火します
-
-Vim9skkpInitializePost				*Vim9skkpInitializePost*
-	g:vim9skppにユーザーの設定をマージした後に発火します
-
 ------------------------------------------------------------------------------
 HIGHLIGHTS					*vim9skkp-highlights*
 
