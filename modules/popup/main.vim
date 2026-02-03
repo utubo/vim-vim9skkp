@@ -73,7 +73,8 @@ export def RedrawText()
     popup_settext(winid, text .. cur)
   elseif !text
     # textが空の場合はカーソル位置の文字を空かしておく
-    popup_settext(winid, U.GetCharAtCursor() ?? ' ')
+    const c = U.GetCharAtCursor()
+    popup_settext(winid, !!c && c !=# "\<Tab>" ? c : ' ')
   else
     # textの末尾にカーソルを表示
     popup_settext(winid, text .. ' ')
