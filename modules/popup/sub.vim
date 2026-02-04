@@ -80,20 +80,21 @@ export def ShowCands(text: string = '')
     return
   endif
   shortcut = U.ToList(g:vim9skkp.keymap.shortcut)
-  var i = 0
+  var idx = 0
   var lines = []
   for k in cands
-    const s = get(shortcut, i, '')->keytrans()
-    const [c, d] = U.Split(k, ';')
-    if !s
+    const s = get(shortcut, idx, '')->keytrans()
+    var [c, d] = U.Split(k, ';')
+    if !!s
+      c = $'{s}:{c}'
+    endif
+    if !d
       lines += [c]
-    elseif !d
-      lines += [$'{s}:{c}']
     else
       const p = $"{repeat(' ', C.cand_width - strdisplaywidth(c))}\t"
-      lines += [$'{s}:{c}{p}{d}']
+      lines += [$'{c}{p}{d}']
     endif
-    i += 1
+    idx += 1
   endfor
   popup_settext(winid, lines)
   popup_setoptions(winid, { highlight: 'Vim9skkpCand' })
@@ -114,9 +115,9 @@ export def ShowRecentAndHistory(text: string)
   Show()
 enddef
 
-def Select(i: number)
+def Select(idx: number)
   const c = len(cands) - 1
-  index = i < 0 ? c : c < i ? 0 : i
+  index = idx < 0 ? c : c < idx ? 0 : idx
   selected = cands[index]->matchstr('^[^;]\+') .. okuri
   g:vim9skkp_status.is_cand_selected = true
   win_execute(winid, $':{index + 1}')
@@ -139,11 +140,11 @@ export def Reset()
 enddef
 
 def ShortCut(key: string): bool
-  const i = shortcut->index(key)
-  if cands->len() - 1 < i
+  const idx = shortcut->index(key)
+  if cands->len() - 1 < idx
     return false
   endif
-  Select(i)
+  Select(idx)
   doautocmd User vim9skkp-s-commit
   return true
 enddef
