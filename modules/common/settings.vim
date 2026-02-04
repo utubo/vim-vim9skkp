@@ -9,10 +9,12 @@ export const initialized = 2
 export def Initialize()
   var default = {
     jisyo: ['~/SKK-JISYO.L:EUC-JP', '~/SKK-JISYO.*.utf8:UTF8'],
+    jisyo_fuzzy: [ '~/SKK-JISYO.emoji.utf8' ],
     jisyo_user: '~/VIM9SKKP-JISYO.user',
     jisyo_recent: '~/VIM9SKKP-JISYO.recent',
     recent: 1000,
     recent_per_yomi: 1,
+    fuzzy_limit: 10,
     marker_okuri: '*',
     mode_label: {
       off: '_A',

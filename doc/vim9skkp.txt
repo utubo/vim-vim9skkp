@@ -96,6 +96,13 @@ g:vim9skkp					*g:vim9skkp*
 		辞書ファイルのパスの配列
 		`ファイル名:文字コード`の形式
 		ワイルドカードはvim9skkpの初回起動時に展開します
+		NOTE:
+			辞書はキャッシュされます(後述の他の辞書設定も同様)
+			vim9skkp起動後に辞書ファイルを置いた場合は後述の
+			|:Vim9skkpReloadJisyo|を実行してください
+	jisyo_fuzzy
+		候補を曖昧検索する辞書ファイルのパスの配列
+		あまり大きなファイルを指定すると重くなると思います
 	jisyo_user
 		ユーザー辞書ファイルのパス
 	jisyo_recent
@@ -105,6 +112,8 @@ g:vim9skkp					*g:vim9skkp*
 		「最後に実行した変換」辞書の最大件数
 	recent_per_yomi
 		「最後に実行した変換」辞書の一つの読みに対する最大候補数
+	fuzzy_limit
+		曖昧検索の検索上限
 	marker_okuri
 		送り仮名のマーカーです
 	mode_label
@@ -205,10 +214,12 @@ g:vim9skkp					*g:vim9skkp*
 	デフォルトは以下です >
 	{
 	  jisyo: ['~/SKK-JISYO.L:EUC-JP', '~/SKK-JISYO.*.utf8:UTF8'],
+	  jisyo_fuzzy: [ '~/SKK-JISYO.emoji.utf8' ],
 	  jisyo_user: '~/VIM9SKKP-JISYO.user',
 	  jisyo_recent: '~/VIM9SKKP-JISYO.recent',
 	  recent: 1000,
 	  recent_per_yomi: 1,
+	  fuzzy_limit: 10,
 	  marker_okuri: '*',
 	  mode_label: {
 	    off: '_A',

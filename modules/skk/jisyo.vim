@@ -13,6 +13,7 @@ const tag_gairai = ';外来語'
 const tag_fixed = ';入力修正'
 const tag_sahen = ';サ変'
 const tag_user = ';ユーザー辞書'
+const tag_fuzzy = ';曖昧'
 
 var jisyo = {}
 var recent = {}
@@ -118,6 +119,7 @@ export def GetAllCands(text: string): list<any>
   cands = cands->Uniq()
   cands += GetGairaigo(gokan)
   cands += GetAllCandsWithFix(text)
+  cands += GetFuzzy(text)
   if !cands
     cands += GetSahen(gokan, okuri)
   endif
@@ -152,6 +154,7 @@ def GetAllCandsWithFix(text: string): list<string>
   return fixed
 enddef
 
+# サ変
 def GetSahen(gokan: string, okuri: string): list<string>
   if okuri !~# '^[さしすせ]'
     return []
@@ -159,6 +162,34 @@ def GetSahen(gokan: string, okuri: string): list<string>
   var [fixed, _, __] = GetAllCands(gokan)
   fixed->map((k, v): string => v->substitute(';.*', tag_sahen, ''))
   return fixed
+enddef
+
+# あいまい検索
+def GetFuzzy(text: string): list<string>
+  var cands = []
+  for path in g:vim9skkp.jisyo_fuzzy
+    var j = ReadJisyo(path)->SetupFuzzy()
+    const matched = matchfuzzy(j.fuzzy->keys(), text, { limit: g:vim9skkp.fuzzy_limit })
+    for k in matched
+      cands += j.fuzzy[k]->copy()->map((_, v): string => k ==# text ? v : $'{v}{tag_fuzzy} {k}')
+    endfor
+  endfor
+  return cands->uniq()
+enddef
+
+def SetupFuzzy(j: dict<any>): dict<any>
+  if j->has_key('fuzzy')
+    return j
+  endif
+  j.fuzzy = {}
+  for line in j.lines
+    if len(line) ==# 0 || line[0] ==# ';'
+      continue
+    endif
+    var [k, v] = line->IconvFrom(j.enc)->Split(' ')
+    j.fuzzy[k] = v->split('/')
+  endfor
+  return j
 enddef
 # }}}
 
@@ -199,13 +230,16 @@ export def ReadJisyo(path: string): dict<any>
   endif
   # 読み込んでスクリプトローカルにキャッシュする
   const [p, enc] = ToFullPathAndEncode(path)
-  if !filereadable(p)
-    # 後から辞書ファイルを置かれる可能性があるので、キャッシュしない
-    return { lines: [], enc: enc }
+  if filereadable(p)
+    # iconvはWindowsですごく重いので、読み込み時には全体を変換しない
+    # 検索時に検索対象の方の文字コードを辞書にあわせる
+    jisyo[path] = { lines: readfile(p)->sort(), enc: enc }
+  else
+    # NOTE:
+    #   後から辞書ファイルを置かれた場合は
+    #   ユーザーに`:Vim9skkpReloadJisyo`してもらう
+    jisyo[path] = { lines: [], enc: enc }
   endif
-  # iconvはWindowsですごく重いので、読み込み時には全体を変換しない
-  # 検索時に検索対象の方の文字コードを辞書にあわせる
-  jisyo[path] = { lines: readfile(p)->sort(), enc: enc }
   return jisyo[path]
 enddef
 
