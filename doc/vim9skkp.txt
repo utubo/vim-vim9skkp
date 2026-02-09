@@ -255,9 +255,7 @@ g:vim9skkp					*g:vim9skkp*
 	    sticky_shift: 'Q',
 	  },
 	  roman_table: {},
-	  roman_abbrev: {
-
-	  },
+	  roman_abbrev: {},
 	  sticky_lock: false,
 	  auto_commit_regex: '[ をヲ、。「」]',
 	  auto_suggest_regex: '*[っッ]\?[^a-zA-Zっッ]$',
