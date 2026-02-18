@@ -35,6 +35,9 @@ enddef
 # 表示制御 {{{
 # ポップアップウィンドウを表示する
 export def Popup()
+  if pumvisible()
+    K.FeedKeys("\<C-y>", false)
+  endif
   Init()
   StopCheckPopupExists()
   M.Popup()
