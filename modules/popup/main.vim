@@ -203,7 +203,9 @@ def BackSpace(mapping: bool): bool
     ->SetText()
   return true
 enddef
+# }}}
 
+# アルファベット入力 {{{
 def AutoAbbr(key: string): bool
   if chartype ==# C.Type.Abbr
     return false
@@ -236,39 +238,9 @@ def InputAlphabet(key: string, mapping: bool): bool
     return false
   endif
 enddef
+# }}}
 
-def ToKata(s: string, ct: C.Type): string
-  const hira = s
-    ->Tr(C.kata_chars, C.hira_chars)
-    ->Tr(C.hankaku_chars, C.hira_chars)
-  if ct ==# C.Type.Kata
-    return hira->Tr(C.hira_chars, C.kata_chars)
-  elseif ct ==# C.Type.Hank
-    return hira->Tr(C.hira_chars, C.hankaku_chars)
-  elseif ct ==# C.Type.Hira
-    return hira
-  else
-    return s
-  endif
-enddef
-
-export def SetMidasiMode(b: bool)
-  if midasi !=# b
-    midasi = b
-    silent! doautocmd User Vim9skkpStatusChanged
-  endif
-enddef
-
-def AfterAddHiragana()
-  if text =~ g:vim9skkp.auto_commit_regex
-    Commit()
-  endif
-  if !!g:vim9skkp.auto_suggest_regex &&
-      text =~ g:vim9skkp.auto_suggest_regex
-    StartSelect()
-  endif
-enddef
-
+# ローマ字入力 {{{
 def InputVowel(key: string): bool
   if !chartype.roman
     return false
@@ -355,6 +327,40 @@ def InputConsonant(key: string, mapping: bool): bool
   return true
 enddef
 
+def AfterAddHiragana()
+  if text =~ g:vim9skkp.auto_commit_regex
+    Commit()
+  endif
+  if !!g:vim9skkp.auto_suggest_regex &&
+      text =~ g:vim9skkp.auto_suggest_regex
+    StartSelect()
+  endif
+enddef
+
+def ToKata(s: string, ct: C.Type): string
+  const hira = s
+    ->Tr(C.kata_chars, C.hira_chars)
+    ->Tr(C.hankaku_chars, C.hira_chars)
+  if ct ==# C.Type.Kata
+    return hira->Tr(C.hira_chars, C.kata_chars)
+  elseif ct ==# C.Type.Hank
+    return hira->Tr(C.hira_chars, C.hankaku_chars)
+  elseif ct ==# C.Type.Hira
+    return hira
+  else
+    return s
+  endif
+enddef
+# }}}
+
+# モード制御 {{{
+export def SetMidasiMode(b: bool)
+  if midasi !=# b
+    midasi = b
+    silent! doautocmd User Vim9skkpStatusChanged
+  endif
+enddef
+
 def ChangeCharType(key: string): bool
   const oldtype = chartype
   for ct in C.Type.values
@@ -386,7 +392,9 @@ export def ToggleCharType(ct: C.Type)
   endif
   silent! doautocmd User Vim9skkpStatusChanged
 enddef
+# }}}
 
+# 変換 {{{
 export def Commit(key: string = '')
   SetRedrawAfterFeedKeys()
   if midasi && chartype !=# C.Type.Abbr
