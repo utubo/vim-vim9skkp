@@ -132,7 +132,7 @@ def FilterImpl(key: string, lowkey: string, mapping: bool): bool
     return BackSpace(mapping)
   elseif StartSelect(key)
     return true
-  elseif AutoAbbr(lowkey, mapping)
+  elseif AutoAbbr(lowkey)
     return true
   elseif InputAlphabet(key, mapping)
     return !mapping
@@ -214,10 +214,8 @@ def BackSpace(mapping: bool): bool
   return true
 enddef
 
-def AutoAbbr(key: string, mapping: bool): bool
-  if !mapping
-    return false
-  elseif chartype ==# C.Type.Abbr
+def AutoAbbr(key: string): bool
+  if chartype ==# C.Type.Abbr
     return false
   elseif !midasi && !sticky_shift
     return false
