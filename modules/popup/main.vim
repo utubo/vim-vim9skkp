@@ -97,11 +97,11 @@ enddef
 var new_sticky_shift = false # TODO: このフラグはいまいち…
 
 # 入力制御の大枠
-export def Filter(key: string, mapping: bool): bool
+export def Filter(lowkey: string, mapping: bool): bool
   new_sticky_shift = false
-  const done = key
+  const done = lowkey
     ->ApplyStickyShift()
-    ->FilterImpl(key, mapping)
+    ->FilterImpl(lowkey, mapping)
   if done
     SetStickyShift(new_sticky_shift)
     return true
@@ -113,7 +113,7 @@ export def Filter(key: string, mapping: bool): bool
   # マッピング後のキーでもやることが無かった場合
   SetStickyShift(false)
   if !!text
-    Commit(key)
+    Commit(lowkey)
     return true
   else
     return false
