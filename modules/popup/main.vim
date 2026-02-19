@@ -102,7 +102,7 @@ export def Filter(key: string, mapping: bool): bool
   new_sticky_shift = false
   const done = key
     ->ApplyStickyShift()
-    ->FilterImpl(mapping)
+    ->FilterImpl(key, mapping)
   if done
     SetStickyShift(new_sticky_shift)
     return true
@@ -122,7 +122,7 @@ export def Filter(key: string, mapping: bool): bool
 enddef
 
 # 入力制御のメイン
-def FilterImpl(key: string, mapping: bool): bool
+def FilterImpl(key: string, lowkey: string, mapping: bool): bool
   if mapping && key ==# "\<Esc>"
     return false
   elseif mapping && C.arrows->Contains(key)
@@ -132,7 +132,7 @@ def FilterImpl(key: string, mapping: bool): bool
     return BackSpace(mapping)
   elseif StartSelect(key)
     return true
-  elseif AutoAbbr(key, mapping)
+  elseif AutoAbbr(lowkey, mapping)
     return true
   elseif InputAlphabet(key, mapping)
     return !mapping
@@ -178,8 +178,8 @@ def CommonFunctions(key: string): bool
   elseif g:vim9skkp.keymap.sticky_shift->Contains(key)
     new_sticky_shift = !sticky_shift
     # NOTE:
-    # stick_shiftで見出しモードに遷移できるのと同様に、
-    # stick_shiftで見出しモードから抜けられるようにする
+    # sticky_shiftで見出しモードに遷移できるのと同様に、
+    # sticky_shiftで見出しモードから抜けられるようにする
     if !new_sticky_shift
       midasi = false
     endif
@@ -219,7 +219,7 @@ def AutoAbbr(key: string, mapping: bool): bool
     return false
   elseif chartype ==# C.Type.Abbr
     return false
-  elseif !midasi
+  elseif !midasi && !sticky_shift
     return false
   elseif !!text
     return false
