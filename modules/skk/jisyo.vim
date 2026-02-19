@@ -315,7 +315,7 @@ def AddCand(jisyo_path: string, before: string, after: string): dict<any>
       ->filter((_, v) => !v->StartsWith(head))
       ->insert($'{k} /{afters}/'->IconvTo(j.enc))
   endfor
-  silent! j.lines->remove(g:vim9skkp.recent, -1) # TODO
+  silent! j.lines->remove(g:vim9skkp.recent_limit, -1) # TODO
   if (jisyo_path ==# g:vim9skkp.jisyo_recent)
     # 変換履歴はソートしない
     jisyo[jisyo_path] = {lines: j.lines, enc: j.enc }

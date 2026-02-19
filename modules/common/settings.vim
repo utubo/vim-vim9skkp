@@ -12,7 +12,7 @@ export def Initialize()
     jisyo_fuzzy: [ '~/SKK-JISYO.emoji.utf8' ],
     jisyo_user: '~/VIM9SKKP-JISYO.user',
     jisyo_recent: '~/VIM9SKKP-JISYO.recent',
-    recent: 1000,
+    recent_limit: 1000,
     recent_per_yomi: 1,
     fuzzy_limit: 10,
     marker_okuri: '*',

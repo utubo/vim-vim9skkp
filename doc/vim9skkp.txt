@@ -111,7 +111,7 @@ g:vim9skkp					*g:vim9skkp*
 	jisyo_recent
 		「最後に実行した変換」辞書ファイルのパス
 		「最後に実行した変換」辞書はvimを閉じるときに保存されます
-	recent
+	recent_limit
 		「最後に実行した変換」辞書の最大件数
 	recent_per_yomi
 		「最後に実行した変換」辞書の一つの読みに対する最大候補数
@@ -220,7 +220,7 @@ g:vim9skkp					*g:vim9skkp*
 	  jisyo_fuzzy: [ '~/SKK-JISYO.emoji.utf8' ],
 	  jisyo_user: '~/VIM9SKKP-JISYO.user',
 	  jisyo_recent: '~/VIM9SKKP-JISYO.recent',
-	  recent: 1000,
+	  recent_limit: 1000,
 	  recent_per_yomi: 1,
 	  fuzzy_limit: 10,
 	  marker_okuri: '*',
