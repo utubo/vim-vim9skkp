@@ -147,16 +147,6 @@ def FilterImpl(key: string, lowkey: string, mapping: bool): bool
   endif
 enddef
 
-def AfterAddChar()
-  if text =~ g:vim9skkp.auto_commit_regex
-    Commit()
-  endif
-  if !!g:vim9skkp.auto_suggest_regex &&
-      text =~ g:vim9skkp.auto_suggest_regex
-    StartSelect()
-  endif
-enddef
-
 def ApplyStickyShift(key: string): string
   return sticky_shift ? key->toupper() : key
 enddef
@@ -269,6 +259,16 @@ export def SetMidasiMode(b: bool)
   endif
 enddef
 
+def AfterAddHiragana()
+  if text =~ g:vim9skkp.auto_commit_regex
+    Commit()
+  endif
+  if !!g:vim9skkp.auto_suggest_regex &&
+      text =~ g:vim9skkp.auto_suggest_regex
+    StartSelect()
+  endif
+enddef
+
 def InputVowel(key: string): bool
   if !chartype.roman
     return false
@@ -284,7 +284,7 @@ def InputVowel(key: string): bool
     if is_abbr || !midasi && text !~ '[っッｯ][a-z]$'
       Commit()
     endif
-    AfterAddChar()
+    AfterAddHiragana()
     return true
   endif
   return false
@@ -347,7 +347,7 @@ def InputConsonant(key: string, mapping: bool): bool
   const low = key->tolower()
   if C.roman_chars->Contains(low)
     SetText($'{text}{low}')
-    AfterAddChar()
+    AfterAddHiragana()
   else
     SetText($'{text}{key}')
     Commit()
