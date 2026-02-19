@@ -94,7 +94,6 @@ enddef
 # }}}
 
 # キー入力制御 {{{
-
 var new_sticky_shift = false # TODO: このフラグはいまいち…
 
 # 入力制御の大枠
@@ -395,22 +394,6 @@ enddef
 # }}}
 
 # 変換 {{{
-export def Commit(key: string = '')
-  SetRedrawAfterFeedKeys()
-  if midasi && chartype !=# C.Type.Abbr
-    text = text->substitute(g:vim9skkp.marker_okuri, '', 'n')
-  endif
-  J.AddHistory(text) # TODO: 直接入力が逐一保存されちゃう
-  K.FeedKeys($'{text}{key}', !!key)
-  SetText('')
-  if chartype ==# C.Type.Abbr
-    ToggleCharType(C.Type.Abbr)
-    midasi = g:vim9skkp.sticky_lock
-  endif
-  SetMidasiMode(g:vim9skkp.sticky_lock && midasi)
-  doautocmd User vim9skkp-m-commit
-enddef
-
 def StartSelect(key: string = ''): bool
   if !text
     return false
@@ -426,6 +409,22 @@ def StartSelect(key: string = ''): bool
     ->SetText()
   doautocmd User vim9skkp-m-start
   return true
+enddef
+
+export def Commit(key: string = '')
+  SetRedrawAfterFeedKeys()
+  if midasi && chartype !=# C.Type.Abbr
+    text = text->substitute(g:vim9skkp.marker_okuri, '', 'n')
+  endif
+  J.AddHistory(text) # TODO: 直接入力が逐一保存されちゃう
+  K.FeedKeys($'{text}{key}', !!key)
+  SetText('')
+  if chartype ==# C.Type.Abbr
+    ToggleCharType(C.Type.Abbr)
+    midasi = g:vim9skkp.sticky_lock
+  endif
+  SetMidasiMode(g:vim9skkp.sticky_lock && midasi)
+  doautocmd User vim9skkp-m-commit
 enddef
 # }}}
 
