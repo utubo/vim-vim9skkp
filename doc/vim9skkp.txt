@@ -205,7 +205,7 @@ g:vim9skkp					*g:vim9skkp*
 		画面上のカーソル位置を返却するfuncrefです
 		ポップアップなどの表示位置を微調整したい場合は
 		以下の関数を用意しカーソル位置を返却してください
-		引数posはvim9skkpが算出したカーソル位置です >
+		引数pos.lineとpos.colはvim9skkpが算出したカーソル位置です >
 			foo(pos: any): any
 <
 	terminal_prompt
