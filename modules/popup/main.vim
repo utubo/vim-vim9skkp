@@ -132,6 +132,8 @@ def FilterImpl(key: string, mapping: bool): bool
     return BackSpace(mapping)
   elseif StartSelect(key)
     return true
+  elseif AutoAbbr(key, mapping)
+    return true
   elseif InputAlphabet(key, mapping)
     return !mapping
   elseif InputVowel(key)
@@ -210,6 +212,24 @@ def BackSpace(mapping: bool): bool
     ->substitute('.$', '', '')
     ->SetText()
   return true
+enddef
+
+def AutoAbbr(key: string, mapping: bool): bool
+  if !mapping
+    return false
+  elseif chartype ==# C.Type.Abbr
+    return false
+  elseif !midasi
+    return false
+  elseif !!text
+    return false
+  elseif key !~# '[A-Z]'
+    return false
+  else
+    noautocmd ToggleCharType(C.Type.Abbr)
+    SetText(key)
+    return true
+  endif
 enddef
 
 def InputAlphabet(key: string, mapping: bool): bool
