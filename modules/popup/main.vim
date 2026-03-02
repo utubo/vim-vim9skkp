@@ -131,13 +131,13 @@ def FilterImpl(key: string, lowkey: string, mapping: bool): bool
     return BackSpace(mapping)
   elseif StartSelect(key)
     return true
-  elseif AutoAbbr(lowkey)
-    return true
   elseif InputAlphabet(key, mapping)
     return !mapping
+  elseif CommonFunctions(key)
+    return true
   elseif InputVowel(key)
     return true
-  elseif CommonFunctions(key)
+  elseif AutoAbbr(lowkey)
     return true
   elseif InputConsonant(key, mapping)
     return true
