@@ -131,13 +131,13 @@ def FilterImpl(key: string, lowkey: string, mapping: bool): bool
     return BackSpace(mapping)
   elseif StartSelect(key)
     return true
+  elseif AutoAbbr(lowkey)
+    return true
   elseif InputAlphabet(key, mapping)
     return !mapping
-  elseif CommonFunctions(key)
-    return true
   elseif InputVowel(key)
     return true
-  elseif AutoAbbr(lowkey)
+  elseif CommonFunctions(key)
     return true
   elseif InputConsonant(key, mapping)
     return true
@@ -214,6 +214,9 @@ def AutoAbbr(key: string): bool
     return false
   elseif key !~# '[A-Z]'
     return false
+  elseif CommonFunctions(key)
+    # `L`で全角アルファベットに切り替えたい…
+    return true
   else
     noautocmd ToggleCharType(C.Type.Abbr)
     SetText(key)
