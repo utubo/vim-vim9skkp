@@ -18,8 +18,7 @@ export def GetCurPos(): dict<any>
   const m = mode()
   if m ==# 'c'
     const q = getcmdscreenpos()
-    const t = GetTabpanelWidth()
-    const w = &columns - t
+    const w = v:echospace + 1
     p = {
       line: &lines - &cmdheight + 1 + q / w,
       col: q % w,
@@ -33,17 +32,6 @@ export def GetCurPos(): dict<any>
     }
   endif
   return p
-enddef
-
-def GetTabpanelWidth(): number
-  if !&showtabpanel
-    return 0
-  endif
-  if &showtabpanel ==# 1 && tabpagenr('$') ==# 1
-    return 0
-  endif
-  const c = &tabpanelopt->matchstr('\(columns:\)\@<=\d\+')->str2nr() ?? 20
-  return &columns < c ? 0 : c
 enddef
 
 # カーソル位置の文字を返す
