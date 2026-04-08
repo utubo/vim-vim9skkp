@@ -34,6 +34,7 @@ export def Close()
   if !!winid
     popup_close(winid)
     winid = 0
+    g:vim9skkp_status.cand_winid = 0
   endif
 enddef
 
@@ -68,6 +69,7 @@ def ShowMode()
   popup_settext(winid, g:vim9skkp_status.mode_label)
   popup_setoptions(winid, { highlight: 'Vim9skkpMode' })
   popup_show(winid)
+  g:vim9skkp_status.cand_winid = 0
 enddef
 
 export def ShowCands(text: string = '')
@@ -102,6 +104,9 @@ export def ShowCands(text: string = '')
   win_execute(winid, 'syntax match Vim9skkpCandExtra /\t\zs.*/')
   win_execute(winid, 'syntax match Vim9skkpCandShortCut /^.*:/')
   popup_show(winid)
+  g:vim9skkp_status.cand_winid = winid
+  silent! doautocmd User Vim9skkpCandPopup
+
   if !!text
     popup_setoptions(winid, { cursorline: true })
     Select(0)

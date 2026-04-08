@@ -72,6 +72,7 @@ export def Initialize()
     mode_label: g:vim9skkp.mode_label.off,
     sticky_shift: false,
     is_cand_selected: false,
+    cand_width: 0,
   }
   KM.Apply()
 enddef
