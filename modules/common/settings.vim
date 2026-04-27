@@ -26,8 +26,9 @@ export def Initialize()
       midasi: '▽',
     },
     mode_display: 'popup',
-    zindex: 200,
-    popup_maxheight: 10,
+    mode_popup_options: {},
+    cands_popup_options: {},
+    main_popup_options: {},
     search_limit: 100,
     keymap: {
       enable: [],

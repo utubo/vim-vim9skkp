@@ -21,7 +21,9 @@ export var prevent_redraw = false
 # 表示制御 {{{
 export def Popup()
   if !U.IsPopupExists(winid)
-    winid = popup_create('', { zindex: g:vim9skkp.zindex })
+    winid = popup_create('',
+      { zindex: C.default_zindex }
+      ->extend(g:vim9skkp.main_popup_options))
   endif
   win_execute(winid, 'syntax match Vim9skkp /./')
   win_execute(winid, 'syntax match Vim9skkpCursor /.$/')

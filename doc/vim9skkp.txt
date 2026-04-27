@@ -128,6 +128,14 @@ g:vim9skkp					*g:vim9skkp*
 		"|cursor|"カーソル位置に表示します
 	popup_maxheight
 		変換候補の最大表示行数です
+	cands_popup_options
+		変換候補のポップアップウィンドウのオプションです
+		詳細は|popup_create-options|
+		変換候補に枠を付けたい場合に利用できます
+	mode_popup_options
+		モード表示のポップアップウィンドウのオプションです
+	main_popup_options
+		入力文字列のポップアップウィンドウのオプションです
 	search_limit
 		候補探索の試行上限です
 	keymap
@@ -240,8 +248,9 @@ g:vim9skkp					*g:vim9skkp*
 	    midasi: '▽',
 	  },
 	  mode_display: 'popup',
-	  zindex: 200,
-	  popup_maxheight: 10,
+	  cands_popup_options: {},
+	  mode_popup_options: {},
+	  main_popup_options: {},
 	  search_limit: 100,
 	  keymap: {
 	    enable: [],

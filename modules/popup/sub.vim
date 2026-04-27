@@ -17,17 +17,32 @@ export var index = -1
 export var selected = ''
 export var shortcut = []
 
-def Create()
+const POPUP_TYPE_CLOSED = 0
+const POPUP_TYPE_MODE = 1
+const POPUP_TYPE_CANDS = 2
+var popup_type = POPUP_TYPE_CLOSED
+var default_options = {
+  hidden: true,
+  tabpage: -1,
+  maxheight: C.default_maxheight,
+  zindex: C.default_zindex,
+  wrap: false,
+}
+
+def Create(pt: number)
+  if popup_type !=# pt
+    Close()
+  endif
   if U.IsPopupExists(winid)
     return
   endif
-  winid = popup_create('', {
-    hidden: true,
-    tabpage: -1,
-    maxheight: g:vim9skkp.popup_maxheight,
-    zindex: g:vim9skkp.zindex,
-    wrap: false,
-  })
+  winid = popup_create('', default_options)
+  if pt ==# POPUP_TYPE_MODE
+    popup_setoptions(winid, g:vim9skkp.mode_popup_options)
+  elseif pt ==# POPUP_TYPE_CANDS
+    popup_setoptions(winid, g:vim9skkp.cands_popup_options)
+  endif
+  popup_type = pt
 enddef
 
 export def Close()
@@ -35,6 +50,7 @@ export def Close()
     popup_close(winid)
     winid = 0
     g:vim9skkp_status.cand_winid = 0
+    popup_type = POPUP_TYPE_CLOSED
   endif
 enddef
 
@@ -60,7 +76,7 @@ export def Show()
 enddef
 
 def ShowMode()
-  Create()
+  Create(POPUP_TYPE_MODE)
   UnSelect()
   if g:vim9skkp.mode_display !=# 'popup'
     popup_hide(winid)
@@ -73,7 +89,7 @@ def ShowMode()
 enddef
 
 export def ShowCands(text: string = '')
-  Create()
+  Create(POPUP_TYPE_CANDS)
   if !!text
     src = text
     [cands, yomi, okuri] = J.GetAllCands(text)
