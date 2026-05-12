@@ -19,7 +19,7 @@ export var sticky_shift = false
 export var prevent_redraw = false
 
 # カーソルを左に移動したときの余りの文字
-var remined_text = ''
+var remaind_text = ''
 
 # 表示制御 {{{
 export def Popup()
@@ -66,8 +66,8 @@ export def SetText(_text: string)
   doautocmd User vim9skkp-m-settext
 enddef
 
-def SetTextAndRemined(_text: string, _remined: string)
-  remined_text = _remined
+def SetTextAndRemined(_text: string, remaind: string)
+  remaind_text = remaind
   SetText(_text)
 enddef
 
@@ -83,14 +83,14 @@ export def RedrawText()
       ? g:vim9skkp.mode_label.midasi
       : g:vim9skkp_status.mode
     cur_regex = cur->escape('/\')
-  elseif !!remined_text
+  elseif !!remaind_text
     cur = ''
   elseif !text
     # textが空の場合はカーソル位置の文字を空かしておく
     const c = U.GetCharAtCursor()
     cur = !!c && c !=# "\<Tab>" ? c : ' '
   endif
-  popup_settext(winid, text .. cur .. remined_text)
+  popup_settext(winid, text .. cur .. remaind_text)
   silent! win_execute(winid, $'syntax clear Vim9skkpCursor')
   win_execute(winid, $'syntax match Vim9skkpCursor /\%{len(text) + 1}c{cur_regex}/')
 enddef
@@ -225,13 +225,13 @@ def MoveCursor(key: string): bool
   if g:vim9skkp.keymap.left->Contains(key) && !!text
     SetTextAndRemined(
       text->substitute('.$', '', ''),
-      text->matchstr('.$') .. remined_text
+      text->matchstr('.$') .. remaind_text
     )
     return true
-  elseif g:vim9skkp.keymap.right->Contains(key) && !!remined_text
+  elseif g:vim9skkp.keymap.right->Contains(key) && !!remaind_text
     SetTextAndRemined(
-      text .. remined_text->matchstr('^.'),
-      remined_text->substitute('^.', '', '')
+      text .. remaind_text->matchstr('^.'),
+      remaind_text->substitute('^.', '', '')
     )
     return true
   else
@@ -457,7 +457,7 @@ export def Commit(key: string = '')
   endif
   J.AddHistory(text) # TODO: 直接入力が逐一保存されちゃう
   K.FeedKeys($'{text}{key}', !!key)
-  SetTextAndRemined(remined_text, '')
+  SetTextAndRemined(remaind_text, '')
   if chartype ==# C.Type.Abbr
     ToggleCharType(C.Type.Abbr)
     midasi = g:vim9skkp.sticky_lock
