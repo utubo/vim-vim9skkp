@@ -191,6 +191,10 @@ g:vim9skkp					*g:vim9skkp*
 			入力無し: vim9skkpをクローズ
 		sticky_shift
 			所謂スティッキーシフトです
+		left
+			カーソルを左へ移動
+		right
+			カーソルを右へ移動
 	roman_table
 		ローマ字入力の追加・上書き設定です
 		例: `{ kn: 'かん' }`
@@ -271,6 +275,8 @@ g:vim9skkp					*g:vim9skkp*
 	    delete: "\<C-d>",
 	    userjisyo: "\<C-u>",
 	    sticky_shift: 'Q',
+	    left: "\<Left>",
+	    right: "\<Right>",
 	  },
 	  roman_table: {},
 	  roman_abbrev: {},

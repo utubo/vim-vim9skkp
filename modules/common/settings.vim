@@ -49,6 +49,8 @@ export def Initialize()
       delete: "\<C-d>",
       userjisyo: "\<C-u>",
       sticky_shift: 'Q',
+      left: "\<Left>",
+      right: "\<Right>",
     },
     roman_table: {},
     roman_abbrev: {},

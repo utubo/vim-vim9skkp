@@ -18,6 +18,9 @@ export var midasi = false
 export var sticky_shift = false
 export var prevent_redraw = false
 
+# カーソルを左に移動したときの余りの文字
+var remined_text = ''
+
 # 表示制御 {{{
 export def Popup()
   if !U.IsPopupExists(winid)
@@ -26,7 +29,6 @@ export def Popup()
       ->extend(g:vim9skkp.main_popup_options))
   endif
   win_execute(winid, 'syntax match Vim9skkp /./')
-  win_execute(winid, 'syntax match Vim9skkpCursor /.$/')
   if g:vim9skkp.mode_display ==# 'cursor'
     for l in values(g:vim9skkp.mode_label)
       win_execute(winid, $'syntax match Vim9skkpCursor /{l->escape('/\')}$/')
@@ -34,7 +36,7 @@ export def Popup()
   endif
   chartype = C.Type.Hira
   midasi = g:vim9skkp.sticky_lock
-  SetText('')
+  SetTextAndRemined('', '')
   active = true
 enddef
 
@@ -64,23 +66,33 @@ export def SetText(_text: string)
   doautocmd User vim9skkp-m-settext
 enddef
 
+def SetTextAndRemined(_text: string, _remined: string)
+  remined_text = _remined
+  SetText(_text)
+enddef
+
+
 export def RedrawText()
   if prevent_redraw
     return
   endif
+  var cur = ' '
+  var cur_regex = '.'
   if g:vim9skkp.mode_display ==# 'cursor'
-    const cur = midasi
+    cur = midasi
       ? g:vim9skkp.mode_label.midasi
       : g:vim9skkp_status.mode
-    popup_settext(winid, text .. cur)
+    cur_regex = cur->escape('/\')
+  elseif !!remined_text
+    cur = ''
   elseif !text
     # textが空の場合はカーソル位置の文字を空かしておく
     const c = U.GetCharAtCursor()
-    popup_settext(winid, !!c && c !=# "\<Tab>" ? c : ' ')
-  else
-    # textの末尾にカーソルを表示
-    popup_settext(winid, text .. ' ')
+    cur = !!c && c !=# "\<Tab>" ? c : ' '
   endif
+  popup_settext(winid, text .. cur .. remined_text)
+  silent! win_execute(winid, $'syntax clear Vim9skkpCursor')
+  win_execute(winid, $'syntax match Vim9skkpCursor /\%{len(text) + 1}c{cur_regex}/')
 enddef
 
 # ちらつき防止
@@ -126,6 +138,8 @@ enddef
 def FilterImpl(key: string, lowkey: string, mapping: bool): bool
   if mapping && key ==# "\<Esc>"
     return false
+  elseif mapping && MoveCursor(key)
+    return true
   elseif mapping && C.arrows->Contains(key)
     # NOTE: 入力が入ったままカーソル移動されると色々と面倒なので…
     return !!text
@@ -203,6 +217,26 @@ def BackSpace(mapping: bool): bool
     ->substitute('.$', '', '')
     ->SetText()
   return true
+enddef
+# }}}
+
+# カーソル移動 {{{
+def MoveCursor(key: string): bool
+  if g:vim9skkp.keymap.left->Contains(key) && !!text
+    SetTextAndRemined(
+      text->substitute('.$', '', ''),
+      text->matchstr('.$') .. remined_text
+    )
+    return true
+  elseif g:vim9skkp.keymap.right->Contains(key) && !!remined_text
+    SetTextAndRemined(
+      text .. remined_text->matchstr('^.'),
+      remined_text->substitute('^.', '', '')
+    )
+    return true
+  else
+    return false
+  endif
 enddef
 # }}}
 
@@ -423,7 +457,7 @@ export def Commit(key: string = '')
   endif
   J.AddHistory(text) # TODO: 直接入力が逐一保存されちゃう
   K.FeedKeys($'{text}{key}', !!key)
-  SetText('')
+  SetTextAndRemined(remined_text, '')
   if chartype ==# C.Type.Abbr
     ToggleCharType(C.Type.Abbr)
     midasi = g:vim9skkp.sticky_lock
