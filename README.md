@@ -31,7 +31,7 @@ wget http://openlab.jp/skk/dic/SKK-JISYO.L.gz
 gunzip -f SKK-JISYO.L.gz
 ```
 
-お好きな方法でvimにvim9skkpを読み込ませる  
+お好きな方法でVimにvim9skkpを読み込ませる  
 (以下はpack以下に置いて読み込ませる例)
 ```bash
 cd ~/.vim/pack/foo/start
