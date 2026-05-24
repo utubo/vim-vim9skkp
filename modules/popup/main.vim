@@ -86,7 +86,7 @@ export def RedrawText()
   elseif !!remaind_text
     cur = ''
   elseif !text
-    # textが空の場合はカーソル位置の文字を空かしておく
+    # textが空の場合はカーソル位置の文字を透かしておく
     const c = U.GetCharAtCursor()
     cur = !!c && c !=# "\<Tab>" ? c : ' '
   endif
