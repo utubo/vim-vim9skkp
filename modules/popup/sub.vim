@@ -170,6 +170,17 @@ def ShortCut(key: string): bool
   return true
 enddef
 
+def SelectByTag(tag: string): bool
+  const chars = - strchars(tag)
+  const idx = cands->indexof((_, v) => v[chars : -1] ==# tag)
+  g:a = cands
+  if idx !=# -1
+    Select(idx)
+    doautocmd User vim9skkp-s-commit
+  endif
+  return true
+enddef
+
 export def Filter(key: string, _: bool): bool
   if cands->empty()
     return false
@@ -184,6 +195,12 @@ export def Filter(key: string, _: bool): bool
     Select(index - 1)
   elseif shortcut->Contains(key)
     return ShortCut(key)
+  elseif g:vim9skkp.keymap.select_direct->Contains(key)
+    return SelectByTag(J.tag_direct)
+  elseif g:vim9skkp.keymap.select_upper->Contains(key)
+    return SelectByTag(J.tag_upper)
+  elseif g:vim9skkp.keymap.select_lower->Contains(key)
+    return SelectByTag(J.tag_lower)
   elseif g:vim9skkp.keymap.commit->Contains(key)
     if index < 0
       return false
