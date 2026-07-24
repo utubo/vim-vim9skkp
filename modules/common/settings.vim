@@ -57,6 +57,7 @@ export def Initialize()
     sticky_lock: false,
     auto_commit_regex: '[ をヲ、。「」]',
     auto_suggest_regex: '*[っッ]\?[^a-zA-Zっッ]$',
+    abbr_with_shift: false,
     getcurpos: vim9skkp#Nop,
     terminal_prompt: 'terminalに入力: ',
     hide_cursor: true,

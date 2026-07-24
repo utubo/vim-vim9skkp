@@ -253,10 +253,12 @@ def AutoAbbr(key: string): bool
   elseif CommonFunctions(key)
     # `L`で全角アルファベットに切り替えたい…
     return true
-  else
+  elseif g:vim9skkp.abbr_with_shift
     noautocmd ToggleCharType(C.Type.Abbr)
     SetText(key)
     return true
+  else
+    return false
   endif
 enddef
 

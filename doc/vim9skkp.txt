@@ -215,6 +215,8 @@ g:vim9skkp					*g:vim9skkp*
 	auto_suggest_regex:
 		見出しモードで入力値がこの正規表現にマッチしたとき
 		変換を開始します
+	abbr_with_shift
+		見出しモード中に大文字入力でabbrevモードへ切り替えます
 	hide_cursor
 		trueの場合、vim9skkp起動中にカーソルを非表示にします
 		vi9skkp終了後にカーソルが表示されなくなってしまう場合は
@@ -283,6 +285,7 @@ g:vim9skkp					*g:vim9skkp*
 	  sticky_lock: false,
 	  auto_commit_regex: '[ をヲ、。「」]',
 	  auto_suggest_regex: '*[っッ]\?[^a-zA-Zっッ]$',
+	  abbr_with_shift: false,
 	  getcurpos: vim9skkp#Nop,
 	  hide_cursor: true,
 	  terminal_prompt: 'terminalに入力: ',
