@@ -130,8 +130,10 @@ def SetupAutocmd()
     au User vim9skkp-m-commit {
       if M.active
         S.Reset()
-        S.cands = J.GetHistory()
-        S.ShowAsPredict()
+        if g:vim9skkp.predict
+          S.cands = J.GetHistory()
+          S.ShowAsPredict()
+        endif
         # Note: feedkeysを待ってから再描画する
         timer_start(0, FollowCursor)
       endif
