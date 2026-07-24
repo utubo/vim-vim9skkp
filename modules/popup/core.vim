@@ -131,7 +131,7 @@ def SetupAutocmd()
       if M.active
         S.Reset()
         S.cands = J.GetHistory()
-        S.Show()
+        S.ShowAsPredict()
         # Note: feedkeysを待ってから再描画する
         timer_start(0, FollowCursor)
       endif

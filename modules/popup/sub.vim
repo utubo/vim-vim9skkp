@@ -132,12 +132,17 @@ export def ShowCands(text: string = '', src_roman: string = '')
   endif
 enddef
 
+export def ShowAsPredict()
+  UnSelect()
+  Show()
+  popup_setoptions(winid, { title: g:vim9skkp.predict_title })
+enddef
+
 export def ShowRecentAndHistory(text: string)
   src = text
   cands = J.GetRecentAndHistory(text)
   UnSelect()
-  Show()
-  popup_setoptions(winid, { title: g:vim9skkp.predict_title })
+  ShowAsPredict()
 enddef
 
 def Select(idx: number)
