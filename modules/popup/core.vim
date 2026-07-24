@@ -201,7 +201,9 @@ def OnSetText()
     return
   endif
   if S.index ==# -1 && M.midasi && g:vim9skkp.predict
-    S.ShowRecentAndHistory(M.text)
+    S.src = M.text
+    S.cands = J.GetRecentAndHistory(M.text)
+    S.ShowAsPredict()
   else
     S.Show()
   endif

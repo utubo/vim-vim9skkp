@@ -138,13 +138,6 @@ export def ShowAsPredict()
   popup_setoptions(winid, { title: g:vim9skkp.predict_title })
 enddef
 
-export def ShowRecentAndHistory(text: string)
-  src = text
-  cands = J.GetRecentAndHistory(text)
-  UnSelect()
-  ShowAsPredict()
-enddef
-
 def Select(idx: number)
   const c = len(cands) - 1
   index = idx < 0 ? c : c < idx ? 0 : idx
