@@ -115,7 +115,10 @@ export def ShowCands(text: string = '', src_roman: string = '')
     idx += 1
   endfor
   popup_settext(winid, lines)
-  popup_setoptions(winid, { highlight: 'Vim9skkpCand' })
+  popup_setoptions(winid, {
+    highlight: 'Vim9skkpCand',
+    title: g:vim9skkp.cands_popup_options->get('title', '')
+  })
   win_execute(winid, 'setlocal tabstop=1')
   win_execute(winid, 'syntax match Vim9skkpCandExtra /\t\zs.*/')
   win_execute(winid, 'syntax match Vim9skkpCandShortCut /^.*:/')
@@ -134,6 +137,7 @@ export def ShowRecentAndHistory(text: string)
   cands = J.GetRecentAndHistory(text)
   UnSelect()
   Show()
+  popup_setoptions(winid, { title: g:vim9skkp.predict_title })
 enddef
 
 def Select(idx: number)

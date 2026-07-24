@@ -121,7 +121,7 @@ def SetupAutocmd()
     au User vim9skkp-m-toggle Toggle()
     au User vim9skkp-m-settext OnSetText()
     au User vim9skkp-m-start {
-      S.ShowCands(M.text, M.GetSrcRoman())
+      S.ShowCands(M.text, M.src_roman->join(''))
       if len(S.cands) < 2 && get(S.cands, 0, J.tag_muhen) =~ J.tag_muhen
         M.SetText(S.src)
         UJ.RegisterWithInstant()
@@ -200,7 +200,7 @@ def OnSetText()
   if !M.active
     return
   endif
-  if S.index ==# -1 && M.midasi
+  if S.index ==# -1 && M.midasi && g:vim9skkp.predict
     S.ShowRecentAndHistory(M.text)
   else
     S.Show()

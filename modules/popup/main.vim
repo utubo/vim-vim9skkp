@@ -181,10 +181,6 @@ def AddSrcRoman(lowkey: string)
   endif
 enddef
 
-export def GetSrcRoman(): string
-  return src_roman->join('')
-enddef
-
 def ApplyStickyShift(key: string): string
   return sticky_shift ? key->toupper() : key
 enddef

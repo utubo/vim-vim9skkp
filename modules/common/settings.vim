@@ -64,6 +64,8 @@ export def Initialize()
     abbr_with_shift: false,
     getcurpos: vim9skkp#Nop,
     terminal_prompt: 'terminalに入力: ',
+    predict: true,
+    predict_title: '予測入力',
     hide_cursor: true,
     dumpsize: 0,
     initialized: marged,
@@ -81,6 +83,10 @@ export def Initialize()
     sticky_shift: false,
     is_cand_selected: false,
     cand_width: 0,
+    cands_opt: {
+      src_roman: '',
+      predict: false,
+    },
   }
   KM.Apply()
 enddef

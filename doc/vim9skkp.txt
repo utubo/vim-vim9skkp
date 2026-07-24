@@ -238,6 +238,10 @@ g:vim9skkp					*g:vim9skkp*
 <
 	terminal_prompt
 		terminalに入力するための入力プロンプトです
+	predict
+		予測入力を有効にします
+	predict_title
+		予測入力ポップアップのタイトルです
 	dumpsize
 		デバッグ用です。ポップアップに飛んできた入力を
 		このサイズの分だけ保存します。
@@ -301,6 +305,8 @@ g:vim9skkp					*g:vim9skkp*
 	  getcurpos: vim9skkp#Nop,
 	  hide_cursor: true,
 	  terminal_prompt: 'terminalに入力: ',
+	  predict: true,
+	  predict_title: '予測入力',
 	  dumpsize: 0,
 	}
 <
