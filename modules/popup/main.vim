@@ -246,16 +246,20 @@ enddef
 # カーソル移動 {{{
 def MoveCursor(key: string): bool
   if g:vim9skkp.keymap.left->Contains(key) && !!text
-    SetTextAndRemined(
-      text->substitute('.$', '', ''),
-      text->matchstr('.$') .. remaind_text
-    )
+    if !g:vim9skkp_status.is_cand_selected
+      SetTextAndRemined(
+        text->substitute('.$', '', ''),
+        text->matchstr('.$') .. remaind_text
+      )
+    endif
     return true
   elseif g:vim9skkp.keymap.right->Contains(key) && !!remaind_text
-    SetTextAndRemined(
-      text .. remaind_text->matchstr('^.'),
-      remaind_text->substitute('^.', '', '')
-    )
+    if !g:vim9skkp_status.is_cand_selected
+      SetTextAndRemined(
+        text .. remaind_text->matchstr('^.'),
+        remaind_text->substitute('^.', '', '')
+      )
+    endif
     return true
   else
     return false
