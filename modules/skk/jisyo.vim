@@ -14,6 +14,9 @@ const tag_fixed = ';入力修正'
 const tag_sahen = ';サ変'
 const tag_user = ';ユーザー辞書'
 const tag_fuzzy = ';曖昧'
+const tag_direct = ';直接入力'
+const tag_upper = ';大文字'
+const tag_lower = ';小文字'
 
 var jisyo = {}
 var recent = {}
@@ -102,7 +105,7 @@ export def ToJisyoKey(text: string): list<string>
 enddef
 
 # 指定したテキスト(ほげ*ふが)に対して[変換候補, 読み(ほげf), 送り仮名(ふが)]を返す
-export def GetAllCands(text: string): list<any>
+export def GetAllCands(text: string, src_roman: string = ''): list<any>
   if !text
     return [[], '', '']
   endif
@@ -124,6 +127,13 @@ export def GetAllCands(text: string): list<any>
     cands += GetSahen(gokan, okuri)
   endif
   cands += [$'{gokan}{tag_muhen}']
+  if !!src_roman
+    cands += [$'{src_roman->toupper()}{tag_upper}']
+    cands += [$'{src_roman->tolower()}{tag_lower}']
+    if src_roman !=# src_roman->toupper() && src_roman !=# src_roman->tolower()
+      cands += [$'{src_roman}{tag_direct}']
+    endif
+  endif
   return [cands, yomi, okuri]
 enddef
 # }}}

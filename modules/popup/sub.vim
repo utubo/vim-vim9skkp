@@ -88,11 +88,11 @@ def ShowMode()
   g:vim9skkp_status.cand_winid = 0
 enddef
 
-export def ShowCands(text: string = '')
+export def ShowCands(text: string = '', src_roman: string = '')
   Create(POPUP_TYPE_CANDS)
   if !!text
     src = text
-    [cands, yomi, okuri] = J.GetAllCands(text)
+    [cands, yomi, okuri] = J.GetAllCands(text, src_roman)
   endif
   if !cands
     return

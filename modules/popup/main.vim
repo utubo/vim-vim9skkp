@@ -21,6 +21,10 @@ export var prevent_redraw = false
 # カーソルを左に移動したときの余りの文字
 var remaind_text = ''
 
+# 見出しモード中に入力されたアルファベット
+export var src_roman = []
+var remaind_roman = []
+
 # 表示制御 {{{
 export def Popup()
   if !U.IsPopupExists(winid)
@@ -64,13 +68,17 @@ export def SetText(_text: string)
   text = _text
   RedrawText()
   doautocmd User vim9skkp-m-settext
+  if text ==# ''
+    src_roman = []
+  endif
 enddef
 
 def SetTextAndRemined(_text: string, remaind: string)
   remaind_text = remaind
   SetText(_text)
+  remaind_roman = remaind ==# '' ? [] : src_roman[strchars(remaind_text) :]
+  src_roman = src_roman[0 : len(remaind_roman) - 1]
 enddef
-
 
 export def RedrawText()
   if prevent_redraw
@@ -151,15 +159,30 @@ def FilterImpl(key: string, lowkey: string, mapping: bool): bool
     return true
   elseif InputAlphabet(key, mapping)
     return !mapping
-  elseif InputVowel(key)
+  elseif InputVowel(key, lowkey)
     return true
   elseif CommonFunctions(key)
     return true
-  elseif InputConsonant(key, mapping)
+  elseif InputConsonant(key, lowkey, mapping)
     return true
   else
     return false
   endif
+enddef
+
+def AddSrcRoman(lowkey: string)
+  const chars = strchars(text)
+  if len(src_roman) < chars
+    src_roman += [lowkey]
+  elseif chars ==# 0
+    src_roman = [lowkey]
+  else
+    src_roman[chars - 1] ..= lowkey
+  endif
+enddef
+
+export def GetSrcRoman(): string
+  return src_roman->join('')
 enddef
 
 def ApplyStickyShift(key: string): string
@@ -281,7 +304,7 @@ enddef
 # }}}
 
 # ローマ字入力 {{{
-def InputVowel(key: string): bool
+def InputVowel(key: string, lowkey: string): bool
   if !chartype.roman
     return false
   endif
@@ -296,7 +319,7 @@ def InputVowel(key: string): bool
     if is_abbr || !midasi && text !~ '[っッｯ][a-z]$'
       Commit()
     endif
-    AfterAddHiragana()
+    AfterAddHiragana(lowkey)
     return true
   endif
   return false
@@ -349,7 +372,7 @@ def AddVowel(key: string): list<any>
   return [text, is_abbr]
 enddef
 
-def InputConsonant(key: string, mapping: bool): bool
+def InputConsonant(key: string, lowkey: string, mapping: bool): bool
   if !mapping || !U.IsNormalChar(key)
     return false
   endif
@@ -359,7 +382,7 @@ def InputConsonant(key: string, mapping: bool): bool
   const low = key->tolower()
   if C.roman_chars->Contains(low)
     SetText($'{text}{low}')
-    AfterAddHiragana()
+    AfterAddHiragana(lowkey)
   else
     SetText($'{text}{key}')
     Commit()
@@ -367,10 +390,11 @@ def InputConsonant(key: string, mapping: bool): bool
   return true
 enddef
 
-def AfterAddHiragana()
+def AfterAddHiragana(lowkey: string)
   if text =~ g:vim9skkp.auto_commit_regex
     Commit()
   endif
+  AddSrcRoman(lowkey)
   if !!g:vim9skkp.auto_suggest_regex &&
       text =~ g:vim9skkp.auto_suggest_regex
     StartSelect()
