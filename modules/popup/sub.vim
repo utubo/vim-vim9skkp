@@ -195,6 +195,8 @@ export def Filter(key: string, _: bool): bool
     Select(index - 1)
   elseif shortcut->Contains(key)
     return ShortCut(key)
+  elseif g:vim9skkp.keymap.select_kata->Contains(key)
+    return SelectByTag(J.tag_kata)
   elseif g:vim9skkp.keymap.select_direct->Contains(key)
     return SelectByTag(J.tag_direct)
   elseif g:vim9skkp.keymap.select_upper->Contains(key)

@@ -14,6 +14,7 @@ const tag_fixed = ';入力修正'
 const tag_sahen = ';サ変'
 const tag_user = ';ユーザー辞書'
 const tag_fuzzy = ';曖昧'
+export const tag_kata = ';カタカナ'
 export const tag_direct = ';直接入力'
 export const tag_upper = ';大文字'
 export const tag_lower = ';小文字'
@@ -120,13 +121,13 @@ export def GetAllCands(text: string, src_roman: string = ''): list<any>
     cands += GetCandsFromJisyo(j, yomi)
   endfor
   cands = cands->Uniq()
-  cands += GetGairaigo(gokan)
   cands += GetAllCandsWithFix(text)
   cands += GetFuzzy(text)
   if !cands
     cands += GetSahen(gokan, okuri)
   endif
   cands += [$'{gokan}{tag_muhen}']
+  cands += [$'{U.Tr(text, C.hira_chars, C.kata_chars)}{tag_kata}']
   if !!src_roman
     cands += [$'{src_roman->toupper()}{tag_upper}']
     cands += [$'{src_roman->tolower()}{tag_lower}']
@@ -137,16 +138,17 @@ enddef
 # }}}
 
 # 変換補完 {{{
+# 不要になったけど消すのもったいないな…
 # 外来語判別
 # NOTE: 参考
 # https://www.bunka.go.jp/kokugo_nihongo/sisaku/joho/joho/kijun/naikaku/gairai
-def GetGairaigo(text: string): list<string>
-  if text =~# '[ゔーぱぴぷぺぽ]\|[いうくぐしじつとふ][ぁぃぇぉ]\|[てで][ぃぅ]\|ふゅ\|ちぇ'
-    return [U.Tr(text, C.hira_chars, C.kata_chars) .. tag_gairai]
-  else
-    return []
-  endif
-enddef
+# def GetGairaigo(text: string): list<string>
+#   if text =~# '[ゔーぱぴぷぺぽ]\|[いうくぐしじつとふ][ぁぃぇぉ]\|[てで][ぃぅ]\|ふゅ\|ちぇ'
+#     return [U.Tr(text, C.hira_chars, C.kata_chars) .. tag_gairai]
+#   else
+#     return []
+#   endif
+# enddef
 
 # 入力修正(`にゃ`→`んや`等の入力ミスをフォロー)
 def GetAllCandsWithFix(text: string): list<string>

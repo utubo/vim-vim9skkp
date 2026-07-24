@@ -44,6 +44,7 @@ export def Initialize()
       next: "\<Tab>",
       prev: ["\<S-Tab>", 'x'],
       shortcut: '.123456789'->split('\zs'),
+      select_kata: [],
       select_direct: [],
       select_upper: [],
       select_lower: [],

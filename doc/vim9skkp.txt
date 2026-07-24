@@ -176,12 +176,14 @@ g:vim9skkp					*g:vim9skkp*
 			前の候補を選択します
 		shortcut
 			候補選択のショートカットキーです
+		select_kata
+			カタカナで確定します(選択モード)
 		select_direct
-			直接入力の候補で確定します
+			直接入力で確定します(選択モード)
 		select_upper
-			大文字の候補で確定します
+			大文字で確定します(選択モード)
 		select_lower
-			小文字の候補で確定します
+			小文字で確定します(選択モード)
 		commit
 			変換を確定します
 		delete
@@ -278,6 +280,7 @@ g:vim9skkp					*g:vim9skkp*
 	    next: "\<Tab>",
 	    prev: ["\<S-Tab>", 'x'],
 	    shortcut: '.123456789'->split('\zs'),
+	    select_kata: [],
 	    select_direct: [],
 	    select_upper: [],
 	    select_lower: [],
