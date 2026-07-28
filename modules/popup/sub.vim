@@ -64,14 +64,18 @@ export def FollowCursor(p: dict<any>, text: string)
   popup_move(winid, winpos)
 enddef
 
+export def OnMoved()
+  popup_show(winid)
+  if mode() ==# 'c'
+    redraw
+  endif
+enddef
+
 export def Show()
   if !cands
     ShowMode()
   else
     ShowCands()
-  endif
-  if mode() ==# 'c'
-    redraw
   endif
 enddef
 
@@ -84,8 +88,8 @@ def ShowMode()
   endif
   popup_settext(winid, g:vim9skkp_status.mode_label)
   popup_setoptions(winid, { highlight: 'Vim9skkpMode' })
-  popup_show(winid)
   g:vim9skkp_status.cand_winid = 0
+  silent! doautocmd User vim9skkp-s-show
 enddef
 
 export def ShowCands(text: string = '', src_roman: string = '')
@@ -122,8 +126,8 @@ export def ShowCands(text: string = '', src_roman: string = '')
   win_execute(winid, 'setlocal tabstop=1')
   win_execute(winid, 'syntax match Vim9skkpCandExtra /\t\zs.*/')
   win_execute(winid, 'syntax match Vim9skkpCandShortCut /^.*:/')
-  popup_show(winid)
   g:vim9skkp_status.cand_winid = winid
+  silent! doautocmd User vim9skkp-s-show
   silent! doautocmd User Vim9skkpCandPopup
 
   if !!text

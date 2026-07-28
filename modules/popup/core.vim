@@ -163,6 +163,10 @@ def SetupAutocmd()
       M.SetText(S.src)
       S.Reset()
     }
+    au User vim9skkp-s-show {
+      FollowCursor()
+      S.OnMoved()
+    }
 
     # global
     au ModeChanged *:[nt] U.Silent(Close)
