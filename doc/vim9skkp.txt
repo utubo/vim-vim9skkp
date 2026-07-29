@@ -215,7 +215,7 @@ g:vim9skkp					*g:vim9skkp*
 		具体的には以下のときに即座に見出しモードに移行します
 		- vim9skkpが有効になったとき
 		- 変換を確定/キャンセルした後
-		- vim9skkp.keymap.toggleでひらがなモードに切り替わってとき
+		- vim9skkp.keymap.toggleでひらがなモードに切り替わったとき
 		NOTE: vim9skkp.keymap.kanaなどで入力文字種を変更したときは
 		ロック対象外です
 	auto_commit_regex:
