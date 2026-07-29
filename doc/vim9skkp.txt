@@ -210,13 +210,14 @@ g:vim9skkp					*g:vim9skkp*
 		roman_tableと似ていますが、こちらは確定まで実行します
 		sticky_lockが|true|な場合にちょっと便利です
 		例: `{ mt: 'ました。', kj: '漢字' }`
-	stikcy_lock
+	sticky_lock
 		|true|の場合、見出しモードが基準になります
 		具体的には以下のときに即座に見出しモードに移行します
 		- vim9skkpが有効になったとき
 		- 変換を確定/キャンセルした後
-		カタカナやアルファベットなど入力文字種を変更したときは
-		一時的に見出しモードではなくなります
+		- vim9skkp.keymap.toggleでひらがなモードに切り替わってとき
+		NOTE:vim9skkp.keymap.kanaなどで入力文字種を変更したときは
+		ロック対象外です
 	auto_commit_regex:
 		見出しモードで入力値がこの正規表現にマッチしたとき
 		即座に確定します
