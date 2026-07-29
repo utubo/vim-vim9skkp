@@ -276,7 +276,7 @@ enddef
 
 # 不意にポップアップがクローズされた場合
 def Abort()
-   U.Silent(Close)
+  U.Silent(Close)
 enddef
 # }}}
 
