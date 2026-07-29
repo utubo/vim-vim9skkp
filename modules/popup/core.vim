@@ -264,12 +264,10 @@ export def Toggle()
   M.Commit()
   if M.chartype !=# C.Type.Hira
     M.ToggleCharType(C.Type.Hira)
-    if !M.midasi && g:vim9skkp.sticky_lock
-      M.SetMidasiMode(true)
-    endif
+    M.ResetMidasiMode(g:vim9skkp.sticky_lock)
     redraw
   elseif M.midasi && !g:vim9skkp.sticky_lock
-    M.SetMidasiMode(false)
+    M.ResetMidasiMode(false)
     redraw
   else
     Close()
