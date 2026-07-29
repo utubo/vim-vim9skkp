@@ -39,7 +39,7 @@ export def Popup()
     endfor
   endif
   chartype = C.Type.Hira
-  ResetMidasiMode(g:vim9skkp.sticky_lock)
+  ResetMidasiModeAndStickyShift(g:vim9skkp.sticky_lock)
   SetTextAndRemined('', '')
   active = true
 enddef
@@ -178,17 +178,6 @@ def AddSrcRoman(lowkey: string)
     src_roman = [lowkey]
   else
     src_roman[chars - 1] ..= lowkey
-  endif
-enddef
-
-def ApplyStickyShift(key: string): string
-  return sticky_shift ? key->toupper() : key
-enddef
-
-def SetStickyShift(b: bool)
-  if sticky_shift !=# b
-    sticky_shift = b
-    doautocmd User Vim9skkpStatusChanged
   endif
 enddef
 
@@ -418,16 +407,29 @@ enddef
 # }}}
 
 # モード制御 {{{
-export def SetMidasiMode(b: bool)
-  if midasi !=# b
-    midasi = b
-    silent! doautocmd User Vim9skkpStatusChanged
-  endif
+def ApplyStickyShift(key: string): string
+  return sticky_shift ? key->toupper() : key
 enddef
 
-export def ResetMidasiMode(b: bool)
-  SetMidasiMode(b)
-  sticky_shift = b && g:vim9skkp.sticky_lock
+def SetStickyShift(b: bool)
+  SetMidasiModeAndStickyShift(midasi, b)
+enddef
+
+export def SetMidasiMode(b: bool)
+  SetMidasiModeAndStickyShift(b, sticky_shift)
+enddef
+
+export def ResetMidasiModeAndStickyShift(b: bool)
+  SetMidasiModeAndStickyShift(b, b && g:vim9skkp.sticky_lock)
+enddef
+
+def SetMidasiModeAndStickyShift(m: bool, s: bool)
+  if midasi ==# m && sticky_shift ==# s
+    return
+  endif
+  midasi = m
+  sticky_shift = s
+  silent! doautocmd User Vim9skkpStatusChanged
 enddef
 
 def ChangeCharType(key: string): bool
@@ -493,7 +495,7 @@ export def Commit(key: string = '')
     ToggleCharType(C.Type.Abbr)
     midasi = g:vim9skkp.sticky_lock
   endif
-  ResetMidasiMode(g:vim9skkp.sticky_lock && midasi)
+  ResetMidasiModeAndStickyShift(g:vim9skkp.sticky_lock && midasi)
   doautocmd User vim9skkp-m-commit
 enddef
 # }}}
