@@ -124,8 +124,9 @@ g:vim9skkp					*g:vim9skkp*
 		現在の入力モードを表す文字です
 	mode_display
 		入力モードの表示形式です
-		"|popup|"カーソルの下にポップアップで表示します
-		"|cursor|"カーソル位置に表示します
+		"|popup|": カーソルの下にポップアップで表示します
+		"|cursor|": カーソル位置に表示します
+		"|none|": 表示しません
 	popup_maxheight
 		変換候補の最大表示行数です
 	cands_popup_options
