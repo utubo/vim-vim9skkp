@@ -68,22 +68,19 @@ export def FollowCursor(p: dict<any>, text: string)
   popup_move(winid, winpos)
 enddef
 
-export def OnMoved()
-  popup_show(winid)
-  if mode() ==# 'c'
-    redraw
-  endif
-enddef
-
 export def Show()
+  popup_show(winid)
+enddef
+
+export def Popup()
   if !cands
-    ShowMode()
+    PopupMode()
   else
-    ShowCands()
+    PopupCands()
   endif
 enddef
 
-def ShowMode()
+def PopupMode()
   Create(POPUP_TYPE_MODE)
   UnSelect()
   if g:vim9skkp.mode_display !=# 'popup'
@@ -95,7 +92,7 @@ def ShowMode()
   silent! doautocmd User vim9skkp-s-show
 enddef
 
-export def ShowCands(text: string = '', src_roman: string = '')
+export def PopupCands(text: string = '', src_roman: string = '')
   Create(POPUP_TYPE_CANDS)
   if !!text
     src = text
@@ -139,9 +136,9 @@ export def ShowCands(text: string = '', src_roman: string = '')
   endif
 enddef
 
-export def ShowAsPredict()
+export def PopupAsPredict()
   UnSelect()
-  Show()
+  Popup()
   if !!cands
     popup_setoptions(winid, { title: g:vim9skkp.predict_title })
   endif

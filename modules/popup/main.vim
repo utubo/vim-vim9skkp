@@ -48,7 +48,6 @@ export def Close()
   popup_close(winid)
   winid = 0
   active = false
-  redraw
 enddef
 
 export def FollowCursor(p: dict<any>)

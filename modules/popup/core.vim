@@ -41,7 +41,7 @@ export def Popup()
   Init()
   StopCheckPopupExists()
   M.Popup()
-  S.Show()
+  S.Popup()
   K.SetupKeyHook(M.winid, [S.Filter, M.Filter])
   J.ReadyHistory()
   timerForCheckPopupExists = timer_start(
@@ -131,7 +131,7 @@ def SetupAutocmd()
     au User vim9skkp-m-toggle Toggle()
     au User vim9skkp-m-settext OnSetText()
     au User vim9skkp-m-start {
-      S.ShowCands(M.text, M.src_roman->join(''))
+      S.PopupCands(M.text, M.src_roman->join(''))
       if len(S.cands) < 2 && get(S.cands, 0, J.tag_muhen) =~ J.tag_muhen
         M.SetText(S.src)
         UJ.RegisterWithInstant()
@@ -142,7 +142,7 @@ def SetupAutocmd()
         S.Reset()
         if g:vim9skkp.predict
           S.cands = J.GetHistory()
-          S.ShowAsPredict()
+          S.PopupAsPredict()
         endif
       endif
     }
@@ -165,15 +165,15 @@ def SetupAutocmd()
     au User vim9skkp-s-cancel {
       M.SetText(S.src)
       S.Reset()
-      S.Show()
+      S.Popup()
     }
     au User vim9skkp-s-chartype {
       M.SetText(S.src)
       S.Reset()
     }
     au User vim9skkp-s-show {
+      S.Show()
       QueueRedraw()
-      S.OnMoved()
     }
 
     # global
@@ -193,7 +193,7 @@ def SetupAutocmd()
         ? g:vim9skkp.mode_label.midasi
         : g:vim9skkp_status.mode
       if M.active
-        S.Show()
+        S.Popup()
         M.RedrawText()
       endif
     }
@@ -221,9 +221,9 @@ def OnSetText()
   if S.index ==# -1 && M.midasi && g:vim9skkp.predict
     S.src = M.text
     S.cands = J.GetRecentAndHistory(M.text)
-    S.ShowAsPredict()
+    S.PopupAsPredict()
   else
-    S.Show()
+    S.Popup()
   endif
   if !M.text
     ClosePumLazy()
