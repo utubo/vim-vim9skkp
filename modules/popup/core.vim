@@ -72,7 +72,7 @@ enddef
 
 def OnCursorMoved()
   # NOTE: <C-r>=foo<CR>などでチラつくのでタイマーを挟む
-  timer_start(0, QueueRedraw)
+  timer_start(1, QueueRedraw)
 enddef
 
 # <C-c>などでポップアップが閉じられた場合に終了させる
@@ -197,9 +197,9 @@ def SetupAutocmd()
         M.Redraw()
       endif
     }
-    au User vim9skkp-queueredraw {
-      QueueRedraw()
-    }
+    au User vim9skkp-queueredraw QueueRedraw()
+    au User vim9skkp-lockredraw prevent_redraw = true
+    au User vim9skkp-unlockredraw prevent_redraw = false
 
     # ショートカットキーでユーザー辞書登録を起動したとき
     au User vim9skkp-userjisyo {

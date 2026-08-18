@@ -17,6 +17,10 @@ export var chartype = C.Type.Hira
 export var midasi = false
 export var sticky_shift = false
 
+# 確定時にチラつくのでその応急処置
+# TODO: まだ、ひらがな直接入力等でチラつく。サブウインドウもチラつく
+var commitnow = false
+
 # カーソルを左に移動したときの余りの文字
 var remaind_text = ''
 
@@ -68,6 +72,9 @@ def SetTextAndRemined(_text: string, remaind: string)
 enddef
 
 export def Redraw(newpos: dict<any> = {})
+  if commitnow
+    return
+  endif
   if !!newpos
     popup_move(winid, newpos)
   endif
@@ -465,7 +472,8 @@ def StartSelect(key: string = ''): bool
 enddef
 
 export def Commit(key: string = '')
-  doautocmd User vim9skkp-queueredraw
+  commitnow = true
+  # doautocmd User vim9skkp-queueredraw
   if midasi && chartype !=# C.Type.Abbr
     text = text->substitute(g:vim9skkp.marker_okuri, '', 'n')
   endif
@@ -478,6 +486,7 @@ export def Commit(key: string = '')
   endif
   ResetMidasiModeAndStickyShift(g:vim9skkp.sticky_lock && midasi)
   doautocmd User vim9skkp-m-commit
+  commitnow = false
 enddef
 # }}}
 
