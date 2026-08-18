@@ -55,7 +55,7 @@ export def Popup()
   redraw
   doautocmd User Vim9skkpStatusChanged
   augroup vim9skkp-cursormoved
-    au! CursorMovedI,CursorMovedC * U.Silent(OnCursorMoved)
+    au! CursorMovedI,CursorMovedC * U.Silent(QueueRedraw)
   augroup END
 enddef
 
@@ -67,11 +67,6 @@ def ClosePumLazy()
       K.FeedKeys("\<C-e>", false)
     endif
   })
-enddef
-
-def OnCursorMoved()
-  # NOTE: <C-r>=foo<CR>などでチラつくのでタイマーを挟む
-  timer_start(0, FollowCursor)
 enddef
 
 # ポップアップウィンドウをカーソル付近に追従させる
@@ -172,7 +167,7 @@ def SetupAutocmd()
       S.Reset()
     }
     au User vim9skkp-s-show {
-      FollowCursor()
+      QueueRedraw()
       S.OnMoved()
     }
 
@@ -228,7 +223,7 @@ def OnSetText()
   if !M.text
     ClosePumLazy()
   endif
-  FollowCursor()
+  QueueRedraw()
   redraw
 enddef
 # }}}
