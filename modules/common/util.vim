@@ -70,8 +70,9 @@ export def Split(str: string, dlm: string): list<string>
 enddef
 
 # keyがバックスペースであるか返す
+const BS = $'{nr2char(128)}kb'
 export def IsBackSpace(key: string): bool
-  return key ==# "\<BS>" || key ==# "\<80>kb"
+  return key ==# "\<BS>" || key ==? BS
 enddef
 
 # ポップアップウインドウが存在するか返す
