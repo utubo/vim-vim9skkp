@@ -368,9 +368,10 @@ def InputConsonant(key: string, lowkey: string, mapping: bool): bool
 enddef
 
 def OnRomanAdded(newtext: string, lowkey: string)
+  const m = g:vim9skkp.marker_okuri
   newtext
-      ->substitute($'{g:vim9skkp.marker_okuri}っ', $'っ{g:vim9skkp.marker_okuri}', 'n')
-      ->substitute($'{g:vim9skkp.marker_okuri}ッ', $'ッ{g:vim9skkp.marker_okuri}', 'n')
+      ->substitute($'{m}っ', $'っ{m}', 'n')
+      ->substitute($'{m}ッ', $'ッ{m}', 'n')
       ->SetText()
   if text =~ g:vim9skkp.auto_commit_regex
     Commit()
