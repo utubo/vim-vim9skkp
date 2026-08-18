@@ -114,7 +114,7 @@ def QueueRedraw(_: number = 0)
 enddef
 
 def Redraw(_: number = 0)
-  if M.active && !M.commitnow
+  if M.active
     const c = g:vim9skkp.getcurpos(U.GetCurPos())
     M.Redraw(c)
     S.FollowCursor(c, M.text)
@@ -192,9 +192,9 @@ def SetupAutocmd()
       g:vim9skkp_status.mode_label = g:vim9skkp_status.midasi
         ? g:vim9skkp.mode_label.midasi
         : g:vim9skkp_status.mode
-      if M.active
-        S.Popup()
+      if M.active && !prevent_redraw
         M.Redraw()
+        S.Popup()
       endif
     }
     au User vim9skkp-queueredraw QueueRedraw()
