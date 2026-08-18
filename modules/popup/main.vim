@@ -16,7 +16,6 @@ export var text = ''
 export var chartype = C.Type.Hira
 export var midasi = false
 export var sticky_shift = false
-export var prevent_redraw = false
 
 # カーソルを左に移動したときの余りの文字
 var remaind_text = ''
@@ -50,22 +49,11 @@ export def Close()
   active = false
 enddef
 
-export def FollowCursor(p: dict<any>)
-  if prevent_redraw
-    return
-  endif
-  popup_move(winid, p)
-  if !text
-    RedrawText()
-  endif
-enddef
-
 export def SetText(_text: string)
   if text ==# _text
     return
   endif
   text = _text
-  RedrawText()
   doautocmd User vim9skkp-m-settext
   if text ==# ''
     src_roman = []
@@ -79,9 +67,9 @@ def SetTextAndRemined(_text: string, remaind: string)
   src_roman = src_roman[0 : len(remaind_roman) - 1]
 enddef
 
-export def RedrawText()
-  if prevent_redraw
-    return
+export def Redraw(newpos: dict<any> = {})
+  if !!newpos
+    popup_move(winid, newpos)
   endif
   var cur = ' '
   var cur_regex = '.'

@@ -13,6 +13,7 @@ import '../skk/userjisyo.vim' as UJ
 import '../common/settings.vim' as SS
 
 var timerForCheckPopupExists = 0
+var prevent_redraw = false
 var bak = { t_ve: '', gcr: '' }
 
 # 初期化 {{{
@@ -49,7 +50,7 @@ export def Popup()
     CheckPopupExists,
     { repeat: -1 }
   )
-  FollowCursor()
+  Redraw()
   HideCursor()
   ClosePumLazy()
   redraw
@@ -71,19 +72,7 @@ enddef
 
 def OnCursorMoved()
   # NOTE: <C-r>=foo<CR>などでチラつくのでタイマーを挟む
-  timer_start(0, FollowCursor)
-enddef
-
-# ポップアップウィンドウをカーソル付近に追従させる
-def FollowCursor(_: number = 0)
-  if M.active && !M.prevent_redraw
-    const c = g:vim9skkp.getcurpos(U.GetCurPos())
-    M.FollowCursor(c)
-    S.FollowCursor(c, M.text)
-    if mode() ==# 'c'
-      redraw
-    endif
-  endif
+  timer_start(0, QueueRedraw)
 enddef
 
 # <C-c>などでポップアップが閉じられた場合に終了させる
@@ -113,13 +102,24 @@ def StopCheckPopupExists()
 enddef
 
 # ちらつき防止
-def QueueRedraw()
-  M.prevent_redraw = true
-  timer_start(1, (_) => {
-    M.prevent_redraw = false
-    FollowCursor()
-    M.RedrawText()
+def QueueRedraw(_: number = 0)
+  if prevent_redraw
+    return
+  endif
+  prevent_redraw = true
+  timer_start(0, (_) => {
+    Redraw()
+    prevent_redraw = false
   })
+enddef
+
+def Redraw(_: number = 0)
+  if M.active
+    const c = g:vim9skkp.getcurpos(U.GetCurPos())
+    M.Redraw(c)
+    S.FollowCursor(c, M.text)
+    redraw
+  endif
 enddef
 # }}}
 
@@ -194,7 +194,7 @@ def SetupAutocmd()
         : g:vim9skkp_status.mode
       if M.active
         S.Popup()
-        M.RedrawText()
+        M.Redraw()
       endif
     }
     au User vim9skkp-queueredraw {
