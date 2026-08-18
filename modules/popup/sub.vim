@@ -36,12 +36,16 @@ def Create(pt: number)
   if U.IsPopupExists(winid)
     return
   endif
-  winid = popup_create('', default_options)
-  if pt ==# POPUP_TYPE_MODE
-    popup_setoptions(winid, g:vim9skkp.mode_popup_options)
-  elseif pt ==# POPUP_TYPE_CANDS
-    popup_setoptions(winid, g:vim9skkp.cands_popup_options)
-  endif
+  const opt = {}
+    ->extend(default_options)
+    ->extend(pt ==# POPUP_TYPE_MODE ?
+    { highlight: 'Vim9skkpMode' } :
+    { highlight: 'Vim9skkpCand' })
+    ->extend(pt ==# POPUP_TYPE_MODE ?
+    g:vim9skkp.mode_popup_options :
+    g:vim9skkp.cands_popup_options)
+    ->extend(winpos)
+  winid = popup_create('', opt)
   popup_type = pt
 enddef
 
@@ -87,7 +91,6 @@ def ShowMode()
     return
   endif
   popup_settext(winid, g:vim9skkp_status.mode_label)
-  popup_setoptions(winid, { highlight: 'Vim9skkpMode' })
   g:vim9skkp_status.cand_winid = 0
   silent! doautocmd User vim9skkp-s-show
 enddef
@@ -139,7 +142,9 @@ enddef
 export def ShowAsPredict()
   UnSelect()
   Show()
-  popup_setoptions(winid, { title: g:vim9skkp.predict_title })
+  if !!cands
+    popup_setoptions(winid, { title: g:vim9skkp.predict_title })
+  endif
 enddef
 
 def Select(idx: number)

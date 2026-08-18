@@ -102,17 +102,6 @@ export def RedrawText()
   silent! win_execute(winid, $'syntax clear Vim9skkpCursor')
   win_execute(winid, $'syntax match Vim9skkpCursor /\%{len(text) + 1}c{cur_regex}/')
 enddef
-
-# ちらつき防止
-def SetRedrawAfterFeedKeys()
-  prevent_redraw = true
-  timer_start(1, (_) => {
-    prevent_redraw = false
-    const c = g:vim9skkp.getcurpos(U.GetCurPos())
-    FollowCursor(c)
-    RedrawText()
-  })
-enddef
 # }}}
 
 # キー入力制御 {{{
@@ -484,7 +473,7 @@ def StartSelect(key: string = ''): bool
 enddef
 
 export def Commit(key: string = '')
-  SetRedrawAfterFeedKeys()
+  doautocmd User vim9skkp-queueredraw
   if midasi && chartype !=# C.Type.Abbr
     text = text->substitute(g:vim9skkp.marker_okuri, '', 'n')
   endif

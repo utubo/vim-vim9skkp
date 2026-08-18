@@ -111,6 +111,16 @@ def StopCheckPopupExists()
     timerForCheckPopupExists = 0
   endif
 enddef
+
+# ちらつき防止
+def QueueRedraw()
+  M.prevent_redraw = true
+  timer_start(1, (_) => {
+    M.prevent_redraw = false
+    FollowCursor()
+    M.RedrawText()
+  })
+enddef
 # }}}
 
 # イベント制御 {{{
@@ -134,8 +144,6 @@ def SetupAutocmd()
           S.cands = J.GetHistory()
           S.ShowAsPredict()
         endif
-        # Note: feedkeysを待ってから再描画する
-        timer_start(0, FollowCursor)
       endif
     }
     au User vim9skkp-m-cancel {
@@ -189,6 +197,10 @@ def SetupAutocmd()
         M.RedrawText()
       endif
     }
+    au User vim9skkp-queueredraw {
+      QueueRedraw()
+    }
+
     # ショートカットキーでユーザー辞書登録を起動したとき
     au User vim9skkp-userjisyo {
       const src = S.src ?? M.text
