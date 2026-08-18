@@ -292,11 +292,12 @@ def InputVowel(key: string, lowkey: string): bool
       newtext = newtext[strchars(text) :]
       Commit()
     endif
-    SetText(newtext)
-    if is_abbr || !midasi && text !~ '[っッｯ][a-z]$'
+    if is_abbr || !midasi && newtext !~ '[っッｯ][a-z]$'
+      SetText(newtext)
       Commit()
+    else
+      OnRomanAdded(newtext, lowkey)
     endif
-    AfterAddHiragana(lowkey)
     return true
   endif
   return false
@@ -358,8 +359,7 @@ def InputConsonant(key: string, lowkey: string, mapping: bool): bool
   endif
   const low = key->tolower()
   if C.roman_chars->Contains(low)
-    SetText($'{text}{low}')
-    AfterAddHiragana(lowkey)
+    OnRomanAdded($'{text}{low}', lowkey)
   else
     SetText($'{text}{key}')
     Commit()
@@ -367,7 +367,11 @@ def InputConsonant(key: string, lowkey: string, mapping: bool): bool
   return true
 enddef
 
-def AfterAddHiragana(lowkey: string)
+def OnRomanAdded(newtext: string, lowkey: string)
+  newtext
+      ->substitute($'{g:vim9skkp.marker_okuri}っ', $'っ{g:vim9skkp.marker_okuri}', 'n')
+      ->substitute($'{g:vim9skkp.marker_okuri}ッ', $'ッ{g:vim9skkp.marker_okuri}', 'n')
+      ->SetText()
   if text =~ g:vim9skkp.auto_commit_regex
     Commit()
   endif
