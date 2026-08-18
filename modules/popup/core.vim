@@ -114,7 +114,7 @@ def QueueRedraw(_: number = 0)
 enddef
 
 def Redraw(_: number = 0)
-  if M.active
+  if M.active && !M.commitnow
     const c = g:vim9skkp.getcurpos(U.GetCurPos())
     M.Redraw(c)
     S.FollowCursor(c, M.text)

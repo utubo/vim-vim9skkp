@@ -18,8 +18,8 @@ export var midasi = false
 export var sticky_shift = false
 
 # 確定時にチラつくのでその応急処置
-# TODO: まだ、ひらがな直接入力等でチラつく。サブウインドウもチラつく
-var commitnow = false
+# TODO: 強引に防いでいるので見直す
+export var commitnow = false
 
 # カーソルを左に移動したときの余りの文字
 var remaind_text = ''
@@ -486,7 +486,9 @@ export def Commit(key: string = '')
   endif
   ResetMidasiModeAndStickyShift(g:vim9skkp.sticky_lock && midasi)
   doautocmd User vim9skkp-m-commit
-  commitnow = false
+  timer_start(1, (_) => {
+    commitnow = false
+  })
 enddef
 # }}}
 
