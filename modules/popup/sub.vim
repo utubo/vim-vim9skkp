@@ -147,13 +147,13 @@ export def ShowAsPredict()
   endif
 enddef
 
-def Select(idx: number)
+def Select(idx: number, cursorline = true)
   const c = len(cands) - 1
   index = idx < 0 ? c : c < idx ? 0 : idx
   selected = cands[index]->matchstr('^[^;]\+') .. okuri
   g:vim9skkp_status.is_cand_selected = true
   win_execute(winid, $':{index + 1}')
-  popup_setoptions(winid, { cursorline: true })
+  popup_setoptions(winid, { cursorline: cursorline })
   doautocmd User vim9skkp-s-select
 enddef
 
@@ -176,7 +176,7 @@ def ShortCut(key: string): bool
   if cands->len() - 1 < idx
     return false
   endif
-  Select(idx)
+  Select(idx, false)
   doautocmd User vim9skkp-s-commit
   return true
 enddef
@@ -186,7 +186,7 @@ def SelectByTag(tag: string): bool
   const idx = cands->indexof((_, v) => v[chars : -1] ==# tag)
   g:a = cands
   if idx !=# -1
-    Select(idx)
+    Select(idx, false)
     doautocmd User vim9skkp-s-commit
   endif
   return true
