@@ -41,6 +41,7 @@ export def Popup()
   endif
   Init()
   StopCheckPopupExists()
+  prevent_redraw = true
   M.Popup()
   S.Popup()
   K.SetupKeyHook(M.winid, [S.Filter, M.Filter])
@@ -52,13 +53,15 @@ export def Popup()
   )
   HideCursor()
   ClosePumLazy()
+  Redraw() # NOTE: ここでウィンドウ位置を調整しておかないとチラつく
   augroup vim9skkp-cursormoved
     au! CursorMovedI,CursorMovedC * U.Silent(QueueRedraw)
   augroup END
   doautocmd User Vim9skkpStatusChanged
-  # TODO: 起動時に`_A`と表示されてしまう…
+  # TODO: 起動時に`_A`と表示されてしまうのでtimerで応急処置…
   timer_start(5, (_) => {
-    S.Popup()
+    prevent_redraw = false
+    QueueRedraw()
   })
 enddef
 
@@ -173,7 +176,9 @@ def SetupAutocmd()
       S.Reset()
     }
     au User vim9skkp-s-show {
-      S.Show()
+      if !prevent_redraw
+        S.Show()
+      endif
       QueueRedraw()
     }
 
