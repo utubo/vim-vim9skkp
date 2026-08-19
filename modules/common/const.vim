@@ -12,14 +12,15 @@ export var okuri_table: dict<any> = {}
 export var arrows = ["\<Left>", "\<Right>", "\<Up>", "\<Down>"]
 
 export enum Type
-  Hira(true, 'hira', 'ん'),
-  Kata(true, 'kata', 'ン'),
-  Hank(true, 'hankaku', 'ﾝ'),
-  Alph(false, 'alphabet', 'ｎ'),
-  Abbr(false, 'abbr', 'n')
+  Hira(true, 'hira', 'ん', 'っ'),
+  Kata(true, 'kata', 'ン', 'ッ'),
+  Hank(true, 'hankaku', 'ﾝ', 'ｯ'),
+  Alph(false, 'alphabet', 'ｎ', ''),
+  Abbr(false, 'abbr', 'n', '')
   var roman: bool
   var label: string
   var n: string
+  var ltsu: string
 endenum
 
 export var roman_table_base = {
@@ -47,25 +48,24 @@ export var roman_table_base = {
   lya: 'ゃ', lyu: 'ゅ', lyo: 'ょ', ltu: 'っ', lwa: 'ゎ',
   xya: 'ゃ', xyu: 'ゅ', xyo: 'ょ', xtu: 'っ', xwa: 'ゎ',
   # 2文字
-  cc: 'っc',
-  ja: 'じゃ', ji: 'じ', ju: 'じゅ', je: 'じぇ', jo: 'じょ', jj: 'っj',
-  fa: 'ふぁ', fi: 'ふぃ', fu: 'ふ', fe: 'ふぇ', fo: 'ふぉ', ff: 'っf',
+  ja: 'じゃ', ji: 'じ', ju: 'じゅ', je: 'じぇ', jo: 'じょ',
+  fa: 'ふぁ', fi: 'ふぃ', fu: 'ふ', fe: 'ふぇ', fo: 'ふぉ',
   va: 'ゔぁ', vi: 'ゔぃ', vu: 'ゔ', ve: 'ゔぇ', vo: 'ゔぉ',
   la: 'ぁ', li: 'ぃ', lu: 'ぅ', le: 'ぇ', lo: 'ぉ',
   xa: 'ぁ', xi: 'ぃ', xu: 'ぅ', xe: 'ぇ', xo: 'ぉ',
-  ga: 'が', gi: 'ぎ', gu: 'ぐ', ge: 'げ', go: 'ご', gg: 'っg',
-  za: 'ざ', zi: 'じ', zu: 'ず', ze: 'ぜ', zo: 'ぞ', zz: 'っz',
-  da: 'だ', di: 'ぢ', du: 'づ', de: 'で', do: 'ど', dd: 'っd',
-  ba: 'ば', bi: 'び', bu: 'ぶ', be: 'べ', bo: 'ぼ', bb: 'っb',
-  pa: 'ぱ', pi: 'ぴ', pu: 'ぷ', pe: 'ぺ', po: 'ぽ', pp: 'っp',
-  ka: 'か', ki: 'き', ku: 'く', ke: 'け', ko: 'こ', kk: 'っk',
-  sa: 'さ', si: 'し', su: 'す', se: 'せ', so: 'そ', ss: 'っs',
-  ta: 'た', ti: 'ち', tu: 'つ', te: 'て', to: 'と', tt: 'っt',
+  ga: 'が', gi: 'ぎ', gu: 'ぐ', ge: 'げ', go: 'ご',
+  za: 'ざ', zi: 'じ', zu: 'ず', ze: 'ぜ', zo: 'ぞ',
+  da: 'だ', di: 'ぢ', du: 'づ', de: 'で', do: 'ど',
+  ba: 'ば', bi: 'び', bu: 'ぶ', be: 'べ', bo: 'ぼ',
+  pa: 'ぱ', pi: 'ぴ', pu: 'ぷ', pe: 'ぺ', po: 'ぽ',
+  ka: 'か', ki: 'き', ku: 'く', ke: 'け', ko: 'こ',
+  sa: 'さ', si: 'し', su: 'す', se: 'せ', so: 'そ',
+  ta: 'た', ti: 'ち', tu: 'つ', te: 'て', to: 'と',
   na: 'な', ni: 'に', nu: 'ぬ', ne: 'ね', no: 'の',
-  ha: 'は', hi: 'ひ', hu: 'ふ', he: 'へ', ho: 'ほ', hh: 'っh',
-  ma: 'ま', mi: 'み', mu: 'む', me: 'め', mo: 'も', mm: 'っm',
-  ya: 'や', yi: 'ゐ', yu: 'ゆ', ye: 'ゑ', yo: 'よ', yy: 'っy',
-  ra: 'ら', ri: 'り', ru: 'る', re: 'れ', ro: 'ろ', rr: 'っr',
+  ha: 'は', hi: 'ひ', hu: 'ふ', he: 'へ', ho: 'ほ',
+  ma: 'ま', mi: 'み', mu: 'む', me: 'め', mo: 'も',
+  ya: 'や', yi: 'ゐ', yu: 'ゆ', ye: 'ゑ', yo: 'よ',
+  ra: 'ら', ri: 'り', ru: 'る', re: 'れ', ro: 'ろ',
   wa: 'わ', wi: 'うぃ', we: 'うぇ', wo: 'を', nn: 'ん',
   # 1文字
   a: 'あ', i: 'い', u: 'う', e: 'え', o: 'お', # n: 'ん',

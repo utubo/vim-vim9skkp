@@ -347,7 +347,16 @@ def InputConsonant(key: string, lowkey: string, mapping: bool): bool
   endif
   const low = key->tolower()
   if C.roman_chars->Contains(low)
-    OnRomanAdded($'{text}{low}', lowkey)
+    const m = g:vim9skkp.marker_okuri
+    if text[-1 :] ==# low
+      # omoTta → 思った
+      OnRomanAdded($'{text[: -2]}{chartype.ltsu}{low}', lowkey)
+    elseif text[-1 - len(m) :] ==# $'{low}{m}'
+      # sasSuru → 察する
+      OnRomanAdded($'{text[: -2 - len(m)]}{chartype.ltsu}{m}{low}', lowkey)
+    else
+      OnRomanAdded($'{text}{low}', lowkey)
+    endif
   else
     SetText($'{text}{key}')
     Commit()
@@ -356,11 +365,7 @@ def InputConsonant(key: string, lowkey: string, mapping: bool): bool
 enddef
 
 def OnRomanAdded(newtext: string, lowkey: string)
-  const m = g:vim9skkp.marker_okuri
-  newtext
-      ->substitute($'{m}っ', $'っ{m}', 'n')
-      ->substitute($'{m}ッ', $'ッ{m}', 'n')
-      ->SetText()
+  newtext->SetText()
   if text =~ g:vim9skkp.auto_commit_regex
     Commit()
   endif
