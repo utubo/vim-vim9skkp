@@ -43,7 +43,7 @@ def GetTabPanelOffset(): number
     return 0
   elseif &tabpanel ==# '2' && tabpagenr('$') ==# 1
     return 0
-  elseif &tabpanelopt =~# 'righit'
+  elseif &tabpanelopt =~# 'right'
     return 0
   elseif &tabpanelopt !~# 'columns'
     return 20
