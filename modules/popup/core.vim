@@ -53,16 +53,12 @@ export def Popup()
   )
   HideCursor()
   ClosePumLazy()
-  Redraw() # NOTE: ここでウィンドウ位置を調整しておかないとチラつく
   augroup vim9skkp-cursormoved
     au! CursorMovedI,CursorMovedC * U.Silent(QueueRedraw)
   augroup END
+  Redraw() # NOTE: ここでウィンドウ位置を調整しておかないとチラつく
+  prevent_redraw = false
   doautocmd User Vim9skkpStatusChanged
-  # TODO: 起動時に`_A`と表示されてしまうのでtimerで応急処置…
-  timer_start(5, (_) => {
-    prevent_redraw = false
-    QueueRedraw()
-  })
 enddef
 
 def ClosePumLazy()
@@ -102,27 +98,31 @@ def StopCheckPopupExists()
 enddef
 
 # ちらつき防止
+var redraw_timer = 0
 def QueueRedraw(_: number = 0)
   if prevent_redraw
     return
   endif
-  prevent_redraw = true
-  timer_start(0, (_) => {
+  if !!redraw_timer
+    timer_stop(redraw_timer)
+  endif
+  redraw_timer = timer_start(1, (_) => {
     Redraw()
-    prevent_redraw = false
+    redraw_timer = 0
   })
 enddef
 
 def Redraw(_: number = 0)
-  if M.active
-    const c = g:vim9skkp.getcurpos(U.GetCurPos())
-    M.Redraw(c)
-    S.FollowCursor(c, M.text)
+  if !M.active
+    return
+  endif
+  const c = g:vim9skkp.getcurpos(U.GetCurPos())
+  M.Redraw(c)
+  S.FollowCursor(c, M.text)
+  redraw
+  # TODO: 2回redrawしないとmode_display = 'cursor'でカタカナ入力が即時表示されない？
+  if g:vim9skkp.mode_display ==# 'cursor'
     redraw
-    # TODO: 2回redrawしないとmode_display = 'cursor'でカタカナ入力が即時表示されない？
-    if g:vim9skkp.mode_display ==# 'cursor'
-      redraw
-    endif
   endif
 enddef
 # }}}
