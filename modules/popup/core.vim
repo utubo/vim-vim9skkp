@@ -53,7 +53,7 @@ export def Popup()
   HideCursor()
   ClosePumLazy()
   augroup vim9skkp-cursormoved
-    au! CursorMovedI,CursorMovedC * U.Silent(OnCursorMoved)
+    au! CursorMovedI,CursorMovedC * U.Silent(QueueRedraw)
   augroup END
   doautocmd User Vim9skkpStatusChanged
   # TODO: 起動時に`_A`と表示されてしまう…
@@ -70,11 +70,6 @@ def ClosePumLazy()
       K.FeedKeys("\<C-e>", false)
     endif
   })
-enddef
-
-def OnCursorMoved()
-  # NOTE: <C-r>=foo<CR>などでチラつくのでタイマーを挟む
-  timer_start(1, QueueRedraw)
 enddef
 
 # <C-c>などでポップアップが閉じられた場合に終了させる
