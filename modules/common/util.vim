@@ -15,25 +15,23 @@ enddef
 # NOTE: terminalはどうやってもカーソル位置を取得できない
 export def GetCurPos(): dict<any>
   var p = { col: 0, line: 0 }
-  const m = mode()
-  if m ==# 'c'
+  if mode() ==# 'c'
     const q = getcmdscreenpos()
     const t = GetTabPanelOffset()
     const x = q - t
     const w = v:echospace + 1
-    p = {
+    return {
       line: &lines - &cmdheight + 1 + x / w + t,
       col: x % w + t,
     }
   else
     const c = getcurpos()[1 : 2]
     const q = screenpos(0, c[0], c[1])
-    p = {
+    return {
       line: min([q.row, &lines]),
       col: q.col,
     }
   endif
-  return p
 enddef
 
 def GetTabPanelOffset(): number
