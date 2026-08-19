@@ -21,7 +21,7 @@ export def GetCurPos(): dict<any>
     const x = q - o
     const w = v:echospace + 1
     return {
-      line: &lines - &cmdheight + 1 + x / w + o,
+      line: &lines - &cmdheight + 1 + x / w,
       col: x % w + o,
     }
   else
