@@ -45,11 +45,11 @@ def GetTabPanelOffset(): number
     return 0
   elseif &tabpanelopt =~# 'righit'
     return 0
-  elseif &tabpanelopt !~# 'width'
+  elseif &tabpanelopt !~# 'columns'
     return 20
   else
     return &tabpanelopt
-      ->matchstr('width:\([0-9]\+)')[1]
+      ->matchstr('columns:\([0-9]\+\)')[1]
       ->str2nr()
   endif
 enddef
