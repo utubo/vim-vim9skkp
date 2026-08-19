@@ -50,14 +50,16 @@ export def Popup()
     CheckPopupExists,
     { repeat: -1 }
   )
-  Redraw()
   HideCursor()
   ClosePumLazy()
-  redraw
-  doautocmd User Vim9skkpStatusChanged
   augroup vim9skkp-cursormoved
     au! CursorMovedI,CursorMovedC * U.Silent(OnCursorMoved)
   augroup END
+  doautocmd User Vim9skkpStatusChanged
+  # TODO: 起動時に`_A`と表示されてしまう…
+  timer_start(5, (_) => {
+    S.Popup()
+  })
 enddef
 
 def ClosePumLazy()
