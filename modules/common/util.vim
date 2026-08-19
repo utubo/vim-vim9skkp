@@ -36,7 +36,7 @@ enddef
 
 def GetEchoOffset(): number
   const o = &columns - v:echospace
-  return !o || &tplo !~# 'right' ? 0 : o
+  return !o || &tplo =~# 'right' ? 0 : o
 enddef
 
 # カーソル位置の文字を返す
