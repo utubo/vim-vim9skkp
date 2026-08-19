@@ -339,7 +339,7 @@ def AddVowel(key: string): list<any>
 enddef
 
 def InputConsonant(key: string, lowkey: string, mapping: bool): bool
-  if !mapping || !U.IsNormalChar(key)
+  if !mapping || !U.IsNormalChar(lowkey)
     return false
   endif
   if g:vim9skkp_status.is_cand_selected
