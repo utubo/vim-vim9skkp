@@ -176,7 +176,7 @@ def SetupAutocmd()
       S.Reset()
     }
     au User vim9skkp-s-show {
-      if !redraw_timer
+      if !redraw_timer && !prevent_redraw
         S.Show()
       endif
       QueueRedraw()
@@ -198,7 +198,7 @@ def SetupAutocmd()
       g:vim9skkp_status.mode_label = g:vim9skkp_status.midasi
         ? g:vim9skkp.mode_label.midasi
         : g:vim9skkp_status.mode
-      if M.active && !redraw_timer
+      if M.active && !redraw_timer && !prevent_redraw
         M.Redraw()
         S.Popup()
       endif
