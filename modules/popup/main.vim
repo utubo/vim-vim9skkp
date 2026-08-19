@@ -283,6 +283,10 @@ def InputVowel(key: string, rawkey: string): bool
     if is_abbr || !midasi && newtext !~ '[っッｯ][a-z]$'
       SetText(newtext)
       Commit()
+      # TODO: timer経由でredrawすると表示がおかしい？でもこれだとチラつく
+      if g:vim9skkp.mode_display ==# 'cursor'
+        Redraw()
+      endif
     else
       OnRomanAdded(newtext, rawkey)
     endif
