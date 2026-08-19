@@ -95,11 +95,11 @@ enddef
 var new_sticky_shift = false # TODO: このフラグはいまいち…
 
 # 入力制御の大枠
-export def Filter(lowkey: string, mapping: bool): bool
+export def Filter(rawkey: string, mapping: bool): bool
   new_sticky_shift = false
-  const done = lowkey
+  const done = rawkey
     ->ApplyStickyShift()
-    ->FilterImpl(lowkey, mapping)
+    ->FilterImpl(rawkey, mapping)
   if done
     SetStickyShift(new_sticky_shift)
     return true
@@ -111,7 +111,7 @@ export def Filter(lowkey: string, mapping: bool): bool
   # マッピング後のキーでもやることが無かった場合
   SetStickyShift(false)
   if !!text
-    Commit(lowkey)
+    Commit(rawkey)
     return true
   else
     return false
@@ -119,7 +119,7 @@ export def Filter(lowkey: string, mapping: bool): bool
 enddef
 
 # 入力制御のメイン
-def FilterImpl(key: string, lowkey: string, mapping: bool): bool
+def FilterImpl(key: string, rawkey: string, mapping: bool): bool
   if mapping && key ==# "\<Esc>"
     return false
   elseif mapping && MoveCursor(key)
@@ -131,29 +131,29 @@ def FilterImpl(key: string, lowkey: string, mapping: bool): bool
     return BackSpace(mapping)
   elseif StartSelect(key)
     return true
-  elseif AutoAbbr(lowkey)
+  elseif AutoAbbr(rawkey)
     return true
   elseif InputAlphabet(key, mapping)
     return !mapping
-  elseif InputVowel(key, lowkey)
+  elseif InputVowel(key, rawkey)
     return true
   elseif CommonFunctions(key)
     return true
-  elseif InputConsonant(key, lowkey, mapping)
+  elseif InputConsonant(key, rawkey, mapping)
     return true
   else
     return false
   endif
 enddef
 
-def AddSrcRoman(lowkey: string)
+def AddSrcRoman(rawkey: string)
   const chars = strchars(text)
   if len(src_roman) < chars
-    src_roman += [lowkey]
+    src_roman += [rawkey]
   elseif chars ==# 0
-    src_roman = [lowkey]
+    src_roman = [rawkey]
   else
-    src_roman[chars - 1] ..= lowkey
+    src_roman[chars - 1] ..= rawkey
   endif
 enddef
 
@@ -269,7 +269,7 @@ enddef
 # }}}
 
 # ローマ字入力 {{{
-def InputVowel(key: string, lowkey: string): bool
+def InputVowel(key: string, rawkey: string): bool
   if !chartype.roman
     return false
   endif
@@ -284,7 +284,7 @@ def InputVowel(key: string, lowkey: string): bool
       SetText(newtext)
       Commit()
     else
-      OnRomanAdded(newtext, lowkey)
+      OnRomanAdded(newtext, rawkey)
     endif
     return true
   endif
@@ -338,8 +338,8 @@ def AddVowel(key: string): list<any>
   return [text, is_abbr]
 enddef
 
-def InputConsonant(key: string, lowkey: string, mapping: bool): bool
-  if !mapping || !U.IsNormalChar(lowkey)
+def InputConsonant(key: string, rawkey: string, mapping: bool): bool
+  if !mapping || !U.IsNormalChar(rawkey)
     return false
   endif
   if g:vim9skkp_status.is_cand_selected
@@ -350,12 +350,12 @@ def InputConsonant(key: string, lowkey: string, mapping: bool): bool
     const m = g:vim9skkp.marker_okuri
     if text[-1 :] ==# low
       # omoTta → 思った
-      OnRomanAdded($'{text[: -2]}{chartype.ltsu}{low}', lowkey)
+      OnRomanAdded($'{text[: -2]}{chartype.ltsu}{low}', rawkey)
     elseif text[-1 - len(m) :] ==# $'{low}{m}'
       # sasSuru → 察する
-      OnRomanAdded($'{text[: -2 - len(m)]}{chartype.ltsu}{m}{low}', lowkey)
+      OnRomanAdded($'{text[: -2 - len(m)]}{chartype.ltsu}{m}{low}', rawkey)
     else
-      OnRomanAdded($'{text}{low}', lowkey)
+      OnRomanAdded($'{text}{low}', rawkey)
     endif
   else
     SetText($'{text}{key}')
@@ -364,12 +364,12 @@ def InputConsonant(key: string, lowkey: string, mapping: bool): bool
   return true
 enddef
 
-def OnRomanAdded(newtext: string, lowkey: string)
+def OnRomanAdded(newtext: string, rawkey: string)
   newtext->SetText()
   if text =~ g:vim9skkp.auto_commit_regex
     Commit()
   endif
-  AddSrcRoman(lowkey)
+  AddSrcRoman(rawkey)
   if !!g:vim9skkp.auto_suggest_regex &&
       text =~ g:vim9skkp.auto_suggest_regex
     StartSelect()
