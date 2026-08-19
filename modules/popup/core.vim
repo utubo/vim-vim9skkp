@@ -119,6 +119,10 @@ def Redraw(_: number = 0)
     M.Redraw(c)
     S.FollowCursor(c, M.text)
     redraw
+    # TODO: 2回redrawしないとmode_display = 'cursor'でカタカナ入力が即時表示されない？
+    if g:vim9skkp.mode_display ==# 'cursor'
+      redraw
+    endif
   endif
 enddef
 # }}}

@@ -480,7 +480,6 @@ export def Commit(key: string = '')
   doautocmd User vim9skkp-m-commit
   doautocmd User vim9skkp-unlockredraw
   doautocmd User vim9skkp-queueredraw
-  # TODO: mode_display = 'curosr'でカタカナ入力が即時表示されない
 enddef
 # }}}
 
