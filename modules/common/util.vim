@@ -39,9 +39,9 @@ enddef
 def GetTabPanelOffset(): number
   if !has('tabpanel')
     return 0
-  elseif &tabpanel ==# '0'
+  elseif &showtabpanel ==# 0
     return 0
-  elseif &tabpanel ==# '2' && tabpagenr('$') ==# 1
+  elseif &showtabpanel ==# 1 && tabpagenr('$') ==# 1
     return 0
   elseif &tabpanelopt =~# 'right'
     return 0
