@@ -59,17 +59,21 @@ export def Close()
 enddef
 
 export def FollowCursor(p: dict<any>, text: string)
-  const a = &lines - p.line < C.bot_margin ? -1 : 1
-  winpos = {
-    col: p.col + (!cands ? strdisplaywidth(text) : 0),
-    line: p.line + a,
-    pos: a < 0 ? 'botleft' : 'topleft',
-  }
-  popup_move(winid, winpos)
-enddef
-
-export def Show()
-  popup_show(winid)
+  if !winid
+  # nop
+  elseif g:vim9skkp.mode_display ==# 'popup' || popup_type ==# POPUP_TYPE_CANDS 
+    echo g:vim9skkp.mode_display
+    const a = &lines - p.line < C.bot_margin ? -1 : 1
+    winpos = {
+      col: p.col + (!cands ? strdisplaywidth(text) : 0),
+      line: p.line + a,
+      pos: a < 0 ? 'botleft' : 'topleft',
+    }
+    popup_move(winid, winpos)
+    popup_show(winid)
+  else
+    popup_hide(winid)
+  endif
 enddef
 
 export def Popup()
@@ -85,11 +89,11 @@ def PopupMode()
   UnSelect()
   if g:vim9skkp.mode_display !=# 'popup'
     popup_hide(winid)
-    return
+  else
+    popup_settext(winid, g:vim9skkp_status.mode_label)
+    silent! doautocmd User vim9skkp-queueredraw
   endif
-  popup_settext(winid, g:vim9skkp_status.mode_label)
   g:vim9skkp_status.cand_winid = 0
-  silent! doautocmd User vim9skkp-s-show
 enddef
 
 export def PopupCands(text: string = '', src_roman: string = '')
@@ -127,7 +131,7 @@ export def PopupCands(text: string = '', src_roman: string = '')
   win_execute(winid, 'syntax match Vim9skkpCandExtra /\t\zs.*/')
   win_execute(winid, 'syntax match Vim9skkpCandShortCut /^.*:/')
   g:vim9skkp_status.cand_winid = winid
-  silent! doautocmd User vim9skkp-s-show
+  silent! doautocmd User vim9skkp-queueredraw
   silent! doautocmd User Vim9skkpCandPopup
 
   if !!text

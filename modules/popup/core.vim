@@ -120,6 +120,13 @@ def Redraw(_: number = 0)
   M.Redraw(c)
   S.FollowCursor(c, M.text)
   redraw
+  # TODO: mode_display = 'cursor'でカタカナ入力の表示が即時に反映されない
+  # NOTE: timer経由でredrawするとポップアップの移動が反映されない？
+  if M.force_redraw
+    # なんでもいいのでポップアップに変化をおこせば再描画される
+    popup_create('', { opacity: 0 })->popup_close()
+    M.force_redraw = false
+  endif
 enddef
 # }}}
 
@@ -170,12 +177,6 @@ def SetupAutocmd()
     au User vim9skkp-s-chartype {
       M.SetText(S.src)
       S.Reset()
-    }
-    au User vim9skkp-s-show {
-      if !redraw_timer && !prevent_redraw
-        S.Show()
-      endif
-      QueueRedraw()
     }
 
     # global
