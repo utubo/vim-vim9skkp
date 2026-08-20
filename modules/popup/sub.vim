@@ -62,7 +62,6 @@ export def FollowCursor(p: dict<any>, text: string)
   if !winid
   # nop
   elseif g:vim9skkp.mode_display ==# 'popup' || popup_type ==# POPUP_TYPE_CANDS 
-    echo g:vim9skkp.mode_display
     const a = &lines - p.line < C.bot_margin ? -1 : 1
     winpos = {
       col: p.col + (!cands ? strdisplaywidth(text) : 0),
