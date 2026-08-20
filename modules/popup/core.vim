@@ -232,7 +232,6 @@ def OnSetText()
     ClosePumLazy()
   endif
   QueueRedraw()
-  redraw
 enddef
 # }}}
 
