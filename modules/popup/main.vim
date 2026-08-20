@@ -178,7 +178,7 @@ def CommonFunctions(key: string): bool
     doautocmd User vim9skkp-userjisyo
     return true
   elseif ChangeCharType(key)
-    doautocmd User Vim9skkpStatusChanged
+    doautocmd User vim9skkp-statuschanged
     return true
   elseif !!text &&
       (midasi || chartype ==# C.Type.Abbr) &&
@@ -416,7 +416,7 @@ def SetMidasiModeAndStickyShift(m: bool, s: bool)
   endif
   midasi = m
   sticky_shift = s
-  silent! doautocmd User Vim9skkpStatusChanged
+  silent! doautocmd User vim9skkp-statuschanged
 enddef
 
 def ChangeCharType(key: string): bool
@@ -448,7 +448,7 @@ export def ToggleCharType(ct: C.Type)
   else
     chartype = ct
   endif
-  silent! doautocmd User Vim9skkpStatusChanged
+  silent! doautocmd User vim9skkp-statuschanged
 enddef
 # }}}
 

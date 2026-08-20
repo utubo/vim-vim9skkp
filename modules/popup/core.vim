@@ -58,7 +58,7 @@ export def Popup()
   augroup END
   Redraw() # NOTE: ここでウィンドウ位置を調整しておかないとチラつく
   prevent_redraw = false
-  doautocmd User Vim9skkpStatusChanged
+  doautocmd User vim9skkp-statuschanged
 enddef
 
 def ClosePumLazy()
@@ -181,7 +181,7 @@ def SetupAutocmd()
 
     # global
     au ModeChanged *:[nt] U.Silent(Close)
-    au User Vim9skkpStatusChanged {
+    au User vim9skkp-statuschanged {
       g:vim9skkp_status.active = M.active
       if M.active
         g:vim9skkp_status.midasi = M.midasi && M.chartype !=# C.Type.Abbr
@@ -199,6 +199,7 @@ def SetupAutocmd()
         M.Redraw()
         S.Popup()
       endif
+      silent! doautocmd User Vim9skkpStatusChanged
     }
     au User vim9skkp-queueredraw QueueRedraw()
     au User vim9skkp-lockredraw prevent_redraw = true
@@ -244,7 +245,7 @@ export def Close()
   S.Reset()
   S.Close()
   RestoreCursor()
-  doautocmd User Vim9skkpStatusChanged
+  doautocmd User vim9skkp-statuschanged
   redraw
 enddef
 
