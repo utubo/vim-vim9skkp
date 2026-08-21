@@ -56,7 +56,7 @@ export def Popup()
   augroup vim9skkp-cursormoved
     au! CursorMovedI,CursorMovedC * U.Silent(QueueRedraw)
   augroup END
-  Redraw() # NOTE: ここでウィンドウ位置を調整しておかないとチラつく
+  FollowCursor() # NOTE: ここでウィンドウ位置を調整しておかないとチラつく
   prevent_redraw = false
   doautocmd User vim9skkp-statuschanged
 enddef
@@ -112,13 +112,18 @@ def QueueRedraw(_: number = 0)
   })
 enddef
 
+def FollowCursor()
+  const c = g:vim9skkp.getcurpos(U.GetCurPos())
+  M.FollowCursor(c)
+  S.FollowCursor(c, M.text)
+enddef
+
 def Redraw(_: number = 0)
   if !M.active
     return
   endif
-  const c = g:vim9skkp.getcurpos(U.GetCurPos())
-  M.Redraw(c)
-  S.FollowCursor(c, M.text)
+  FollowCursor()
+  M.Redraw()
   redraw
   # TODO: mode_display = 'cursor'でカタカナ入力の表示が即時に反映されない
   # NOTE: timer経由でredrawするとポップアップの移動が反映されない？

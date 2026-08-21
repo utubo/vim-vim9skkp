@@ -68,10 +68,11 @@ def SetTextAndRemined(_text: string, remaind: string)
   src_roman = src_roman[0 : len(remaind_roman) - 1]
 enddef
 
-export def Redraw(newpos: dict<any> = {})
-  if !!newpos
-    popup_move(winid, newpos)
-  endif
+export def FollowCursor(p: dict<any>)
+  popup_move(winid, p)
+enddef
+
+export def Redraw()
   var cur = ' '
   var cur_regex = '.'
   if g:vim9skkp.mode_display ==# 'cursor'
