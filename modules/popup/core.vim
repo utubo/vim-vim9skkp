@@ -14,6 +14,7 @@ import '../common/settings.vim' as SS
 
 var timerForCheckPopupExists = 0
 var prevent_redraw = false
+var force_redraw = false
 var bak = { t_ve: '', gcr: '' }
 
 # 初期化 {{{
@@ -127,10 +128,10 @@ def Redraw(_: number = 0)
   redraw
   # TODO: mode_display = 'cursor'でカタカナ入力の表示が即時に反映されない
   # NOTE: timer経由でredrawするとポップアップの移動が反映されない？
-  if M.force_redraw
+  if force_redraw
     # なんでもいいのでポップアップに変化をおこせば再描画される
     popup_create('', { opacity: 0 })->popup_close()
-    M.force_redraw = false
+    force_redraw = false
   endif
 enddef
 # }}}
@@ -157,6 +158,7 @@ def SetupAutocmd()
           S.PopupAsPredict()
         endif
       endif
+      force_redraw = true
     }
     au User vim9skkp-m-cancel {
       if !M.text

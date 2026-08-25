@@ -16,7 +16,6 @@ export var text = ''
 export var chartype = C.Type.Hira
 export var midasi = false
 export var sticky_shift = false
-export var force_redraw = false
 
 # カーソルを左に移動したときの余りの文字
 var remaind_text = ''
@@ -388,6 +387,10 @@ def ToKata(s: string, ct: C.Type): string
     return hira->Tr(C.hira_chars, C.hankaku_chars)
   elseif ct ==# C.Type.Hira
     return hira
+  elseif ct ==# C.Type.Alph && !!src_roman
+    return src_roman->join('')->Tr(C.abbr_chars, C.alphabet_chars)
+  elseif ct ==# C.Type.Abbr && !!src_roman
+    return src_roman->join('')
   else
     return s
   endif
@@ -484,9 +487,6 @@ export def Commit(key: string = '')
     midasi = g:vim9skkp.sticky_lock
   endif
   ResetMidasiModeAndStickyShift(g:vim9skkp.sticky_lock && midasi)
-  if g:vim9skkp.mode_display ==# 'cursor'
-    force_redraw = true
-  endif
   doautocmd User vim9skkp-m-commit
   doautocmd User vim9skkp-unlockredraw
   doautocmd User vim9skkp-queueredraw
