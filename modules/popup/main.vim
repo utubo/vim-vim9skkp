@@ -60,11 +60,16 @@ export def SetText(_text: string)
   endif
 enddef
 
-def SetTextAndRemined(_text: string, remaind: string)
+def SetTextAndRemined(_text: string, remaind: string, commit: bool = false)
+  if commit
+    src_roman = remaind_roman
+  endif
+  const all = src_roman + remaind_roman
+  const p = strchars(_text)
+  src_roman = _text ==# '' ? [] : all[: p - 1]
+  remaind_roman = remaind ==# '' ? [] : all[p :]
   remaind_text = remaind
   SetText(_text)
-  remaind_roman = remaind ==# '' ? [] : src_roman[strchars(remaind_text) :]
-  src_roman = src_roman[0 : len(remaind_roman) - 1]
 enddef
 
 export def FollowCursor(p: dict<any>)
@@ -481,7 +486,7 @@ export def Commit(key: string = '')
   endif
   J.AddHistory(text) # TODO: 直接入力が逐一保存されちゃう
   K.FeedKeys($'{text}{key}', !!key)
-  SetTextAndRemined(remaind_text, '')
+  SetTextAndRemined(remaind_text, '', true)
   if chartype ==# C.Type.Abbr
     ToggleCharType(C.Type.Abbr)
     midasi = g:vim9skkp.sticky_lock
