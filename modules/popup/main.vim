@@ -63,11 +63,13 @@ enddef
 def SetTextAndRemined(_text: string, remaind: string, commit: bool = false)
   if commit
     src_roman = remaind_roman
+    remaind_roman = []
+  else
+    const all = src_roman + remaind_roman
+    const p = strchars(_text)
+    src_roman = _text ==# '' ? [] : all[: p - 1]
+    remaind_roman = remaind ==# '' ? [] : all[p :]
   endif
-  const all = src_roman + remaind_roman
-  const p = strchars(_text)
-  src_roman = _text ==# '' ? [] : all[: p - 1]
-  remaind_roman = remaind ==# '' ? [] : all[p :]
   remaind_text = remaind
   SetText(_text)
 enddef
