@@ -39,7 +39,7 @@ export def Popup()
   endif
   chartype = C.Type.Hira
   ResetMidasiModeAndStickyShift(g:vim9skkp.sticky_lock)
-  SetTextAndRemined('', '')
+  SetTextAndRemaind('', '')
   active = true
 enddef
 
@@ -60,7 +60,7 @@ export def SetText(_text: string)
   endif
 enddef
 
-def SetTextAndRemined(_text: string, remaind: string, commit: bool = false)
+def SetTextAndRemaind(_text: string, remaind: string, commit: bool = false)
   if commit
     src_roman = remaind_roman
     remaind_roman = []
@@ -216,7 +216,7 @@ enddef
 def MoveCursor(key: string): bool
   if g:vim9skkp.keymap.left->Contains(key) && !!text
     if !g:vim9skkp_status.is_cand_selected
-      SetTextAndRemined(
+      SetTextAndRemaind(
         text->substitute('.$', '', ''),
         text->matchstr('.$') .. remaind_text
       )
@@ -224,7 +224,7 @@ def MoveCursor(key: string): bool
     return true
   elseif g:vim9skkp.keymap.right->Contains(key) && !!remaind_text
     if !g:vim9skkp_status.is_cand_selected
-      SetTextAndRemined(
+      SetTextAndRemaind(
         text .. remaind_text->matchstr('^.'),
         remaind_text->substitute('^.', '', '')
       )
@@ -488,7 +488,7 @@ export def Commit(key: string = '')
   endif
   J.AddHistory(text) # TODO: 直接入力が逐一保存されちゃう
   K.FeedKeys($'{text}{key}', !!key)
-  SetTextAndRemined(remaind_text, '', true)
+  SetTextAndRemaind(remaind_text, '', true)
   if chartype ==# C.Type.Abbr
     ToggleCharType(C.Type.Abbr)
     midasi = g:vim9skkp.sticky_lock
