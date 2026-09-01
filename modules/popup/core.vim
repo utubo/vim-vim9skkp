@@ -156,6 +156,8 @@ def SetupAutocmd()
         if g:vim9skkp.predict
           S.cands = J.GetHistory()
           S.PopupAsPredict()
+        else
+          S.Popup()
         endif
       endif
       force_redraw = true
