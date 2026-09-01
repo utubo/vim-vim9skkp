@@ -341,8 +341,12 @@ g:vim9skkp_status				*g:vim9skkp_status*
 	sticky_shift
 		スティッキーシフトによってシフトが有効ならtrue、
 		それ以外ならfalse
+	main_winid
+		メインポップアップのウインドウIDです
 	cand_winid
 		変換候補ポップアップのウインドウIDです
+	midasi_text
+		見出しの入力値です
 
 g:vim9skkp_exception				*g:vim9skkp_exception*
 	vim9skkpで最後に発生した例外です
@@ -388,8 +392,11 @@ EVENTS						*vim9skkp-events*
 Vim9skkpStatusChanged				*Vim9skkpStatusChanged*
 	|g:vim9skkp_status|が変更されたときに発火します
 
-Vim9skkpCandPopup						*Vim9skkpCandPopup*
+Vim9skkpCandPopup				*Vim9skkpCandPopup*
 	変換候補が表示されたときに発火します
+
+Vim9skkpMidasiTextChanged			*Vim9skkpMidasiTextChanged*
+	見出し文字列が変更されたときに発火します
 
 ------------------------------------------------------------------------------
 HIGHLIGHTS					*vim9skkp-highlights*

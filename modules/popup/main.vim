@@ -30,6 +30,7 @@ export def Popup()
     winid = popup_create('',
       { zindex: C.default_zindex }
       ->extend(g:vim9skkp.main_popup_options))
+    g:vim9skkp_status.main_winid = winid
   endif
   win_execute(winid, 'syntax match Vim9skkp /./')
   if g:vim9skkp.mode_display ==# 'cursor'
@@ -46,6 +47,7 @@ enddef
 export def Close()
   popup_close(winid)
   winid = 0
+  g:vim9skkp_status.main_winid = 0
   active = false
 enddef
 

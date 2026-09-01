@@ -87,6 +87,7 @@ export def Initialize()
       src_roman: '',
       predict: false,
     },
+    midasi_text: '',
   }
   KM.Apply()
 enddef

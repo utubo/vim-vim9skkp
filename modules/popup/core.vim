@@ -208,7 +208,7 @@ def SetupAutocmd()
         M.Redraw()
         S.Popup()
       endif
-      silent! doautocmd User Vim9skkpStatusChanged
+      silent doautocmd User Vim9skkpStatusChanged
     }
     au User vim9skkp-queueredraw QueueRedraw()
     au User vim9skkp-lockredraw prevent_redraw = true
@@ -242,6 +242,11 @@ def OnSetText()
     ClosePumLazy()
   endif
   QueueRedraw()
+  const midasi_text = M.midasi ? M.text : ''
+  if new_midasi_text !=# g:vim9skkp_status.midasi_text
+    g:vim9skkp_status.midasi_text = midasi_text
+    silent doautocmd User Vim9skkpMidasiTextChanged
+  endif
 enddef
 # }}}
 
