@@ -243,7 +243,7 @@ def OnSetText()
   endif
   QueueRedraw()
   const midasi_text = M.midasi ? M.text : ''
-  if new_midasi_text !=# g:vim9skkp_status.midasi_text
+  if midasi_text !=# g:vim9skkp_status.midasi_text
     g:vim9skkp_status.midasi_text = midasi_text
     silent doautocmd User Vim9skkpMidasiTextChanged
   endif
