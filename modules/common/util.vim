@@ -98,3 +98,11 @@ export def IsNormalChar(c: string): bool
   return c ==# ' ' || c ==# c->keytrans()
 enddef
 
+export def MergeDicts(...dicts: list<dict<any>>): dict<any>
+  var ret = {}
+  for d in dicts
+    ret->extend(d)
+  endfor
+  return ret
+enddef
+

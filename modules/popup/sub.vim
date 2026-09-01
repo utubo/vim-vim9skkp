@@ -17,11 +17,7 @@ export var index = -1
 export var selected = ''
 export var shortcut = []
 
-const POPUP_TYPE_CLOSED = 0
-const POPUP_TYPE_MODE = 1
-const POPUP_TYPE_CANDS = 2
-var popup_type = POPUP_TYPE_CLOSED
-var default_options = {
+const default_options = {
   hidden: true,
   tabpage: -1,
   maxheight: C.default_maxheight,
@@ -29,22 +25,32 @@ var default_options = {
   wrap: false,
 }
 
-def Create(pt: number)
+enum PopupType
+  Closed('mode_popup_options', {}),
+  Mode('mode_popup_options', U.MergeDicts(default_options, {
+    highlight: 'Vim9skkpMode'
+  })),
+  Cands('cands_popup_options', U.MergeDicts(default_options, {
+    highlight: 'Vim9skkpCands'
+  }))
+  var options_key: string
+  var options: dict<any>
+endenum
+
+var popup_type = PopupType.Closed
+
+def Create(pt: PopupType)
   if popup_type !=# pt
     Close()
   endif
   if U.IsPopupExists(winid)
     return
   endif
-  const opt = {}
-    ->extend(default_options)
-    ->extend(pt ==# POPUP_TYPE_MODE ?
-    { highlight: 'Vim9skkpMode' } :
-    { highlight: 'Vim9skkpCand' })
-    ->extend(pt ==# POPUP_TYPE_MODE ?
-    g:vim9skkp.mode_popup_options :
-    g:vim9skkp.cands_popup_options)
-    ->extend(winpos)
+  const opt = U.MergeDicts(
+    pt.options,
+    g:vim9skkp[pt.options_key],
+    winpos
+  )
   winid = popup_create('', opt)
   popup_type = pt
 enddef
@@ -54,14 +60,14 @@ export def Close()
     popup_close(winid)
     winid = 0
     g:vim9skkp_status.cand_winid = 0
-    popup_type = POPUP_TYPE_CLOSED
+    popup_type = PopupType.Closed
   endif
 enddef
 
 export def FollowCursor(p: dict<any>, text: string)
   if !winid
   # nop
-  elseif g:vim9skkp.mode_display ==# 'popup' || popup_type ==# POPUP_TYPE_CANDS 
+  elseif g:vim9skkp.mode_display ==# 'popup' || popup_type ==# PopupType.Cands 
     const a = &lines - p.line < C.bot_margin ? -1 : 1
     winpos = {
       col: p.col + (!cands ? strdisplaywidth(text) : 0),
@@ -84,7 +90,7 @@ export def Popup()
 enddef
 
 def PopupMode()
-  Create(POPUP_TYPE_MODE)
+  Create(PopupType.Mode)
   UnSelect()
   if g:vim9skkp.mode_display !=# 'popup'
     popup_hide(winid)
@@ -96,7 +102,7 @@ def PopupMode()
 enddef
 
 export def PopupCands(text: string = '', src_roman: string = '')
-  Create(POPUP_TYPE_CANDS)
+  Create(PopupType.Cands)
   if !!text
     src = text
     [cands, yomi, okuri] = J.GetAllCands(text, src_roman)
