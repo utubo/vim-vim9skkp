@@ -169,6 +169,10 @@ def SetupAutocmd()
         M.SetText('')
       endif
     }
+    au User vim9skkp-m-predict {
+      S.cands = !M.text ? J.GetHistory() : J.GetRecentAndHistory(M.text)
+      S.PopupAsPredict()
+    }
 
     # subwinが発行するイベント
     au User vim9skkp-s-select {

@@ -186,6 +186,9 @@ def CommonFunctions(key: string): bool
   elseif g:vim9skkp.keymap.userjisyo->Contains(key)
     doautocmd User vim9skkp-userjisyo
     return true
+  elseif g:vim9skkp.keymap.predict->Contains(key)
+    doautocmd User vim9skkp-m-predict
+    return true
   elseif ChangeCharType(key)
     doautocmd User vim9skkp-statuschanged
     return true

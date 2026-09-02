@@ -204,6 +204,8 @@ g:vim9skkp					*g:vim9skkp*
 			カーソルを左へ移動
 		right
 			カーソルを右へ移動
+		predict
+			予測変換候補を表示します
 	roman_table
 		ローマ字入力の追加・上書き設定です
 		例: `{ kn: 'かん' }`
@@ -297,6 +299,7 @@ g:vim9skkp					*g:vim9skkp*
 	    sticky_shift: 'Q',
 	    left: "\<Left>",
 	    right: "\<Right>",
+	    predict: [],
 	  },
 	  roman_table: {},
 	  roman_abbrev: {},

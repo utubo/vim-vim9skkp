@@ -55,6 +55,7 @@ export def Initialize()
       sticky_shift: 'Q',
       left: "\<Left>",
       right: "\<Right>",
+      predict: [],
     },
     roman_table: {},
     roman_abbrev: {},
