@@ -96,7 +96,7 @@ def PopupMode()
     popup_hide(winid)
   else
     popup_settext(winid, g:vim9skkp_status.mode_label)
-    silent! doautocmd User vim9skkp-queueredraw
+    doautocmd User vim9skkp-queueredraw
   endif
   g:vim9skkp_status.cand_winid = 0
 enddef
@@ -136,8 +136,8 @@ export def PopupCands(text: string = '', src_roman: string = '')
   win_execute(winid, 'syntax match Vim9skkpCandExtra /\t\zs.*/')
   win_execute(winid, 'syntax match Vim9skkpCandShortCut /^.*:/')
   g:vim9skkp_status.cand_winid = winid
-  silent! doautocmd User vim9skkp-queueredraw
-  silent! doautocmd User Vim9skkpCandPopup
+  doautocmd User vim9skkp-queueredraw
+  silent doautocmd User Vim9skkpCandPopup
 
   if !!text
     popup_setoptions(winid, { cursorline: true })
