@@ -229,6 +229,7 @@ g:vim9skkp					*g:vim9skkp*
 		変換を開始します
 	abbr_with_shift
 		見出しモード中に大文字入力でabbrevモードへ切り替えます
+		NOTE: trueにすると"L"や"Q"でモードが変らなくなります
 	hide_cursor
 		trueの場合、vim9skkp起動中にカーソルを非表示にします
 		vi9skkp終了後にカーソルが表示されなくなってしまう場合は
