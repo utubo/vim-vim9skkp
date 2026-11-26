@@ -143,11 +143,14 @@ def FilterImpl(key: string, rawkey: string, mapping: bool): bool
     return true
   elseif AutoAbbr(rawkey)
     return true
+  elseif !!text && ChangeCharType(rawkey)
+    doautocmd User vim9skkp-statuschanged
+    return true
   elseif InputAlphabet(key, mapping)
     return !mapping
   elseif InputVowel(key, rawkey)
     return true
-  elseif CommonFunctions(key)
+  elseif CommonFunctions(rawkey)
     return true
   elseif InputConsonant(key, rawkey, mapping)
     return true
@@ -167,14 +170,14 @@ def AddSrcRoman(rawkey: string)
   endif
 enddef
 
-def CommonFunctions(key: string): bool
-  if g:vim9skkp.keymap.toggle->Contains(key)
+def CommonFunctions(rawkey: string): bool
+  if g:vim9skkp.keymap.toggle->Contains(rawkey)
     doautocmd User vim9skkp-m-toggle
     return true
-  elseif g:vim9skkp.keymap.cancel->Contains(key)
+  elseif g:vim9skkp.keymap.cancel->Contains(rawkey)
     doautocmd User vim9skkp-m-cancel
     return true
-  elseif g:vim9skkp.keymap.sticky_shift->Contains(key)
+  elseif g:vim9skkp.keymap.sticky_shift->Contains(rawkey)
     new_sticky_shift = !sticky_shift
     # NOTE:
     # sticky_shiftで見出しモードに遷移できるのと同様に、
@@ -183,21 +186,21 @@ def CommonFunctions(key: string): bool
       midasi = false
     endif
     return true
-  elseif g:vim9skkp.keymap.userjisyo->Contains(key)
+  elseif g:vim9skkp.keymap.userjisyo->Contains(rawkey)
     doautocmd User vim9skkp-userjisyo
     return true
-  elseif g:vim9skkp.keymap.predict->Contains(key)
+  elseif g:vim9skkp.keymap.predict->Contains(rawkey)
     doautocmd User vim9skkp-m-predict
     return true
-  elseif ChangeCharType(key)
+  elseif ChangeCharType(rawkey)
     doautocmd User vim9skkp-statuschanged
     return true
   elseif !!text &&
       (midasi || chartype ==# C.Type.Abbr) &&
-      g:vim9skkp.keymap.commit->Contains(key)
+      g:vim9skkp.keymap.commit->Contains(rawkey)
     Commit()
     return true
-  elseif midasi && key ==# J.prefix
+  elseif midasi && rawkey ==# J.prefix
     Commit()
     SetText(J.prefix)
     return true
@@ -251,9 +254,6 @@ def AutoAbbr(key: string): bool
     return false
   elseif key !~# '[A-Z]'
     return false
-  elseif CommonFunctions(key)
-    # `L`で全角アルファベットに切り替えたい…
-    return true
   elseif g:vim9skkp.abbr_with_shift
     noautocmd ToggleCharType(C.Type.Abbr)
     SetText(key)
@@ -435,10 +435,10 @@ def SetMidasiModeAndStickyShift(m: bool, s: bool)
   silent! doautocmd User vim9skkp-statuschanged
 enddef
 
-def ChangeCharType(key: string): bool
+def ChangeCharType(rawkey: string): bool
   const oldtype = chartype
   for ct in C.Type.values
-    if g:vim9skkp.keymap[ct.label]->Contains(key)
+    if g:vim9skkp.keymap[ct.label]->Contains(rawkey)
       if midasi && !!text
         const before = text
         text

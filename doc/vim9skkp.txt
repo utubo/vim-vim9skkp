@@ -200,6 +200,11 @@ g:vim9skkp					*g:vim9skkp*
 			入力無し: vim9skkpをクローズ
 		sticky_shift
 			所謂スティッキーシフトです
+			NOTE:keymapには反映されません
+				例えば
+				`keymap: { stick_shift: ';', alphabet: 'L' }`
+				と設定しても
+				";l"では全角英数モードになりません
 		left
 			カーソルを左へ移動
 		right
